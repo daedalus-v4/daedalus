@@ -1,0 +1,11 @@
+{
+    "scripts": {
+        "dev": "bun run --watch src/index.ts"
+    },
+    "dependencies": {
+        "elysia": "latest"
+    },
+    "devDependencies": {
+        "bun-types": "latest"
+    }
+}
