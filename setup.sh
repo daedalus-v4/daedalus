@@ -6,3 +6,5 @@ bun x prettier --write .
 EOF
 
 chmod +x .git/hooks/pre-commit
+
+bun i -g pino-pretty

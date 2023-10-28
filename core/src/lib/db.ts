@@ -22,7 +22,7 @@ import {
     DbUtilitySettings,
     DbWelcomeSettings,
     DbXpSettings,
-} from "shared";
+} from "../../../shared";
 
 export let _db: Db;
 export let client: MongoClient;
@@ -34,6 +34,14 @@ export async function connect() {
 }
 
 class Database {
+    public get counters() {
+        return _db.collection<{ sequence: string; value: number }>("counters");
+    }
+
+    public get admins() {
+        return _db.collection<{ user: string }>("admins");
+    }
+
     public get guildSettings() {
         return _db.collection<DbSettings>("guild_settings");
     }
@@ -123,4 +131,10 @@ class Database {
     }
 }
 
-export default new Database();
+const db = new Database();
+export default db;
+
+export async function autoIncrement(sequence: string) {
+    const doc = await db.counters.findOneAndUpdate({ sequence }, { $inc: { value: 1 } }, { upsert: true });
+    return (doc?.value ?? 0) + 1;
+}
