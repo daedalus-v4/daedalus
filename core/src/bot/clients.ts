@@ -1,5 +1,5 @@
 import { Client, Events } from "discord.js";
-import log from "../lib/log.js";
+import { log } from "shared";
 import argentium from "./argentium.js";
 
 const cache: Record<string, Client> = {};

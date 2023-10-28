@@ -22,9 +22,9 @@ import {
     DbUtilitySettings,
     DbWelcomeSettings,
     DbXpSettings,
-} from "../../../shared";
-import { PremiumTier } from "../premium.js";
-import log from "./log.js";
+} from "..";
+import { log } from "./log.js";
+import { PremiumTier } from "./premium.js";
 
 export let _db: Db;
 export let client: MongoClient;
@@ -138,8 +138,7 @@ class Database {
     }
 }
 
-const db = new Database();
-export default db;
+export const db = new Database();
 
 export async function autoIncrement(sequence: string) {
     const doc = await db.counters.findOneAndUpdate({ sequence }, { $inc: { value: 1 } }, { upsert: true });

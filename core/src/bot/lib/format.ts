@@ -1,5 +1,5 @@
 import { APIEmbed, APIGuild, BaseMessageOptions, Colors, Guild } from "discord.js";
-import db from "../../lib/db.js";
+import { db } from "../../../../shared";
 
 export async function colorEmbed(ctx: APIGuild | Guild | { guild: APIGuild | Guild }, embed: APIEmbed): Promise<BaseMessageOptions> {
     const guild = "guild" in ctx ? ctx.guild : ctx;

@@ -1,7 +1,7 @@
 import Argentium from "argentium";
 import { BaseMessageOptions } from "discord.js";
-import db from "../../../lib/db.js";
-import { getToken } from "../../../premium.js";
+import { db } from "shared";
+import { getToken } from "../../../lib/premium.js";
 import { template } from "../../lib/format.js";
 import { defer } from "../../lib/hooks.js";
 
