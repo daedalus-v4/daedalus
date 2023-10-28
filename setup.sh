@@ -1,8 +1,8 @@
 cat > .git/hooks/pre-commit << EOF
 #!/bin/sh
-
-echo "Formatting files..."
-bun x prettier --write api bot shared > /dev/null
+bun x prettier --write api bot shared
 cd dashboard
-bun x prettier --write . > /dev/null
+bun x prettier --write .
 EOF
+
+chmod +x .git/hooks/pre-commit
