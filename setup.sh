@@ -1,6 +1,6 @@
 cat > .git/hooks/pre-commit << EOF
 #!/bin/sh
-bun x prettier --write api bot shared
+bun x prettier --write core shared
 cd dashboard
 bun x prettier --write .
 EOF
