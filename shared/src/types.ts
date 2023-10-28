@@ -54,7 +54,7 @@ export type DbSettings = {
     blockedChannels: string[];
 };
 
-export type DbLogSettings = {
+export type DbLoggingSettings = {
     guild: string;
     defaultChannelOrWebhook: string | null;
     ignoredChannels: string[];
