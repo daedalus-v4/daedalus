@@ -8,7 +8,7 @@ import { template } from "./lib/format.js";
 
 export default new Argentium()
     .use((x) => readdirSync(path.join(__dirname, "modules")).reduce((x, y) => x.use(require(`./modules/${y}`).default), x))
-    .onCommandError(async (e, { _ }) => {
+    .onCommandError(async (e) => {
         if (typeof e === "string") return template.error(e);
 
         e.id = await autoIncrement("unexpected-errors");
@@ -17,5 +17,4 @@ export default new Argentium()
 
         return template.error(`An unexpected error occurred. If contacting support, please mention the error ID **\`${e.id}\`**.`);
     })
-    .on(Events.ClientReady, () => log.info("Bot online."))
-    .client(Bun.env.TOKEN!, { intents: 0 });
+    .on(Events.ClientReady, () => log.info("Bot online."));

@@ -23,6 +23,7 @@ import {
     DbWelcomeSettings,
     DbXpSettings,
 } from "../../../shared";
+import { PremiumTier } from "../premium.js";
 import log from "./log.js";
 
 export let _db: Db;
@@ -42,6 +43,10 @@ class Database {
 
     public get admins() {
         return _db.collection<{ user: string }>("admins");
+    }
+
+    public get guilds() {
+        return _db.collection<{ guild: string; tier: PremiumTier; token: string | null }>("guilds");
     }
 
     public get guildSettings() {
