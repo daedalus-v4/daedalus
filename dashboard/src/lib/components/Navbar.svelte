@@ -1,8 +1,8 @@
 <script lang="ts">
     import { browser } from "$app/environment";
     import { page } from "$app/stores";
-    import { Avatar } from "@skeletonlabs/skeleton";
     import Icon from "./Icon.svelte";
+    import LoggedInAs from "./LoggedInAs.svelte";
 
     const links: [string, string, string, boolean?, boolean?][] = [
         ["/docs", "book", "Docs"],
@@ -34,39 +34,30 @@
 
 <nav class="z-10 fixed w-screen flex items-center justify-between bg-surface-600 dark:bg-surface-900 text-surface-50">
     <div class="flex items-center">
-        <a href="/" class="inline-flex items-center gap-2 px-4 py-2">
+        <a href="/" class="flex items-center gap-4 px-4 py-2">
             <img src="/favicon.png" alt="Daedalus Icon" class="h-12 rounded" />
             <span class="text-2xl font-bold">Daedalus</span>
         </a>
         {#each links as [href, icon, label, brand, external]}
             <span class="divider-vertical h-8 hidden lg:block" />
-            <a {href} target={external ? "_blank" : "_self"} class="inline-flex items-center gap-2 text-lg px-4 py-4 hidden lg:block">
-                <Icon {icon} {brand} />
+            <a {href} target={external ? "_blank" : "_self"} class="flex items-center text-lg p-4 hidden lg:block">
+                <Icon {icon} {brand} class="pr-2" />
                 {label}
             </a>
         {/each}
     </div>
     <div class="flex items-center">
         {#if $page.data.user}
-            <div class="flex items-center">
-                <Avatar
-                    src="https://cdn.discordapp.com/avatars/{$page.data.user.id}/{$page.data.user.avatar}"
-                    initials={$page.data.user.username[0]}
-                    width="w-10"
-                />
-                <span class="text-lg opacity-75 p-4 hidden lg:block">
-                    Hi, {$page.data.user.username}<span class="opacity-50"
-                        >{$page.data.user.discriminator === "0" ? "" : `#${$page.data.user.discriminator}`}</span
-                    >!
-                </span>
+            <div class="hidden lg:block">
+                <LoggedInAs />
             </div>
             <span class="divider-vertical h-8 hidden lg:block" />
-            <a href="/auth/logout?{new URLSearchParams({ redirect: $page.url.pathname })}" class="inline-flex items-center gap-2 text-lg p-4 hidden lg:block">
+            <a href="/auth/logout?{new URLSearchParams({ redirect: $page.url.pathname })}" class="flex items-center gap-2 text-lg p-4 hidden lg:block">
                 <Icon icon="right-from-bracket" />
                 Log Out
             </a>
         {:else}
-            <a href="/auth/login?{new URLSearchParams({ redirect: $page.url.pathname })}" class="inline-flex items-center gap-2 text-lg p-4 hidden lg:block">
+            <a href="/auth/login?{new URLSearchParams({ redirect: $page.url.pathname })}" class="flex items-center gap-2 text-lg p-4 hidden lg:block">
                 <Icon icon="right-to-bracket" />
                 Log In
             </a>
@@ -94,23 +85,25 @@
                     {#if index !== 0}
                         <hr />
                     {/if}
-                    <a {href} target={external ? "_blank" : "_self"} class="inline-flex items-center gap-2 text-lg p-4">
-                        <Icon {icon} {brand} />
+                    <a {href} target={external ? "_blank" : "_self"} class="flex items-center text-lg p-4">
+                        <Icon {icon} {brand} class="pr-4" />
                         {label}
                     </a>
                 {/each}
             </div>
             <div class="flex flex-col">
                 {#if $page.data.user}
-                    <span class="text-lg opacity-60 p-4">Logged in as {$page.data.user.username}</span>
+                    <div class="p-4">
+                        <LoggedInAs />
+                    </div>
                     <hr />
-                    <a href="/auth/logout?{new URLSearchParams({ redirect: $page.url.pathname })}" class="inline-flex items-center gap-2 text-lg p-4">
-                        <Icon icon="right-from-bracket" />
+                    <a href="/auth/logout?{new URLSearchParams({ redirect: $page.url.pathname })}" class="flex items-center text-lg p-4">
+                        <Icon icon="right-from-bracket" class="pr-4" />
                         Log Out
                     </a>
                 {:else}
-                    <a href="/auth/login?{new URLSearchParams({ redirect: $page.url.pathname })}" class="inline-flex items-center gap-2 text-lg p-4">
-                        <Icon icon="right-to-bracket" />
+                    <a href="/auth/login?{new URLSearchParams({ redirect: $page.url.pathname })}" class="flex items-center text-lg p-4">
+                        <Icon icon="right-to-bracket" class="pr-4" />
                         Log In
                     </a>
                 {/if}

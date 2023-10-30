@@ -126,7 +126,7 @@
             {@const level = server.owner ? 0 : BigInt(server.permissions) & 8n ? 1 : BigInt(server.permissions) & 32n ? 2 : !server.notIn ? 3 : 4}
             <a href={server.hasBot ? `/manage/${server.id}` : "/invite"} class={server.hide ? "hidden" : ""}>
                 <div
-                    class="card p-4 grid items-center gap-4 h-24 {server.hasBot ? 'bg-primary-400 dark:bg-primary-700' : ''}"
+                    class="card p-4 grid items-center gap-4 h-24 {server.hasBot ? 'bg-primary-400 dark:bg-primary-600' : 'bg-surface-100 dark:bg-surface-700'}"
                     style="grid-template-columns: max-content 1fr"
                 >
                     {#if server.icon}
