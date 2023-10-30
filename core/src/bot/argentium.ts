@@ -2,7 +2,7 @@ import Argentium from "argentium";
 import { Events } from "discord.js";
 import { readdirSync } from "fs";
 import path from "path";
-import { autoIncrement } from "shared";
+import { autoIncrement } from "shared/db.js";
 import { log } from "../lib/log.js";
 import { template } from "./lib/format.js";
 

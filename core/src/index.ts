@@ -1,4 +1,4 @@
-import { connect } from "shared";
+import { connect } from "shared/db.js";
 import "./api";
 import { getClientFromToken } from "./bot/clients.js";
 import { log } from "./lib/log.js";
