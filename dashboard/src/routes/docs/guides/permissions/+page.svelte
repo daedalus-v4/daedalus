@@ -5,7 +5,6 @@
 <script lang="ts">
     import A from "$lib/components/A.svelte";
     import Breadcrumbs from "$lib/components/Breadcrumbs.svelte";
-    import Code from "$lib/components/Code.svelte";
     import Container from "$lib/components/Container.svelte";
     import Header from "$lib/components/Header.svelte";
     import Icon from "$lib/components/Icon.svelte";
@@ -147,7 +146,7 @@
         <h4 class="relative h4 flex gap-4 items-center">
             <span id={key} class="relative -top-24" />
             {permission.name}
-            <Code>{key}</Code>
+            <code class="code text-sm">{key}</code>
             <A to="#{key}"><Icon icon="link" /></A>
         </h4>
         <blockquote class="border-secondary-500 border-l-2 pl-6">
