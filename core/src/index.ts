@@ -1,5 +1,7 @@
-import { connect, log } from "shared";
+import { connect } from "shared";
+import "./api";
 import { getClientFromToken } from "./bot/clients.js";
+import { log } from "./lib/log.js";
 
 process.on("uncaughtException", (e) => log.fatal(e));
 

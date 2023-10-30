@@ -1,5 +1,5 @@
 import { Client, Events } from "discord.js";
-import { log } from "shared";
+import { log } from "../lib/log.js";
 import argentium from "./argentium.js";
 
 const cache: Record<string, Client> = {};
@@ -17,4 +17,8 @@ export async function getClientFromToken(token: string) {
     }
 
     return cache[token];
+}
+
+export function getAllClients() {
+    return Object.values(cache);
 }

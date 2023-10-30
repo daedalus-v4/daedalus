@@ -1,4 +1,5 @@
 import { Db, MongoClient } from "mongodb";
+import pino from "pino";
 import {
     DbAutomodSettings,
     DbAutoresponderSettings,
@@ -23,8 +24,9 @@ import {
     DbWelcomeSettings,
     DbXpSettings,
 } from "..";
-import { log } from "./log.js";
 import { PremiumTier } from "./premium.js";
+
+const log = pino({ level: Bun.env.LEVEL ?? (Bun.env.PRODUCTION ? "info" : "trace") });
 
 export let _db: Db;
 export let client: MongoClient;

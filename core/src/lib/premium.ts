@@ -2,16 +2,18 @@ import { APIGuild, Guild } from "discord.js";
 import { db, premiumBenefits } from "../../../shared";
 import { getClientFromToken } from "../bot/clients.js";
 
-export async function getToken(ctx: APIGuild | Guild | { guild: APIGuild | Guild }) {
-    const guild = "guild" in ctx ? ctx.guild : ctx;
+export async function getToken(ctx?: string | APIGuild | Guild | { guild: APIGuild | Guild }) {
+    if (!ctx) return Bun.env.TOKEN!;
 
-    const doc = await db.guilds.findOne({ guild: guild.id });
+    const guild = typeof ctx === "string" ? ctx : "guild" in ctx ? ctx.guild.id : ctx.id;
+
+    const doc = await db.guilds.findOne({ guild });
     if (!doc?.token || !premiumBenefits[doc.tier].vanityClient) return Bun.env.TOKEN!;
 
     return doc.token!;
 }
 
-export async function getClient(ctx: APIGuild | Guild | { guild: APIGuild | Guild }) {
+export async function getClient(ctx?: string | APIGuild | Guild | { guild: APIGuild | Guild }) {
     try {
         return await getClientFromToken(await getToken(ctx));
     } catch {

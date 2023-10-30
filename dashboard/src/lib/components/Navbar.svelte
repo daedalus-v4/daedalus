@@ -31,7 +31,7 @@
     }
 </script>
 
-<nav class="fixed w-screen flex items-center justify-between bg-surface-600 dark:bg-surface-900 text-surface-50">
+<nav class="z-10 fixed w-screen flex items-center justify-between bg-surface-600 dark:bg-surface-900 text-surface-50">
     <div class="flex items-center">
         <a href="/" class="inline-flex items-center gap-2 px-4 py-2">
             <img src="/favicon.png" alt="Daedalus Icon" class="h-12 rounded" />
@@ -74,7 +74,7 @@
         </button>
     </div>
 </nav>
-<div id="sidebar" class="{sidebarOpen ? 'open' : ''} block lg:hidden fixed inset-0 dark:bg-surface-900/40 backdrop-blur-sm">
+<div id="sidebar" class="{sidebarOpen ? 'open' : ''} z-20 block lg:hidden fixed inset-0 dark:bg-surface-900/40 backdrop-blur-sm">
     <button class="h-full w-1/4 cursor-default" on:click={() => (sidebarOpen = false)} />
     <div class="fixed top-0 left-1/4 right-0 bottom-0 flex flex-col dark:bg-surface-900/80 backdrop-blur-sm">
         <div class="h-full flex flex-col justify-between">

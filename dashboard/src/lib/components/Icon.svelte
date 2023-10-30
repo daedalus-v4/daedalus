@@ -6,4 +6,4 @@
     export { className as class };
 </script>
 
-<i class="fa-{brand ? 'brands' : 'solid'} fa-{icon} {className}" />
+<i {...$$restProps} class="fa-{brand ? 'brands' : 'solid'} fa-{icon} {className}" />
