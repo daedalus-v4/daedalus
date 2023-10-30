@@ -7,29 +7,17 @@
     import Icon from "$lib/components/Icon.svelte";
     import Loading from "$lib/components/Loading.svelte";
     import { fuzzy } from "$lib/utils";
-    import { Avatar } from "@skeletonlabs/skeleton";
+    import type { DDLGuild } from "shared";
     import { onMount } from "svelte";
 
-    interface Server {
-        id: string;
-        name: string;
-        icon: string | null;
-        owner: boolean;
-        permissions: string;
-        hasBot: boolean;
-        features: string[];
-        notIn?: boolean;
-        hide?: boolean;
-    }
-
-    let servers: Server[] | undefined;
+    let servers: (DDLGuild & { hide: boolean })[] | undefined;
     let loading: boolean = false;
     let query: string;
     let error: string;
     let updated: number = 0;
     let showAll: boolean;
 
-    function key(server: Server) {
+    function key(server: DDLGuild) {
         return [server.hasBot, server.owner, (BigInt(server.permissions) & 8n) > 0n, server.features.includes("COMMUNITY")]
             .map<number>((x) => (x ? 0 : 1))
             .reduce((x, y) => x * 2 + y);
@@ -46,18 +34,10 @@
             return (error = response.error);
         }
 
-        servers = response.guilds.map((x: any) => ({
-            id: x.id,
-            name: x.name,
-            icon: x.icon,
-            owner: x.owner,
-            permissions: x.permissions,
-            hasBot: x.hasBot,
-            features: x.features.filter((x: string) => ["COMMUNITY"].includes(x)),
-            notIn: x.notIn,
-        }));
+        servers = response.guilds;
 
         updated = Date.now();
+        servers!.sort((x, y) => key(x) - key(y) || x.name.localeCompare(y.name));
 
         localStorage.setItem("server-list", JSON.stringify({ updated, servers }));
 
@@ -79,7 +59,6 @@
                 } catch {}
 
             if (!servers) load();
-            servers?.sort((x, y) => key(x) - key(y) || x.name.localeCompare(y.name));
         });
     });
 
@@ -131,15 +110,14 @@
                     style="grid-template-columns: max-content 1fr"
                 >
                     {#if server.icon}
-                        <Avatar src="https://cdn.discordapp.com/icons/{server.id}/{server.icon}.png" />
+                        <img src="https://cdn.discordapp.com/icons/{server.id}/{server.icon}.png" alt="Icon" class="w-16 rounded-full" />
                     {:else}
-                        <Avatar
-                            initials={server.name
-                                .split(/\s+/)
-                                .slice(0, 2)
+                        <span class="h-16 w-16 grid items-center justify-center bg-surface-300 dark:bg-surface-500 rounded-full">
+                            {server.name
+                                .split(/\W+/)
                                 .map((x) => x[0])
                                 .join("")}
-                        />
+                        </span>
                     {/if}
                     <div class="min-w-0 flex flex-col gap-1">
                         <span class="text-xl truncate">

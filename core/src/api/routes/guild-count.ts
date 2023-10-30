@@ -1,4 +1,4 @@
-import { getAllClients } from "core/src/bot/clients.js";
+import { getAllClients } from "../../bot/clients.js";
 import { App } from "../app.js";
 
 export default (app: App) =>

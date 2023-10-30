@@ -1,12 +1,13 @@
 <script lang="ts">
     import { browser } from "$app/environment";
     import { page } from "$app/stores";
+    import invite from "$lib/invite";
     import Icon from "./Icon.svelte";
     import LoggedInAs from "./LoggedInAs.svelte";
 
     const links: [string, string, string, boolean?, boolean?][] = [
         ["/docs", "book", "Docs"],
-        ["/invite", "plus", "Invite"],
+        [invite(), "plus", "Invite", false, true],
         ["https://discord.gg/7TRKfSK7EU", "discord", "Support", true, true],
     ];
 

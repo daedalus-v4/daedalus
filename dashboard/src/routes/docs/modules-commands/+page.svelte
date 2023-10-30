@@ -6,7 +6,7 @@
     import Icon from "$lib/components/Icon.svelte";
     import P from "$lib/components/P.svelte";
     import { fuzzy } from "$lib/utils";
-    import { modules } from "../../../../../shared";
+    import { modules } from "shared";
 
     let query: string;
 

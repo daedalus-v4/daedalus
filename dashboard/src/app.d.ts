@@ -3,6 +3,10 @@
 // and what to do when importing types
 declare namespace App {
     interface Locals {
-        user: unknown;
+        user: {
+            id: string;
+            username: string;
+            discriminator: string;
+        };
     }
 }

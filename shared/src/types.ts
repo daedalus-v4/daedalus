@@ -365,3 +365,14 @@ export type DbUtilitySettings = {
     blockedRoles: string[];
     bypassRoles: string[];
 };
+
+export type DDLGuild = {
+    id: string;
+    name: string;
+    icon: string | null;
+    owner: boolean;
+    permissions: string;
+    hasBot?: boolean;
+    features: string[];
+    notIn?: boolean;
+};

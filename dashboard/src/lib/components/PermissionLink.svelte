@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getModalStore, type ModalSettings } from "@skeletonlabs/skeleton";
-    import { permissions } from "../../../../shared";
+    import { permissions } from "shared";
     import A from "./A.svelte";
 
     const modalStore = getModalStore();

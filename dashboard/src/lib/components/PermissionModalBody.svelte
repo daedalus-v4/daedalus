@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getModalStore } from "@skeletonlabs/skeleton";
     import type { SvelteComponent } from "svelte";
-    import { permissions } from "../../../../shared";
+    import { permissions } from "shared";
     import Button from "./Button.svelte";
     import Container from "./Container.svelte";
     import P from "./P.svelte";

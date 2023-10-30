@@ -5,7 +5,7 @@
     import Header from "$lib/components/Header.svelte";
     import P from "$lib/components/P.svelte";
     import PermissionLink from "$lib/components/PermissionLink.svelte";
-    import { modules, permissions } from "../../../../../shared";
+    import { modules, permissions } from "shared";
 
     const moduleList = Object.entries(modules);
 

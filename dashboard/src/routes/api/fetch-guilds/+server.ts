@@ -1,5 +1,6 @@
 import { API, DISCORD_API } from "$env/static/private";
 import type { RequestHandler } from "@sveltejs/kit";
+import type { DDLGuild } from "shared";
 
 export const GET: RequestHandler = async ({ cookies, fetch, locals }) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -16,8 +17,16 @@ export const GET: RequestHandler = async ({ cookies, fetch, locals }) => {
 
     if (!request.ok) return new Response(JSON.stringify({ error: "Failed to fetch your servers.", data: response }));
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const guilds: any[] = response;
+    const guilds: DDLGuild[] = response.map((x: DDLGuild) => ({
+        id: x.id,
+        name: x.name,
+        icon: x.icon,
+        owner: x.owner,
+        permissions: x.permissions,
+        hasBot: x.hasBot,
+        features: x.features.filter((x: string) => ["COMMUNITY"].includes(x)),
+        notIn: x.notIn,
+    }));
 
     const g_request = await fetch(`${API}/check-guilds`, {
         method: "post",
@@ -29,16 +38,5 @@ export const GET: RequestHandler = async ({ cookies, fetch, locals }) => {
 
     const g_response = await g_request.json();
 
-    return new Response(
-        JSON.stringify({
-            guilds: g_response
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                .sort((a: any, b: any) => priority(a) - priority(b)),
-        }),
-    );
+    return new Response(JSON.stringify({ guilds: g_response }));
 };
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function priority(guild: any): number {
-    return (BigInt(guild.permissions) & BigInt(8) ? 0 : 1) + (guild.has_bot ? 0 : 2);
-}

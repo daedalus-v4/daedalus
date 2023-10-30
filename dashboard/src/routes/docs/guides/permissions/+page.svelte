@@ -10,7 +10,7 @@
     import Icon from "$lib/components/Icon.svelte";
     import P from "$lib/components/P.svelte";
     import PermissionLink from "$lib/components/PermissionLink.svelte";
-    import { permissions } from "../../../../../../shared";
+    import { permissions } from "shared";
 </script>
 
 <Header>

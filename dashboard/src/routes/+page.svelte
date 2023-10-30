@@ -7,6 +7,7 @@
     import Header from "$lib/components/Header.svelte";
     import Icon from "$lib/components/Icon.svelte";
     import P from "$lib/components/P.svelte";
+    import invite from "$lib/invite";
 </script>
 
 <Header>
@@ -46,12 +47,11 @@
     </P>
     <h2 class="h2 pt-8">I'm in &mdash; how do I get started?</h2>
     <P>
-        To get started, go to our <A to="/invite">invite page</A>. You can choose some modules and commands to exclude now and you'll get an invite link with
-        only the permissions the bot absolutely needs for the functionalities you'd like. If you don't want to commit now, no worries! Just leave them all
-        enabled and remove permissions later, or you can remove any permissions now and add them back later.
+        To get started, <A to={invite()} external>add the bot</A>. If you'd like to restrict any permissions, check out the
+        <A to="/docs/permissions">permissions documentation page</A> to see what features require which permissions and which ones you can safely remove.
     </P>
     <P>
-        After you add the bot, you'll also find our onboarding guide on that page. If you already have the bot, feel free to check it out anyway so you're
+        After you add the bot, visit our <A to="/docs/onboarding">onboarding page</A>. If you already have the bot, feel free to check it out anyway so you're
         always up-to-date on our latest features, tips, and tricks!
     </P>
 </Container>

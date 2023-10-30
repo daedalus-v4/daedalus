@@ -4,14 +4,16 @@ import { db } from "shared/db.js";
 import { getClientFromToken } from "../bot/clients.js";
 
 export async function getToken(ctx?: string | APIGuild | Guild | { guild: APIGuild | Guild }) {
-    if (!ctx) return Bun.env.TOKEN!;
+    return (await getTokens([ctx ?? ""]))[0];
+}
 
-    const guild = typeof ctx === "string" ? ctx : "guild" in ctx ? ctx.guild.id : ctx.id;
+export async function getTokens(ctx?: (string | APIGuild | Guild | { guild: APIGuild | Guild })[]) {
+    if (!ctx?.length) return [];
 
-    const doc = await db.guilds.findOne({ guild });
-    if (!doc?.token || !premiumBenefits[doc.tier].vanityClient) return Bun.env.TOKEN!;
+    const guilds = ctx.map((x) => (typeof x === "string" ? x : "guild" in x ? x.guild.id : x.id));
 
-    return doc.token!;
+    const docs = Object.fromEntries((await db.guilds.find({ guild: { $in: guilds } }).toArray()).map((x) => [x.guild, x]));
+    return guilds.map((guild) => (!docs[guild]?.token || !premiumBenefits[docs[guild].tier].vanityClient ? Bun.env.TOKEN! : docs[guild].token!));
 }
 
 export async function getClient(ctx?: string | APIGuild | Guild | { guild: APIGuild | Guild }) {
@@ -20,4 +22,8 @@ export async function getClient(ctx?: string | APIGuild | Guild | { guild: APIGu
     } catch {
         return await getClientFromToken(Bun.env.TOKEN!);
     }
+}
+
+export async function getClients(ctx?: (string | APIGuild | Guild | { guild: APIGuild | Guild })[]) {
+    return await Promise.all((await getTokens(ctx)).map((token) => getClientFromToken(token).catch(() => getClientFromToken(Bun.env.TOKEN!))));
 }

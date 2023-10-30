@@ -2,23 +2,23 @@ import { Client, Events } from "discord.js";
 import { log } from "../lib/log.js";
 import argentium from "./argentium.js";
 
-const cache: Record<string, Client> = {};
+export const clientCache: Record<string, Client> = {};
 
 export async function getClientFromToken(token: string) {
-    if (!cache[token]) {
+    if (!clientCache[token]) {
         log.info(`Obtaining client ${token.slice(0, 5)}...${token.slice(-5)}`);
 
-        cache[token] = new Client({ intents: 0 });
-        await cache[token].login(token);
+        clientCache[token] = new Client({ intents: 0 });
+        await clientCache[token].login(token);
 
-        await argentium.preApply(cache[token]);
-        await new Promise((r) => cache[token].on(Events.ClientReady, r));
-        await argentium.postApply(cache[token]);
+        await argentium.preApply(clientCache[token]);
+        await new Promise((r) => clientCache[token].on(Events.ClientReady, r));
+        await argentium.postApply(clientCache[token]);
     }
 
-    return cache[token];
+    return clientCache[token];
 }
 
 export function getAllClients() {
-    return Object.values(cache);
+    return Object.values(clientCache);
 }
