@@ -6,11 +6,12 @@
     const modalStore = getModalStore();
 
     export let key: string;
-    let obj: any = permissions[key as keyof typeof permissions] ?? {};
+    export let title: string | undefined = undefined;
 
+    let obj: any = {};
     $: key, (obj = permissions[key as keyof typeof permissions] ?? {});
 
-    const modal: ModalSettings = { type: "alert", title: obj.name, body: obj.description, buttonTextCancel: "Close" };
+    const modal: ModalSettings = { type: "component", component: "PermissionModalBody", buttonTextCancel: "Close", meta: { key } };
 </script>
 
-<A {...$$restProps} on:click={() => modalStore.trigger(modal)}>{obj.name}</A>
+<A {...$$restProps} on:click={() => modalStore.trigger(modal)}>{@html title ?? obj.name}</A>

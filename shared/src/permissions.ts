@@ -102,7 +102,7 @@ export const permissions: Record<keyof typeof PermissionFlagsBits, { name: strin
     },
     SendTTSMessages: {
         name: "Send Test-To-Speech Messages",
-        description: "Allows users to use <code>/tts</code> which sends a message that is read aloud to everyone focused on the channel.",
+        description: "Allows users to use <b>/tts</b> which sends a message that is read aloud to everyone focused on the channel.",
     },
     ManageMessages: {
         name: "Manage Messages",
@@ -112,7 +112,7 @@ export const permissions: Record<keyof typeof PermissionFlagsBits, { name: strin
     EmbedLinks: {
         name: "Embed Links",
         description:
-            "Links that users send will show embeds if possible and the user has not suppressed embeds using <code>&lt;...&gt;</code>. For bots, this is necessary for them to send custom embeds in messages.",
+            "Links that users send will show embeds if possible and the user has not suppressed embeds using <b>&lt;link&gt;</b>. For bots, this is necessary for them to send custom embeds in messages.",
     },
     AttachFiles: {
         name: "Attach Files",
@@ -126,7 +126,7 @@ export const permissions: Record<keyof typeof PermissionFlagsBits, { name: strin
     MentionEveryone: {
         name: "Mention @everyone, @here, and All Roles",
         description:
-            'Allows users to use <code>@everyone</code> to ping all server members who can see the channel, <code>@here</code> to ping all online members who can see the channel, and ping any role regardless of if it has the "Allow anyone to <b>@mention</b> this role" setting enabled. This is <b>not</b> subject to role hierarchy.',
+            'Allows users to use <b>@everyone</b> to ping all server members who can see the channel, <b>@here</b> to ping all online members who can see the channel, and ping any role regardless of if it has the "Allow anyone to <b>@mention</b> this role" setting enabled. This is <b>not</b> subject to role hierarchy.',
     },
     UseExternalEmojis: {
         name: "Use External Emoji",
@@ -202,7 +202,7 @@ export const permissions: Record<keyof typeof PermissionFlagsBits, { name: strin
             {
                 style: "info",
                 content:
-                    "This permission is not needed for the bot to support application commands; that is the <code>application.commands</code> scope set when inviting the bot. If you are not seeing a bot's commands and you gave it this scope, you likely have too many bots; if you have over 50 bots, some will no longer be able to register commands.<br /><br />In fact, this permission currently does nothing for bots.",
+                    "This permission is not needed for the bot to support application commands; that is the <b>application.commands</b> scope set when inviting the bot. If you are not seeing a bot's commands and you gave it this scope, you likely have too many bots; if you have over 50 bots, some will no longer be able to register commands.<br /><br />In fact, this permission currently does nothing for bots.",
             },
         ],
     },
