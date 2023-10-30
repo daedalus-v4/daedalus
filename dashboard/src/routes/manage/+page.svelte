@@ -65,20 +65,22 @@
     }
 
     onMount(() => {
-        if ($page.url.searchParams.has("reload")) {
-            localStorage.removeItem("server-list");
-            goto("/manage");
-        }
+        setTimeout(() => {
+            if ($page.url.searchParams.has("reload")) {
+                localStorage.removeItem("server-list");
+                goto("/manage", { replaceState: true });
+            }
 
-        const cache = localStorage.getItem("server-list");
+            const cache = localStorage.getItem("server-list");
 
-        if (cache)
-            try {
-                ({ updated, servers } = JSON.parse(cache));
-            } catch {}
+            if (cache)
+                try {
+                    ({ updated, servers } = JSON.parse(cache));
+                } catch {}
 
-        if (!servers) load();
-        servers?.sort((x, y) => key(x) - key(y) || x.name.localeCompare(y.name));
+            if (!servers) load();
+            servers?.sort((x, y) => key(x) - key(y) || x.name.localeCompare(y.name));
+        });
     });
 
     let count = 0;
