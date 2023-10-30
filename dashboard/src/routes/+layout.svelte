@@ -3,11 +3,14 @@
     import Navbar from "$lib/components/Navbar.svelte";
     import UpButton from "$lib/components/UpButton.svelte";
     import { arrow, autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
-    import { storePopup } from "@skeletonlabs/skeleton";
+    import { Modal, initializeStores, storePopup } from "@skeletonlabs/skeleton";
     import "../app.postcss";
 
+    initializeStores();
     storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
+
+<Modal />
 
 <Navbar />
 <UpButton />

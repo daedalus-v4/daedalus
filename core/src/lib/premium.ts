@@ -1,5 +1,6 @@
 import { APIGuild, Guild } from "discord.js";
-import { db, premiumBenefits } from "../../../shared";
+import { premiumBenefits } from "shared";
+import { db } from "shared/db.js";
 import { getClientFromToken } from "../bot/clients.js";
 
 export async function getToken(ctx?: string | APIGuild | Guild | { guild: APIGuild | Guild }) {

@@ -23,8 +23,12 @@
             </p>
         </section>
         <hr />
-        <footer class="card-footer p-4">
-            <A to="/">Home</A>
+        <footer class="card-footer p-4 flex flex-col items-start">
+            <div class="flex items-center gap-8">
+                <A on:click={() => history.back()}>Back</A>
+                <span class="divider-vertical h-8" />
+                <A to="/">Home</A>
+            </div>
         </footer>
     </div>
 </div>

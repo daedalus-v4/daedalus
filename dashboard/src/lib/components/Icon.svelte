@@ -1,6 +1,6 @@
 <script lang="ts">
     export let icon: string;
-    export let brand: boolean = false;
+    export let brand: boolean | undefined = false;
     let className: string = "";
 
     export { className as class };

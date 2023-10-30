@@ -98,6 +98,7 @@
 
 <Container main>
     <input type="search" class="input text-xl" placeholder="Filter Servers" bind:value={query} />
+
     {#if servers?.some((x) => x.notIn)}
         <label class="flex items-center gap-2">
             <input type="checkbox" class="checkbox" bind:checked={showAll} />

@@ -2,7 +2,7 @@ import { getAllClients } from "core/src/bot/clients.js";
 import { getClient } from "core/src/lib/premium.js";
 import { PermissionFlagsBits } from "discord.js";
 import { t } from "elysia";
-import { db } from "shared/index.js";
+import { db } from "shared/db.js";
 import { App } from "../app.js";
 
 const guildSchema = t.Object({

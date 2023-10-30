@@ -23,8 +23,8 @@ import {
     DbUtilitySettings,
     DbWelcomeSettings,
     DbXpSettings,
-} from "..";
-import { PremiumTier } from "./premium.js";
+} from ".";
+import { PremiumTier } from "./src/premium.js";
 
 const log = pino({ level: Bun.env.LEVEL ?? (Bun.env.PRODUCTION ? "info" : "trace") });
 

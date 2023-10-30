@@ -41,8 +41,8 @@
     </P>
     <P>
         Daedalus is also transparent about its permissions. You shouldn't trust a bot or user with more permissions than they need, and we don't expect you to
-        compromise on that. We provide documentation about the permissions each module/command needs and why we need them, and if you're not planning on using a
-        feature, you are welcome and encouraged to remove those permissions.
+        compromise on that. We provide documentation about the permissions each module/command needs, and if you're not planning on using a feature, you are
+        welcome and encouraged to remove those permissions.
     </P>
     <h2 class="h2 pt-8">I'm in &mdash; how do I get started?</h2>
     <P>

@@ -1,5 +1,3 @@
-import { PermissionResolvable } from "discord.js";
-
 export type ModuleData = Record<
     string,
     {
@@ -12,16 +10,16 @@ export type ModuleData = Record<
                 name: string;
                 icon?: string;
                 description?: string;
-                ghost: boolean;
-                bypass: boolean;
-                admin: boolean;
-                permissions?: PermissionResolvable;
-                selfPermissions?: PermissionResolvable;
-                default: boolean;
+                ghost?: boolean;
+                bypass?: boolean;
+                admin?: boolean;
+                permissions?: string[];
+                selfPermissions?: string[];
+                default?: boolean;
             }
         >;
-        selfPermissions?: PermissionResolvable;
-        default: boolean;
+        selfPermissions?: string[];
+        default?: boolean;
     }
 >;
 
