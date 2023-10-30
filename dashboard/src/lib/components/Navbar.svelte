@@ -40,7 +40,7 @@
         </a>
         {#each links as [href, icon, label, brand, external]}
             <span class="divider-vertical h-8 hidden lg:block" />
-            <a {href} target={external ? "_blank" : "_self"} class="flex items-center text-lg p-4 hidden lg:block">
+            <a {href} target={external ? "_blank" : null} class="flex items-center text-lg p-4 hidden lg:block">
                 <Icon {icon} {brand} class="pr-2" />
                 {label}
             </a>
@@ -85,7 +85,7 @@
                     {#if index !== 0}
                         <hr />
                     {/if}
-                    <a {href} target={external ? "_blank" : "_self"} class="flex items-center text-lg p-4">
+                    <a {href} target={external ? "_blank" : null} class="flex items-center text-lg p-4">
                         <Icon {icon} {brand} class="pr-4" />
                         {label}
                     </a>

@@ -13,7 +13,7 @@
 <UpButton />
 <div class="h-full pt-16">
     <div class="h-full grid" style="grid-template-rows: 1fr auto">
-        <div class="pb-12 bg-surface-200 dark:bg-surface-800">
+        <div class="pb-12 bg-surface-200 dark:bg-surface-700">
             <slot />
         </div>
         <Container class="py-4 bg-surface-600 dark:bg-surface-900 text-surface-50">

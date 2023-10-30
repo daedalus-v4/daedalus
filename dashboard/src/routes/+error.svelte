@@ -4,7 +4,7 @@
 </script>
 
 <div class="h-full grid items-center justify-center">
-    <div class="block card card-hover p-4 bg-surface-100 dark:bg-surface-700">
+    <div class="block card card-hover p-4 bg-surface-100 dark:bg-surface-800">
         <header class="card-header text-5xl p-4">
             <span class="font-bold text-error-500 dark:text-error-400">
                 {$page.status}
