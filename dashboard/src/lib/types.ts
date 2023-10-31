@@ -18,3 +18,19 @@ export type FESettings = {
     allowedChannels: string[];
     blockedChannels: string[];
 };
+
+export type FEModulesPermissionsSettings = {
+    modules: Record<string, { enabled: boolean }>;
+    commands: Record<
+        string,
+        {
+            enabled: boolean;
+            ignoreDefaultPermissions: boolean;
+            allowedRoles: string[];
+            blockedRoles: string[];
+            restrictChannels: boolean;
+            allowedChannels: string[];
+            blockedChannels: string[];
+        }
+    >;
+};

@@ -16,4 +16,18 @@ export default {
         allowedChannels: snowflakes,
         blockedChannels: snowflakes,
     }),
+    "modules-permissions": z.object({
+        modules: z.record(z.object({ enabled: z.boolean() })),
+        commands: z.record(
+            z.object({
+                enabled: z.boolean(),
+                ignoreDefaultPermissions: z.boolean(),
+                allowedRoles: snowflakes,
+                blockedRoles: snowflakes,
+                restrictChannels: z.boolean(),
+                allowedChannels: snowflakes,
+                blockedChannels: snowflakes,
+            }),
+        ),
+    }),
 };

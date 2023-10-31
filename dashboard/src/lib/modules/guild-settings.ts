@@ -1,11 +1,7 @@
 import { sortRoles } from "$lib/utils.js";
 import type { DbSettings } from "shared";
 import type { FEData, FESettings } from "../types.js";
-
-function defaults<T extends object>(inputs: Partial<T> | undefined | null, object: T): T {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return Object.fromEntries(Object.entries(object).map(([k, v]) => [k, (inputs as any)?.[k] ?? v])) as T;
-}
+import { defaults } from "./utils.js";
 
 export async function b2fGuildSettings(fe: FEData, data: Partial<DbSettings> | null): Promise<FESettings> {
     if (data?.allowedRoles) sortRoles(data.allowedRoles, fe.roles);

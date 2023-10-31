@@ -1,12 +1,10 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import { icons } from "$lib/data";
-    import { getModalStore } from "@skeletonlabs/skeleton";
+    import { channelSelectorModalStore } from "$lib/stores";
     import type { TFChannel } from "shared";
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
-
-    const modalStore = getModalStore();
 
     export let selected: string[];
 
@@ -22,18 +20,13 @@
     for (const channel of $page.data.rootChannels) insert(channel);
 
     function open() {
-        modalStore.trigger({
-            type: "component",
-            component: "ChannelSelectorModalBody",
-            buttonTextCancel: "Close",
-            meta: {
-                select(id: string, set: any) {
-                    if (selected.includes(id)) set((selected = selected.filter((x) => x !== id)));
-                    else set((selected = [...selected, id].sort((x, y) => indexes[x] - indexes[y])));
-                },
-                selected,
+        $channelSelectorModalStore = {
+            select(id: string, set: any) {
+                if (selected.includes(id)) set((selected = selected.filter((x) => x !== id)));
+                else set((selected = [...selected, id].sort((x, y) => indexes[x] - indexes[y])));
             },
-        });
+            selected,
+        };
     }
 </script>
 

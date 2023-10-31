@@ -1,9 +1,9 @@
 import { API } from "$env/static/private";
-import { b2fGuildSettings } from "$lib/modules.js";
 import { redirect } from "@sveltejs/kit";
 import type { TFChannel, TFRole } from "shared";
-import { db } from "shared/db.js";
 import type { LayoutServerLoad } from "./$types.js";
+import collections from "./collections.js";
+import { b2f } from "./modules.js";
 
 export const load: LayoutServerLoad = async ({ locals, params, url }) => {
     if (!params.id.match(/^[1-9][0-9]{16,19}$/)) throw redirect(303, "/manage");
@@ -39,11 +39,11 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
     sortChannels(roots);
     roots.sort((x, y) => (x.type === 4 ? 1 : 0) - (y.type === 4 ? 1 : 0));
 
-    if (key === "-")
+    if (key in collections())
         return {
             roles: response.roles,
             channels: response.channels,
             rootChannels: roots,
-            data: await b2fGuildSettings(fe, await db.guildSettings.findOne({ guild: params.id })),
+            data: await b2f[key as keyof typeof b2f](fe, await collections()[key as keyof ReturnType<typeof collections>].findOne({ guild: params.id })),
         };
 };

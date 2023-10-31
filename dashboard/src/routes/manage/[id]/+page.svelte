@@ -4,31 +4,21 @@
     import A from "$lib/components/A.svelte";
     import ChannelSelector from "$lib/components/ChannelSelector.svelte";
     import InputHint from "$lib/components/InputHint.svelte";
+    import ModuleSaver from "$lib/components/ModuleSaver.svelte";
     import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
     import PermissionLink from "$lib/components/PermissionLink.svelte";
     import RoleSelector from "$lib/components/RoleSelector.svelte";
     import SingleRoleSelector from "$lib/components/SingleRoleSelector.svelte";
-    import TrackChanges from "$lib/components/TrackChanges.svelte";
-    import { diffGuildSettings, f2bGuildSettings } from "$lib/modules";
+    import { diffGuildSettings } from "$lib/modules";
     import type { FESettings } from "$lib/types";
     import { SlideToggle } from "@skeletonlabs/skeleton";
 
     let base: FESettings = $page.data.data;
     let data = browser ? structuredClone(base) : base;
-
-    async function save() {
-        const request = await fetch(`/manage/${$page.params.id}/save/-`, {
-            method: "POST",
-            body: JSON.stringify(await f2bGuildSettings(data)),
-            headers: { "Content-Type": "application/json" },
-        });
-
-        if (!request.ok) throw await request.text();
-    }
 </script>
 
-<TrackChanges {save} bind:base bind:data diff={diffGuildSettings} />
+<ModuleSaver bind:base bind:data diff={diffGuildSettings} />
 
 <Panel>
     <h3 class="h3">Dashboard Permissions</h3>

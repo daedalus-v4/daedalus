@@ -1,21 +1,17 @@
 <script lang="ts">
-    import { page } from "$app/stores";
+    import { navigating, page } from "$app/stores";
     import Icon from "$lib/components/Icon.svelte";
     import Loading from "$lib/components/Loading.svelte";
     import Panel from "$lib/components/Panel.svelte";
     import { modules } from "shared";
 
-    let { id, module: moduleParam } = $page.params;
+    let { id } = $page.params;
 
     let open = false;
     let loading = false;
 
-    function click() {
-        open = false;
-        loading = true;
-    }
-
-    page.subscribe(() => ((loading = false), (moduleParam = $page.params.module)));
+    page.subscribe(() => (loading = false));
+    $: moduleParam = $page.url.pathname.split("/").at(-1)!;
 </script>
 
 <div class="h-full w-screen grid grid-cols-[min-content_1fr]">
@@ -27,8 +23,9 @@
     >
         <a
             href="/manage/{id}"
-            class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {!moduleParam ? 'bg-black/10 dark:bg-white/5' : ''} hover:bg-black/20 dark:hover:bg-white/10"
-            on:click={click}
+            class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam.match(/^\d+$/)
+                ? 'bg-black/10 dark:bg-white/5'
+                : ''} hover:bg-black/20 dark:hover:bg-white/10"
         >
             <div class="w-4 h-4">
                 <Icon icon="gear" class="w-4 h-4" />
@@ -36,23 +33,21 @@
             <div>Guild Settings</div>
         </a>
         <a
-            href="/manage/{id}/permissions"
-            class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam === 'permissions'
+            href="/manage/{id}/modules-permissions"
+            class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam === 'modules-permissions'
                 ? 'bg-black/10 dark:bg-white/5'
                 : ''} hover:bg-black/20 dark:hover:bg-white/10"
-            on:click={click}
         >
             <div class="w-4 h-4">
                 <Icon icon="screwdriver-wrench" class="w-4 h-4" />
             </div>
-            <div>Command Permissions</div>
+            <div>Modules &amp; Permissions</div>
         </a>
         <a
             href="/manage/{id}/api"
             class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam === 'api'
                 ? 'bg-black/10 dark:bg-white/5'
                 : ''} hover:bg-black/10 dark:hover:bg-white/5"
-            on:click={click}
         >
             <div class="w-4 h-4">
                 <Icon icon="code" class="w-4 h-4" />
@@ -66,7 +61,6 @@
                 class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam === 'mid'
                     ? 'bg-black/10 dark:bg-white/5'
                     : ''} hover:bg-black/10 dark:hover:bg-white/5"
-                on:click={click}
             >
                 <div class="w-4 h-4">
                     {#if module.icon}<Icon icon={module.icon} class="w-4 h-4" />{/if}
@@ -76,9 +70,10 @@
         {/each}
     </div>
     <div class="relative h-[calc(100vh-8rem)] col-span-2 lg:col-span-1 ml-16 lg:ml-0 pt-4 lg:pt-8 pb-24 px-4 lg:px-8 flex flex-col gap-4 overflow-y-auto">
-        <slot />
-        {#if loading}
-            <div class="absolute inset-0 grid items-center justify-center bg-white/10 dark:bg-black/10 backdrop-blur-[1px]">
+        {#if !$navigating}
+            <slot />
+        {:else}
+            <div class="absolute inset-0 grid items-center justify-center">
                 <Panel>
                     <div class="flex items-center gap-4">
                         <Loading size="24" />

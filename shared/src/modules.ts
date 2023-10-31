@@ -10,7 +10,6 @@ export const modules: ModuleData = {
         name: "Welcome",
         icon: "door-open",
         description: "Welcome incoming members to the server.",
-        default: true,
     },
     "supporter-announcements": {
         name: "Supporter Announcements",

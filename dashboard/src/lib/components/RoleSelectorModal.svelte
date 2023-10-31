@@ -1,35 +1,38 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import { roleSelectorModalStore } from "$lib/stores";
     import { fuzzy } from "$lib/utils";
-    import { getModalStore } from "@skeletonlabs/skeleton";
     import type { TFRole } from "shared";
-    import type { SvelteComponent } from "svelte";
-    import Button from "./Button.svelte";
+    import Modal from "./Modal.svelte";
 
-    export let parent: SvelteComponent;
+    $: _ = $roleSelectorModalStore;
 
-    const modalStore = getModalStore();
-    let { showManaged, showHigher, showEveryone, select, selected } = $modalStore[0]?.meta ?? { selected: [] };
-
-    const roles: TFRole[] = $page.data.roles;
+    $: showManaged = _?.showManaged;
+    $: showHigher = _?.showHigher;
+    $: showEveryone = _?.showEveryone;
+    $: select = _?.select;
+    $: selected = _?.selected;
 
     let input: string;
 
+    let roles: TFRole[];
+    $: roles = $page.data.roles ?? [];
+
     function pick(id: string) {
-        select(id, (x: any) => (selected = x));
+        select?.(id, (x: any) => (selected = x));
     }
 </script>
 
-<div class="w-screen mx-[calc(max(5%,50%-640px))]">
-    <div class="h-[50vh] p-8 grid grid-rows-[auto_1fr_auto] gap-8 rounded-lg overflow-y-auto bg-surface-300 dark:bg-surface-600">
+<Modal open={!!$roleSelectorModalStore} on:close={() => ($roleSelectorModalStore = null)}>
+    <div class="w-[calc(90vw-4rem)] lg:w-[75vw] min-h-[calc(75vh-7rem)] p-8">
         <input type="search" class="input" placeholder="Search Roles" bind:value={input} />
         <div>
-            <div class="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-1 p-2 overflow-y-auto">
+            <div class="grid grid-cols-[repeat(auto-fill,minmax(min(180px,100%),1fr))] gap-1 p-4 overflow-y-auto">
                 {#each roles as role}
                     {#if (showManaged || !role.managed) && (showHigher || !role.higher) && (showEveryone || !role.everyone) && fuzzy(role.name, input)}
                         <button
                             class="btn block"
-                            style={selected.includes(role.id)
+                            style={selected?.includes(role.id)
                                 ? `background-color: #${role.color.toString(16).padStart(6, "0")}; color: ${
                                       (role.color >> 16) * 0.299 + ((role.color >> 8) & 0xff) * 0.587 + (role.color & 0xff) * 0.114 > 186
                                           ? "#000000"
@@ -48,8 +51,5 @@
                 {/each}
             </div>
         </div>
-        <div class="flex justify-end">
-            <Button on:click={parent.onClose}>{parent.buttonTextCancel}</Button>
-        </div>
     </div>
-</div>
+</Modal>

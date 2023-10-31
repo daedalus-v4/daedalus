@@ -1,11 +1,9 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import { getModalStore } from "@skeletonlabs/skeleton";
+    import { roleSelectorModalStore } from "$lib/stores";
     import type { TFRole } from "shared";
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
-
-    const modalStore = getModalStore();
 
     export let showManaged: boolean = false;
     export let showHigher: boolean = false;
@@ -16,23 +14,18 @@
     const map: Record<string, TFRole> = Object.fromEntries($page.data.roles.map((x: TFRole) => [x.id, x]));
 
     function open() {
-        modalStore.trigger({
-            type: "component",
-            component: "RoleSelectorModalBody",
-            buttonTextCancel: "Close",
-            meta: {
-                showManaged,
-                showHigher,
-                showEveryone,
-                select(id: string, set: any) {
-                    if (selected === id) {
-                        selected = null;
-                        set([]);
-                    } else set([(selected = id)]);
-                },
-                selected: selected ? [selected] : [],
+        $roleSelectorModalStore = {
+            showManaged,
+            showHigher,
+            showEveryone,
+            select(id, set) {
+                if (selected === id) {
+                    selected = null;
+                    set([]);
+                } else set([(selected = id)]);
             },
-        });
+            selected: selected ? [selected] : [],
+        };
     }
 </script>
 

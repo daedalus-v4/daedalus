@@ -4,7 +4,7 @@
     import type { TFChannel } from "shared";
     import Icon from "./Icon.svelte";
 
-    export let open: boolean;
+    let open: boolean;
     export let channel: TFChannel;
     export let input: string;
     export let pick: (id: string) => any;

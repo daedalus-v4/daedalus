@@ -1,24 +1,20 @@
 <script lang="ts">
-    import ChannelSelectorModalBody from "$lib/components/ChannelSelectorModalBody.svelte";
+    import ChannelSelectorModal from "$lib/components/ChannelSelectorModal.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
-    import PermissionModalBody from "$lib/components/PermissionModalBody.svelte";
-    import RoleSelectorModalBody from "$lib/components/RoleSelectorModalBody.svelte";
+    import PermissionModal from "$lib/components/PermissionModal.svelte";
+    import RoleSelectorModal from "$lib/components/RoleSelectorModal.svelte";
     import UpButton from "$lib/components/UpButton.svelte";
     import { arrow, autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
-    import { Modal, initializeStores, storePopup } from "@skeletonlabs/skeleton";
+    import { initializeStores, storePopup } from "@skeletonlabs/skeleton";
     import "../app.postcss";
 
     initializeStores();
-    storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+    $storePopup = { computePosition, autoUpdate, flip, shift, offset, arrow };
 </script>
 
-<Modal
-    components={{
-        PermissionModalBody: { ref: PermissionModalBody },
-        RoleSelectorModalBody: { ref: RoleSelectorModalBody },
-        ChannelSelectorModalBody: { ref: ChannelSelectorModalBody },
-    }}
-/>
+<PermissionModal />
+<RoleSelectorModal />
+<ChannelSelectorModal />
 
 <Navbar />
 <UpButton />

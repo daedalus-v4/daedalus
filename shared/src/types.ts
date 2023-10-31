@@ -72,6 +72,22 @@ export type DbSettings = {
     blockedChannels: string[];
 };
 
+export type DbPermissionsSettings = {
+    modules: Record<string, { enabled: boolean }>;
+    commands: Record<
+        string,
+        {
+            enabled: boolean;
+            ignoreDefaultPermissions: boolean;
+            allowedRoles: string[];
+            blockedRoles: string[];
+            restrictChannels: boolean;
+            allowedChannels: string[];
+            blockedChannels: string[];
+        }
+    >;
+};
+
 export type DbLoggingSettings = {
     defaultChannelOrWebhook: string | null;
     ignoredChannels: string[];

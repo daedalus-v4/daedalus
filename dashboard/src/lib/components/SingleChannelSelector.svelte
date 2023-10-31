@@ -1,32 +1,25 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import { icons } from "$lib/data";
-    import { getModalStore } from "@skeletonlabs/skeleton";
+    import { channelSelectorModalStore } from "$lib/stores";
     import type { TFChannel } from "shared";
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
-
-    const modalStore = getModalStore();
 
     export let selected: string | null;
 
     const map: Record<string, TFChannel> = Object.fromEntries($page.data.channels.map((x: TFChannel) => [x.id, x]));
 
     function open() {
-        modalStore.trigger({
-            type: "component",
-            component: "ChannelSelectorModalBody",
-            buttonTextCancel: "Close",
-            meta: {
-                select(id: string, set: any) {
-                    if (selected === id) {
-                        selected = null;
-                        set([]);
-                    } else set([(selected = id)]);
-                },
-                selected: selected ? [selected] : [],
+        $channelSelectorModalStore = {
+            select(id: string, set: any) {
+                if (selected === id) {
+                    selected = null;
+                    set([]);
+                } else set([(selected = id)]);
             },
-        });
+            selected: selected ? [selected] : [],
+        };
     }
 </script>
 
