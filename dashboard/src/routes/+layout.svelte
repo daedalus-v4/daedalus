@@ -1,4 +1,5 @@
 <script lang="ts">
+    import ChannelSelectorModalBody from "$lib/components/ChannelSelectorModalBody.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
     import PermissionModalBody from "$lib/components/PermissionModalBody.svelte";
     import RoleSelectorModalBody from "$lib/components/RoleSelectorModalBody.svelte";
@@ -11,7 +12,13 @@
     storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
 
-<Modal components={{ PermissionModalBody: { ref: PermissionModalBody }, RoleSelectorModalBody: { ref: RoleSelectorModalBody } }} />
+<Modal
+    components={{
+        PermissionModalBody: { ref: PermissionModalBody },
+        RoleSelectorModalBody: { ref: RoleSelectorModalBody },
+        ChannelSelectorModalBody: { ref: ChannelSelectorModalBody },
+    }}
+/>
 
 <Navbar />
 <UpButton />

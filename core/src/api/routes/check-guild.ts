@@ -44,8 +44,6 @@ export default (app: App) =>
 
             const me = await guild.members.fetchMe();
 
-            const channelMap: Record<string, TFChannel[]> = {};
-
             return {
                 valid: true,
                 roles: guild.roles.cache
@@ -67,9 +65,11 @@ export default (app: App) =>
                     const output: TFChannel = {
                         id: channel.id,
                         type: channel.type,
+                        position: "position" in channel ? channel.position : 0,
                         name: channel.name,
                     };
 
+                    if (channel.parentId) output.parent = channel.parentId;
                     if (!channel.permissionsFor(me).has(PermissionFlagsBits.SendMessages)) output.readonly = true;
 
                     return output;
@@ -94,14 +94,14 @@ export default (app: App) =>
                     }),
                 ),
                 channels: t.Array(
-                    t.Array(
-                        t.Object({
-                            id: t.String(),
-                            type: t.Integer(),
-                            name: t.String(),
-                            readonly: t.Optional(t.Boolean()),
-                        }),
-                    ),
+                    t.Object({
+                        id: t.String(),
+                        type: t.Integer(),
+                        position: t.Integer(),
+                        name: t.String(),
+                        parent: t.Optional(t.String()),
+                        readonly: t.Optional(t.Boolean()),
+                    }),
                 ),
             }),
         },

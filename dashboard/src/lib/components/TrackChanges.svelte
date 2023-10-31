@@ -41,6 +41,8 @@
     beforeNavigate(({ cancel }) => unsaved && (confirm("Are you sure you want to leave this page? Unsaved changes will be lost.") || cancel()));
 </script>
 
+<svelte:window on:keydown={(e) => (e.ctrlKey || e.metaKey) && e.key === "s" && [e.preventDefault(), unsaved && onsave()]} />
+
 <div
     id="track-changes"
     class="z-10 fixed left-0 right-0 {unsaved

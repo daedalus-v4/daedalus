@@ -34,6 +34,8 @@ export async function connect(uri: string, name: string) {
     _db = client.db(name);
 }
 
+type WithGuild<T> = T & { guild: string };
+
 class Database {
     public get counters() {
         return _db.collection<{ sequence: string; value: number }>("counters");
@@ -48,71 +50,71 @@ class Database {
     }
 
     public get guildSettings() {
-        return _db.collection<DbSettings>("guild_settings");
+        return _db.collection<WithGuild<DbSettings>>("guild_settings");
     }
 
     public get loggingSettings() {
-        return _db.collection<DbLoggingSettings>("logging_settings");
+        return _db.collection<WithGuild<DbLoggingSettings>>("logging_settings");
     }
 
     public get welcomeSettings() {
-        return _db.collection<DbWelcomeSettings>("welcome_settings");
+        return _db.collection<WithGuild<DbWelcomeSettings>>("welcome_settings");
     }
 
     public get supporterAnnouncementSettings() {
-        return _db.collection<DbSupporterAnnouncementsSettings>("supporter_announcements_settings");
+        return _db.collection<WithGuild<DbSupporterAnnouncementsSettings>>("supporter_announcements_settings");
     }
 
     public get xpSettings() {
-        return _db.collection<DbXpSettings>("xp_settings");
+        return _db.collection<WithGuild<DbXpSettings>>("xp_settings");
     }
 
     public get reactionRolesSettings() {
-        return _db.collection<DbReactionRolesSettings>("reaction_roles_settings");
+        return _db.collection<WithGuild<DbReactionRolesSettings>>("reaction_roles_settings");
     }
 
     public get starboardSettings() {
-        return _db.collection<DbStarboardSettings>("starboard_settings");
+        return _db.collection<WithGuild<DbStarboardSettings>>("starboard_settings");
     }
 
     public get automodSettings() {
-        return _db.collection<DbAutomodSettings>("automod_settings");
+        return _db.collection<WithGuild<DbAutomodSettings>>("automod_settings");
     }
 
     public get stickyRolesSettings() {
-        return _db.collection<DbStickyRolesSettings>("sticky_roles_settings");
+        return _db.collection<WithGuild<DbStickyRolesSettings>>("sticky_roles_settings");
     }
 
     public get customRolesSettings() {
-        return _db.collection<DbCustomRolesSettings>("custom_roles_settings");
+        return _db.collection<WithGuild<DbCustomRolesSettings>>("custom_roles_settings");
     }
 
     public get statsChannelsSettings() {
-        return _db.collection<DbStatsChannelsSettings>("stats_channels_settings");
+        return _db.collection<WithGuild<DbStatsChannelsSettings>>("stats_channels_settings");
     }
 
     public get autoresponderSettings() {
-        return _db.collection<DbAutoresponderSettings>("autoresponder_settings");
+        return _db.collection<WithGuild<DbAutoresponderSettings>>("autoresponder_settings");
     }
 
     public get modmailSettings() {
-        return _db.collection<DbModmailSettings>("modmail_settings");
+        return _db.collection<WithGuild<DbModmailSettings>>("modmail_settings");
     }
 
     public get ticketsSettings() {
-        return _db.collection<DbTicketsSettings>("tickets_settings");
+        return _db.collection<WithGuild<DbTicketsSettings>>("tickets_settings");
     }
 
     public get nukeguardSettings() {
-        return _db.collection<DbNukeguardSettings>("nukeguard_settings");
+        return _db.collection<WithGuild<DbNukeguardSettings>>("nukeguard_settings");
     }
 
     public get suggestionsSettings() {
-        return _db.collection<DbSuggestionsSettings>("suggestions_settings");
+        return _db.collection<WithGuild<DbSuggestionsSettings>>("suggestions_settings");
     }
 
     public get coOpSettings() {
-        return _db.collection<DbCoOpSettings>("co_op_settings");
+        return _db.collection<WithGuild<DbCoOpSettings>>("co_op_settings");
     }
 
     public get countSettings() {

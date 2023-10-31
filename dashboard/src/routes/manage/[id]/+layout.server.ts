@@ -15,7 +15,7 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
         headers: { "Content-Type": "application/json" },
     });
 
-    const response: { valid: boolean; roles: TFRole[]; channels: TFChannel[][] } = await request.json();
+    const response: { valid: boolean; roles: TFRole[]; channels: TFChannel[] } = await request.json();
 
     if (!response) throw redirect(303, "/manage?reload");
 
@@ -24,10 +24,26 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
 
     const fe = { guild: params.id, ...response };
 
+    const roots: TFChannel[] = [];
+    const map = Object.fromEntries(response.channels.map((ch) => [ch.id, ch]));
+
+    for (const channel of response.channels)
+        if (!channel.parent) roots.push(channel);
+        else (map[channel.parent].children ??= []).push(channel);
+
+    function sortChannels(list: TFChannel[]) {
+        list.sort((x, y) => x.position - y.position);
+        for (const { children } of list) if (children) sortChannels(children);
+    }
+
+    sortChannels(roots);
+    roots.sort((x, y) => (x.type === 4 ? 1 : 0) - (y.type === 4 ? 1 : 0));
+
     if (key === "-")
         return {
             roles: response.roles,
             channels: response.channels,
+            rootChannels: roots,
             data: await b2fGuildSettings(fe, await db.guildSettings.findOne({ guild: params.id })),
         };
 };

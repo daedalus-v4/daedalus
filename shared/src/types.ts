@@ -52,12 +52,14 @@ export type TFRole = {
 export type TFChannel = {
     id: string;
     type: ChannelType;
+    position: number;
     name: string;
+    parent?: string;
     readonly?: boolean;
+    children?: TFChannel[];
 };
 
 export type DbSettings = {
-    guild: string;
     dashboardPermissions: "owner" | "admin" | "manager";
     embedColor: number;
     muteRole: string | null;
@@ -71,7 +73,6 @@ export type DbSettings = {
 };
 
 export type DbLoggingSettings = {
-    guild: string;
     defaultChannelOrWebhook: string | null;
     ignoredChannels: string[];
     filesOnly: boolean;
@@ -92,13 +93,11 @@ export type DbLoggingSettings = {
 };
 
 export type DbWelcomeSettings = {
-    guild: string;
     channel: string | null;
     message: MessageData;
 };
 
 export type DbSupporterAnnouncementsSettings = {
-    guild: string;
     entries: {
         channel: string | null;
         boosts: boolean;
@@ -108,7 +107,6 @@ export type DbSupporterAnnouncementsSettings = {
 };
 
 export type DbXpSettings = {
-    guild: string;
     blockedRoles: string[];
     blockedChannels: string[];
     bonusChannels: { channel: string | null; multiplier: number }[];
@@ -122,7 +120,6 @@ export type DbXpSettings = {
 };
 
 export type DbReactionRolesSettings = {
-    guild: string;
     entries: {
         name: string;
         addReactionsToExistingMessage: boolean;
@@ -138,7 +135,6 @@ export type DbReactionRolesSettings = {
 };
 
 export type DbStarboardSettings = {
-    guild: string;
     detectEmoji: string | null;
     defaultChannel: string | null;
     defaultThreshold: number;
@@ -153,7 +149,6 @@ export type DbStarboardSettings = {
 };
 
 export type DbAutomodSettings = {
-    guild: string;
     ignoredChannels: string[];
     ignoredRoles: string[];
     defaultChannel: string | null;
@@ -208,19 +203,16 @@ export type DbAutomodSettings = {
 };
 
 export type DbStickyRolesSettings = {
-    guild: string;
     exclude: string[];
 };
 
 export type DbCustomRolesSettings = {
-    guild: string;
     allowBoosters: boolean;
     allowedRoles: string[];
     anchor: string | null;
 };
 
 export type DbStatsChannelsSettings = {
-    guild: string;
     channels: {
         channel: string | null;
         format: string;
@@ -228,7 +220,6 @@ export type DbStatsChannelsSettings = {
 };
 
 export type DbAutoresponderSettings = {
-    guild: string;
     onlyInAllowedChannels: boolean;
     onlyToAllowedRoles: boolean;
     allowedChannels: string[];
@@ -255,7 +246,6 @@ export type DbAutoresponderSettings = {
 };
 
 export type DbModmailSettings = {
-    guild: string;
     logChannel: string | null;
     category: string | null;
     pingRoles: string[];
@@ -268,7 +258,6 @@ export type DbModmailSettings = {
 };
 
 export type DbTicketsSettings = {
-    guild: string;
     prompts: {
         name: string;
         channel: string | null;
@@ -287,7 +276,6 @@ export type DbTicketsSettings = {
 };
 
 export type DbNukeguardSettings = {
-    guild: string;
     alertChannel: string | null;
     pingRoles: string[];
     pingHere: boolean;
@@ -318,20 +306,17 @@ export type DbNukeguardSettings = {
 };
 
 export type DbSuggestionsSettings = {
-    guild: string;
     outputChannel: string | null;
     anonymous: boolean;
 };
 
 export type DbCoOpSettings = {
-    guild: string;
     worldLevelRoles: (string | null)[];
     regionRoles: (string | null)[];
     helperRoles: (string | null)[];
 };
 
 export type DbCountSettings = {
-    guild: string;
     channels: {
         channel: string | null;
         interval: number;
@@ -356,7 +341,6 @@ type Giveaway = {
 };
 
 export type DbGiveawaysSettings = {
-    guild: string;
     template: Giveaway;
     giveaways: (Giveaway & {
         name: string;
@@ -365,19 +349,16 @@ export type DbGiveawaysSettings = {
 };
 
 export type DbReportsSettings = {
-    guild: string;
     outputChannel: string | null;
     anonymous: boolean;
     viewRoles: string[];
 };
 
 export type DbPollsSettings = {
-    guild: string;
     qotdRole: string | null;
 };
 
 export type DbUtilitySettings = {
-    guild: string;
     blockRolesByDefault: boolean;
     allowedRoles: string[];
     blockedRoles: string[];

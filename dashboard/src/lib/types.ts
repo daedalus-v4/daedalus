@@ -3,11 +3,10 @@ import type { TFChannel, TFRole } from "shared";
 export type FEData = {
     guild: string;
     roles: TFRole[];
-    channels: TFChannel[][];
+    channels: TFChannel[];
 };
 
 export type FESettings = {
-    guild: string;
     dashboardPermissions: "owner" | "admin" | "manager";
     embedColor: string;
     muteRole: string | null;

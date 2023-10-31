@@ -6,3 +6,11 @@
 * {
     scrollbar-gutter: stable;
 }
+
+.modal *:focus:not([tabindex="-1"]):not(.input):not(.textarea):not(.select):not(.input-group) {
+    outline: none;
+}
+
+.error {
+    @apply bg-error-300/75 text-error-600 dark:bg-error-600/75 dark:text-error-200;
+}

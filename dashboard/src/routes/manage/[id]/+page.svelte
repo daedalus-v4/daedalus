@@ -1,21 +1,30 @@
 <script lang="ts">
+    import { browser } from "$app/environment";
     import { page } from "$app/stores";
     import A from "$lib/components/A.svelte";
+    import ChannelSelector from "$lib/components/ChannelSelector.svelte";
+    import InputHint from "$lib/components/InputHint.svelte";
     import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
     import PermissionLink from "$lib/components/PermissionLink.svelte";
     import RoleSelector from "$lib/components/RoleSelector.svelte";
     import SingleRoleSelector from "$lib/components/SingleRoleSelector.svelte";
     import TrackChanges from "$lib/components/TrackChanges.svelte";
-    import { diffGuildSettings } from "$lib/modules";
+    import { diffGuildSettings, f2bGuildSettings } from "$lib/modules";
     import type { FESettings } from "$lib/types";
     import { SlideToggle } from "@skeletonlabs/skeleton";
 
     let base: FESettings = $page.data.data;
-    let data = structuredClone(base);
+    let data = browser ? structuredClone(base) : base;
 
     async function save() {
-        throw "Not Implemented.";
+        const request = await fetch(`/manage/${$page.params.id}/save/-`, {
+            method: "POST",
+            body: JSON.stringify(await f2bGuildSettings(data)),
+            headers: { "Content-Type": "application/json" },
+        });
+
+        if (!request.ok) throw await request.text();
     }
 </script>
 
@@ -45,7 +54,7 @@
         <div class="flex items-center">
             <input type="color" class="input" bind:value={data.embedColor} />
         </div>
-        <input type="text" class="input {data.embedColor.match(/^#\d{6}$/) ? '' : 'input-error'}" bind:value={data.embedColor} />
+        <input type="text" class="input {data.embedColor.match(/^#[0-9a-f]{6}$/i) ? '' : 'error'}" bind:value={data.embedColor} />
     </div>
 </Panel>
 
@@ -64,7 +73,8 @@
         If this is set, this content will be included at the end of every ban message sent to users, including automod actions. For example, you can link your
         ban appeal form here.
     </P>
-    <input type="text" class="input" placeholder="Ban Footer" bind:value={data.banFooter} />
+    <textarea rows="4" class="textarea {data.banFooter.trim().length > 1024 ? 'error' : ''}" placeholder="Ban Footer" bind:value={data.banFooter} />
+    <InputHint>{data.banFooter.trim().length} / 1024</InputHint>
 </Panel>
 
 <Panel>
@@ -88,4 +98,21 @@
         <span class="text-surface-600 dark:text-surface-300">(This overrides allowed roles.)</span>
     </span>
     <RoleSelector bind:selected={data.blockedRoles} />
+    <h4 class="h4">Channel Permissions</h4>
+    <div class="flex items-center gap-4">
+        <SlideToggle name="" size="sm" bind:checked={data.allowlistOnly} />
+        <span><b>Allowlist Only</b> (commands can only be used in allowed channels &mdash; cannot be overridden)</span>
+    </div>
+    <div class="flex items-center gap-2">
+        <h5 class="h5">Allowed Channels</h5>
+    </div>
+    <P>
+        If a channel and its parent category differ, the channel's settings will take precedence. If a channel is both allowed and blocked at the same level, it
+        will be blocked.
+    </P>
+    <ChannelSelector bind:selected={data.allowedChannels} />
+    <div class="flex items-center gap-2">
+        <h5 class="h5">Blocked Channels</h5>
+    </div>
+    <ChannelSelector bind:selected={data.blockedChannels} />
 </Panel>
