@@ -13,7 +13,6 @@
 
     export let selected: string | null;
 
-    const indexes: Record<string, number> = Object.fromEntries($page.data.roles.map((x: TFRole, i: number) => [x.id, i]));
     const map: Record<string, TFRole> = Object.fromEntries($page.data.roles.map((x: TFRole) => [x.id, x]));
 
     function open() {

@@ -39,13 +39,15 @@
     {#each selected as id}
         <span
             class="badge px-4 text-sm flex rounded-full"
-            style="color: #{map[id].color.toString(16).padStart(6, '0')}; outline: 1px solid #{map[id].color.toString(16).padStart(6, '0')}"
+            style="color: #{(map[id]?.color ?? 0xff0000).toString(16).padStart(6, '0')}; outline: 1px solid #{(map[id]?.color ?? 0xff0000)
+                .toString(16)
+                .padStart(6, '0')}"
         >
             <button on:click={() => (selected = selected.filter((x) => x !== id))}>
                 <Icon icon="circle-xmark" />
             </button>
             <span class="text-surface-900 dark:text-surface-50">
-                {map[id].name}
+                {map[id]?.name ?? `Invalid Role: ${id}`}
             </span>
         </span>
     {/each}

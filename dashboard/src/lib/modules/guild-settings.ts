@@ -1,11 +1,17 @@
+import { sortRoles } from "$lib/utils.js";
 import type { DbSettings } from "shared";
-import type { FESettings } from "../types.js";
+import type { FEData, FESettings } from "../types.js";
 
-export async function b2fGuildSettings(guild: string, data: DbSettings | null): Promise<FESettings> {
+export async function b2fGuildSettings(fe: FEData, data: DbSettings | null): Promise<FESettings> {
+    if (data) {
+        sortRoles(data.allowedRoles, fe.roles);
+        sortRoles(data.blockedRoles, fe.roles);
+    }
+
     return data
         ? { ...data, embedColor: `#${data.embedColor.toString(16).padStart(6, "0")}` }
         : {
-              guild,
+              guild: fe.guild,
               dashboardPermissions: "manager",
               embedColor: "#009688",
               muteRole: null,

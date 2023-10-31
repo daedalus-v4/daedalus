@@ -1,3 +1,5 @@
+import type { TFRole } from "shared";
+
 export function fuzzy(string: string, query: string | undefined): boolean {
     if (!query) return true;
 
@@ -9,4 +11,9 @@ export function fuzzy(string: string, query: string | undefined): boolean {
         i++;
     }
     return true;
+}
+
+export function sortRoles(input: string[], roles: TFRole[]) {
+    const indexes = Object.fromEntries(roles.map((x, i) => [x, i]));
+    return input.sort((x, y) => indexes[x] - indexes[y]);
 }

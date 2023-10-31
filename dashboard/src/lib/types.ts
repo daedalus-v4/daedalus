@@ -1,3 +1,11 @@
+import type { TFChannel, TFRole } from "shared";
+
+export type FEData = {
+    guild: string;
+    roles: TFRole[];
+    channels: TFChannel[][];
+};
+
 export type FESettings = {
     guild: string;
     dashboardPermissions: "owner" | "admin" | "manager";

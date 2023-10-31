@@ -75,15 +75,15 @@
     </P>
     <h4 class="h4">Role Permissions</h4>
     <span class="flex items-center gap-4">
-        <SlideToggle name="" bind:checked={data.modOnly} />
+        <SlideToggle name="" size="sm" bind:checked={data.modOnly} />
         <span><b>Entire Bot Mod Only</b> (only allowed roles may use any commands &mdash; cannot be overridden)</span>
     </span>
-    <span class="flex items-center gap-4">
+    <span class="flex items-center gap-2">
         <h5 class="h5">Allowed Roles</h5>
         <span class="text-surface-600 dark:text-surface-300">(This is overridden by blocked roles.)</span>
     </span>
     <RoleSelector bind:selected={data.allowedRoles} />
-    <span class="flex items-center gap-4">
+    <span class="flex items-center gap-2">
         <h5 class="h5">Blocked Roles</h5>
         <span class="text-surface-600 dark:text-surface-300">(This overrides allowed roles.)</span>
     </span>

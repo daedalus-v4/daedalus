@@ -44,6 +44,8 @@ export default (app: App) =>
 
             const me = await guild.members.fetchMe();
 
+            const channelMap: Record<string, TFChannel[]> = {};
+
             return {
                 valid: true,
                 roles: guild.roles.cache
@@ -75,11 +77,32 @@ export default (app: App) =>
             };
         },
         {
-            body: t.Object({ user: t.String(), guild: t.String() }),
+            body: t.Object({
+                user: t.String(),
+                guild: t.String(),
+            }),
             response: t.Object({
                 valid: t.Boolean(),
-                roles: t.Array(t.Object({ id: t.String(), name: t.String(), color: t.Integer({ minimum: 0, maximum: 0xffffff }) })),
-                channels: t.Array(t.Object({})),
+                roles: t.Array(
+                    t.Object({
+                        id: t.String(),
+                        name: t.String(),
+                        color: t.Integer({ minimum: 0, maximum: 0xffffff }),
+                        everyone: t.Optional(t.Boolean()),
+                        managed: t.Optional(t.Boolean()),
+                        higher: t.Optional(t.Boolean()),
+                    }),
+                ),
+                channels: t.Array(
+                    t.Array(
+                        t.Object({
+                            id: t.String(),
+                            type: t.Integer(),
+                            name: t.String(),
+                            readonly: t.Optional(t.Boolean()),
+                        }),
+                    ),
+                ),
             }),
         },
     );

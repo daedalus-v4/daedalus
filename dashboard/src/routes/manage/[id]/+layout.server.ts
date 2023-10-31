@@ -15,17 +15,19 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
         headers: { "Content-Type": "application/json" },
     });
 
-    const response: { valid: boolean; roles: TFRole[]; channels: TFChannel[] } = await request.json();
+    const response: { valid: boolean; roles: TFRole[]; channels: TFChannel[][] } = await request.json();
 
     if (!response) throw redirect(303, "/manage?reload");
 
     let key = url.pathname.split("/").at(-1) ?? "-";
     if (key.match(/^\d+$/)) key = "-";
 
+    const fe = { guild: params.id, ...response };
+
     if (key === "-")
         return {
             roles: response.roles,
             channels: response.channels,
-            data: await b2fGuildSettings(params.id, await db.guildSettings.findOne({ guild: params.id })),
+            data: await b2fGuildSettings(fe, await db.guildSettings.findOne({ guild: params.id })),
         };
 };
