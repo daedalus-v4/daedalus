@@ -1,5 +1,8 @@
 import { API } from "$env/static/private";
+import { b2fGuildSettings } from "$lib/modules.js";
 import { redirect } from "@sveltejs/kit";
+import type { TFChannel, TFRole } from "shared";
+import { db } from "shared/db.js";
 import type { LayoutServerLoad } from "./$types.js";
 
 export const load: LayoutServerLoad = async ({ locals, params, url }) => {
@@ -12,7 +15,17 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
         headers: { "Content-Type": "application/json" },
     });
 
-    const response = await request.json();
+    const response: { valid: boolean; roles: TFRole[]; channels: TFChannel[] } = await request.json();
 
     if (!response) throw redirect(303, "/manage?reload");
+
+    let key = url.pathname.split("/").at(-1) ?? "-";
+    if (key.match(/^\d+$/)) key = "-";
+
+    if (key === "-")
+        return {
+            roles: response.roles,
+            channels: response.channels,
+            data: await b2fGuildSettings(params.id, await db.guildSettings.findOne({ guild: params.id })),
+        };
 };

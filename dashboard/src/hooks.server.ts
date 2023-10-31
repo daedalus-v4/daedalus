@@ -1,8 +1,16 @@
-import { DISCORD_API } from "$env/static/private";
+import { DB_NAME, DB_URI, DISCORD_API } from "$env/static/private";
 import { PUBLIC_DOMAIN } from "$env/static/public";
 import type { Handle } from "@sveltejs/kit";
+import { connect } from "shared/db.js";
+
+let connected = false;
 
 export const handle: Handle = async ({ event, resolve }) => {
+    if (!connected) {
+        await connect(DB_URI, DB_NAME);
+        connected = true;
+    }
+
     console.log(`[${event.request.method}] ${event.url.pathname}`);
     if (event.url.pathname.startsWith("/auth/")) return await resolve(event);
 

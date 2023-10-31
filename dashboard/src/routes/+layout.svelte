@@ -1,7 +1,7 @@
 <script lang="ts">
-    import Container from "$lib/components/Container.svelte";
     import Navbar from "$lib/components/Navbar.svelte";
     import PermissionModalBody from "$lib/components/PermissionModalBody.svelte";
+    import RoleSelectorModalBody from "$lib/components/RoleSelectorModalBody.svelte";
     import UpButton from "$lib/components/UpButton.svelte";
     import { arrow, autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
     import { Modal, initializeStores, storePopup } from "@skeletonlabs/skeleton";
@@ -11,7 +11,7 @@
     storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 </script>
 
-<Modal components={{ PermissionModalBody: { ref: PermissionModalBody } }} />
+<Modal components={{ PermissionModalBody: { ref: PermissionModalBody }, RoleSelectorModalBody: { ref: RoleSelectorModalBody } }} />
 
 <Navbar />
 <UpButton />
@@ -21,13 +21,13 @@
             <slot />
         </div>
         <div class="bg-surface-600 dark:bg-surface-900 text-surface-50">
-            <Container>
+            <div class="h-16 flex items-center px-4">
                 <span class="text-lg">
                     &copy; 2023 hyper-neutrino &mdash;
-                    <a href="/terms" class="text-secondary-400">Terms of Service</a> &mdash;
-                    <a href="/privacy" class="text-secondary-400">Privacy Policy</a>
+                    <a href="/terms" class="text-secondary-400">Terms <span class="hidden sm:inline">of Service</span></a> &mdash;
+                    <a href="/privacy" class="text-secondary-400">Privacy <span class="hidden sm:inline">Policy</span></a>
                 </span>
-            </Container>
+            </div>
         </div>
     </div>
 </div>

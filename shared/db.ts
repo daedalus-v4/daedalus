@@ -1,5 +1,4 @@
 import { Db, MongoClient } from "mongodb";
-import pino from "pino";
 import {
     DbAutomodSettings,
     DbAutoresponderSettings,
@@ -26,16 +25,13 @@ import {
 } from ".";
 import { PremiumTier } from "./src/premium.js";
 
-const log = pino({ level: Bun.env.LEVEL ?? (Bun.env.PRODUCTION ? "info" : "trace") });
-
 export let _db: Db;
 export let client: MongoClient;
 
-export async function connect() {
-    client = new MongoClient(Bun.env.DB_URI!);
+export async function connect(uri: string, name: string) {
+    client = new MongoClient(uri);
     await client.connect();
-    _db = client.db(Bun.env.DB_NAME);
-    log.info("DB connected.");
+    _db = client.db(name);
 }
 
 class Database {

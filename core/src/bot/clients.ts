@@ -1,4 +1,4 @@
-import { Client, Events } from "discord.js";
+import { Client, Events, IntentsBitField } from "discord.js";
 import { log } from "../lib/log.js";
 import argentium from "./argentium.js";
 
@@ -8,7 +8,7 @@ export async function getClientFromToken(token: string) {
     if (!clientCache[token]) {
         log.info(`Obtaining client ${token.slice(0, 5)}...${token.slice(-5)}`);
 
-        clientCache[token] = new Client({ intents: 0 });
+        clientCache[token] = new Client({ intents: IntentsBitField.Flags.Guilds });
         await clientCache[token].login(token);
 
         await argentium.preApply(clientCache[token]);

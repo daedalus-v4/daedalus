@@ -15,7 +15,7 @@
 </script>
 
 <Container size="small">
-    <div class="bg-surface-400 dark:bg-surface-600 p-8 flex flex-col items-end gap-8 rounded-lg max-h-[32vh] overflow-y-auto">
+    <div class="bg-surface-300 dark:bg-surface-600 p-8 flex flex-col items-end gap-8 rounded-lg max-h-[32vh] overflow-y-auto">
         <P>
             {@html permissions[key]?.description}
         </P>

@@ -6,6 +6,7 @@
     import Header from "$lib/components/Header.svelte";
     import Icon from "$lib/components/Icon.svelte";
     import Loading from "$lib/components/Loading.svelte";
+    import invite from "$lib/invite";
     import { fuzzy } from "$lib/utils";
     import type { DDLGuild } from "shared";
     import { onMount } from "svelte";
@@ -104,7 +105,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-1">
         {#each servers ?? [] as server}
             {@const level = server.owner ? 0 : BigInt(server.permissions) & 8n ? 1 : BigInt(server.permissions) & 32n ? 2 : !server.notIn ? 3 : 4}
-            <a href={server.hasBot ? `/manage/${server.id}` : "/invite"} class={server.hide ? "hidden" : ""}>
+            <a href={server.hasBot ? `/manage/${server.id}` : invite(server.id)} class={server.hide ? "hidden" : ""} target={server.hasBot ? null : "_blank"}>
                 <div
                     class="card p-4 grid items-center gap-4 h-24 {server.hasBot ? 'bg-primary-400 dark:bg-primary-600' : 'bg-surface-100 dark:bg-surface-600'}"
                     style="grid-template-columns: max-content 1fr"

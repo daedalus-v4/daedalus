@@ -1,3 +1,5 @@
+import { ChannelType } from "discord.js";
+
 export type ModuleData = Record<
     string,
     {
@@ -36,6 +38,22 @@ export type MessageData = {
         thumbnail: { url: string };
         footer: { text: string; iconURL: string };
     }[];
+};
+
+export type TFRole = {
+    id: string;
+    name: string;
+    color: number;
+    everyone?: boolean;
+    managed?: boolean;
+    higher?: boolean;
+};
+
+export type TFChannel = {
+    id: string;
+    type: ChannelType;
+    name: string;
+    readonly?: boolean;
 };
 
 export type DbSettings = {

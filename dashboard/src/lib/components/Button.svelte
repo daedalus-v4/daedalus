@@ -4,6 +4,8 @@
         medium: "bg-surface-300 dark:bg-surface-600",
         primary: "bg-primary-400 dark:bg-primary-500",
         "primary-text": "bg-surface-50 text-primary-800 dark:bg-surface-900 dark:text-primary-400",
+        "error-text": "bg-surface-50 text-error-400 dark:bg-surface-900 dark:text-error-400",
+        "error-text-only": "bg-transparent text-error-400 dark:text-error-400",
     } as const;
 </script>
 
@@ -15,4 +17,4 @@
     export { className as class };
 </script>
 
-<button class="{className} btn {styles[variant]} {bold ? 'font-bold' : ''} flex items-center gap-2" on:click><slot /></button>
+<button {...$$restProps} type="button" class="{className} btn {styles[variant]} {bold ? 'font-bold' : ''} flex items-center gap-2" on:click><slot /></button>

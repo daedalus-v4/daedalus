@@ -5,5 +5,5 @@ import { log } from "./lib/log.js";
 
 process.on("uncaughtException", (e) => log.fatal(e));
 
-await connect();
+await connect(Bun.env.DB_URI!, Bun.env.DB_NAME!);
 await getClientFromToken(Bun.env.TOKEN!);
