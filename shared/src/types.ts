@@ -72,7 +72,7 @@ export type DbSettings = {
     blockedChannels: string[];
 };
 
-export type DbPermissionsSettings = {
+export type DbModulesPermissionsSettings = {
     modules: Record<string, { enabled: boolean }>;
     commands: Record<
         string,

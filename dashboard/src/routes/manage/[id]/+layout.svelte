@@ -43,17 +43,6 @@
             </div>
             <div>Modules &amp; Permissions</div>
         </a>
-        <a
-            href="/manage/{id}/api"
-            class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam === 'api'
-                ? 'bg-black/10 dark:bg-white/5'
-                : ''} hover:bg-black/10 dark:hover:bg-white/5"
-        >
-            <div class="w-4 h-4">
-                <Icon icon="code" class="w-4 h-4" />
-            </div>
-            <div>API Tokens &amp; Settings</div>
-        </a>
         {#each [] as mid}
             {@const module = modules[mid]}
             <a

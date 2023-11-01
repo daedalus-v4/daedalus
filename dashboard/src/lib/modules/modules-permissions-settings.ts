@@ -1,4 +1,4 @@
-import { modules, type DbPermissionsSettings as DbModulesPermissionsSettings } from "shared";
+import { modules, type DbModulesPermissionsSettings as DbModulesPermissionsSettings } from "shared";
 import type { FEData, FEModulesPermissionsSettings } from "../types.js";
 import { defaults } from "./utils.js";
 

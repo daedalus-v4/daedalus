@@ -9,7 +9,7 @@ import {
     DbLoggingSettings,
     DbModmailSettings,
     DbNukeguardSettings,
-    DbPermissionsSettings,
+    DbModulesPermissionsSettings,
     DbPollsSettings,
     DbReactionRolesSettings,
     DbReportsSettings,
@@ -55,7 +55,7 @@ class Database {
     }
 
     public get modulesPermissionsSettings() {
-        return _db.collection<WithGuild<DbPermissionsSettings>>("modules_permissions_settings");
+        return _db.collection<WithGuild<DbModulesPermissionsSettings>>("modules_permissions_settings");
     }
 
     public get loggingSettings() {
