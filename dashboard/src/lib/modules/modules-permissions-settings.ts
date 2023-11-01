@@ -2,7 +2,7 @@ import { modules, type DbPermissionsSettings as DbModulesPermissionsSettings } f
 import type { FEData, FEModulesPermissionsSettings } from "../types.js";
 import { defaults } from "./utils.js";
 
-export async function b2fPermissionsSettings(fe: FEData, data: Partial<DbModulesPermissionsSettings> | null): Promise<FEModulesPermissionsSettings> {
+export async function b2fModulesPermissionsSettings(fe: FEData, data: Partial<DbModulesPermissionsSettings> | null): Promise<FEModulesPermissionsSettings> {
     return {
         modules: defaults<FEModulesPermissionsSettings["modules"]>(
             data?.modules,
@@ -30,10 +30,10 @@ export async function b2fPermissionsSettings(fe: FEData, data: Partial<DbModules
     };
 }
 
-export async function f2bPermissionsSettings(data: FEModulesPermissionsSettings): Promise<DbModulesPermissionsSettings> {
+export async function f2bModulesPermissionsSettings(data: FEModulesPermissionsSettings): Promise<DbModulesPermissionsSettings> {
     return data;
 }
 
-export function diffPermissionsSettings(x: FEModulesPermissionsSettings, y: FEModulesPermissionsSettings): boolean {
+export function diffModulesPermissionsSettings(x: FEModulesPermissionsSettings, y: FEModulesPermissionsSettings): boolean {
     return JSON.stringify(x) !== JSON.stringify(y);
 }

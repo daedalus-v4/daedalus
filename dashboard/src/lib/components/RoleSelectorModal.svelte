@@ -23,7 +23,7 @@
     }
 </script>
 
-<Modal open={!!$roleSelectorModalStore} on:close={() => ($roleSelectorModalStore = null)}>
+<Modal z={80} open={!!$roleSelectorModalStore} on:close={() => ($roleSelectorModalStore = null)}>
     <div class="w-[calc(90vw-4rem)] lg:w-[75vw] min-h-[calc(75vh-7rem)] p-8">
         <input type="search" class="input" placeholder="Search Roles" bind:value={input} />
         <div>

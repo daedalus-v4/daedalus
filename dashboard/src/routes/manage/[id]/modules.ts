@@ -1,5 +1,5 @@
-import { b2fGuildSettings, b2fPermissionsSettings, f2bGuildSettings, f2bPermissionsSettings } from "$lib/modules.js";
+import { b2fGuildSettings, b2fModulesPermissionsSettings, f2bGuildSettings, f2bModulesPermissionsSettings } from "$lib/modules.js";
 
-export const b2f = { "-": b2fGuildSettings, "modules-permissions": b2fPermissionsSettings };
+export const b2f = { "-": b2fGuildSettings, "modules-permissions": b2fModulesPermissionsSettings };
 
-export const f2b = { "-": f2bGuildSettings, "modules-permissions": f2bPermissionsSettings };
+export const f2b = { "-": f2bGuildSettings, "modules-permissions": f2bModulesPermissionsSettings };

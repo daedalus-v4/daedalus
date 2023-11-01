@@ -73,36 +73,40 @@
         Control permissions for the entire bot. To control permissions by each individual command, return to the server settings, go to a module and click
         "manage" on a command card to edit its permission overrides.
     </P>
-    <h4 class="h4">Role Permissions</h4>
-    <span class="flex items-center gap-4">
-        <SlideToggle name="" size="sm" bind:checked={data.modOnly} />
-        <span><b>Entire Bot Mod Only</b> (only allowed roles may use any commands &mdash; cannot be overridden)</span>
-    </span>
-    <span class="flex items-center gap-2">
-        <h5 class="h5">Allowed Roles</h5>
-        <span class="text-surface-600 dark:text-surface-300">(This is overridden by blocked roles.)</span>
-    </span>
-    <RoleSelector bind:selected={data.allowedRoles} />
-    <span class="flex items-center gap-2">
-        <h5 class="h5">Blocked Roles</h5>
-        <span class="text-surface-600 dark:text-surface-300">(This overrides allowed roles.)</span>
-    </span>
-    <RoleSelector bind:selected={data.blockedRoles} />
-    <h4 class="h4">Channel Permissions</h4>
-    <div class="flex items-center gap-4">
-        <SlideToggle name="" size="sm" bind:checked={data.allowlistOnly} />
-        <span><b>Allowlist Only</b> (commands can only be used in allowed channels &mdash; cannot be overridden)</span>
-    </div>
-    <div class="flex items-center gap-2">
-        <h5 class="h5">Allowed Channels</h5>
-    </div>
-    <P>
-        If a channel and its parent category differ, the channel's settings will take precedence. If a channel is both allowed and blocked at the same level, it
-        will be blocked.
-    </P>
-    <ChannelSelector bind:selected={data.allowedChannels} />
-    <div class="flex items-center gap-2">
-        <h5 class="h5">Blocked Channels</h5>
-    </div>
-    <ChannelSelector bind:selected={data.blockedChannels} />
+    <Panel class="w-full">
+        <h4 class="h4">Role Permissions</h4>
+        <span class="flex items-center gap-4">
+            <SlideToggle name="" size="sm" bind:checked={data.modOnly} />
+            <span><b>Entire Bot Mod Only</b> (only allowed roles may use any commands &mdash; cannot be overridden)</span>
+        </span>
+        <span class="flex items-center gap-2">
+            <h5 class="h5">Allowed Roles</h5>
+            <span class="text-surface-600 dark:text-surface-300">(This is overridden by blocked roles.)</span>
+        </span>
+        <RoleSelector bind:selected={data.allowedRoles} />
+        <span class="flex items-center gap-2">
+            <h5 class="h5">Blocked Roles</h5>
+            <span class="text-surface-600 dark:text-surface-300">(This overrides allowed roles.)</span>
+        </span>
+        <RoleSelector bind:selected={data.blockedRoles} />
+    </Panel>
+    <Panel class="w-full">
+        <h4 class="h4">Channel Permissions</h4>
+        <div class="flex items-center gap-4">
+            <SlideToggle name="" size="sm" bind:checked={data.allowlistOnly} />
+            <span><b>Allowlist Only</b> (commands can only be used in allowed channels &mdash; cannot be overridden)</span>
+        </div>
+        <div class="flex items-center gap-2">
+            <h5 class="h5">Allowed Channels</h5>
+        </div>
+        <P>
+            If a channel and its parent category differ, the channel's settings will take precedence. If a channel is both allowed and blocked at the same
+            level, it will be blocked.
+        </P>
+        <ChannelSelector bind:selected={data.allowedChannels} />
+        <div class="flex items-center gap-2">
+            <h5 class="h5">Blocked Channels</h5>
+        </div>
+        <ChannelSelector bind:selected={data.blockedChannels} />
+    </Panel>
 </Panel>

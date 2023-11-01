@@ -37,6 +37,7 @@ export const modules: ModuleData = {
                 name: "Manage XP",
                 icon: "ranking-star",
                 description: "Manage the server's XP, including importing or fully resetting XP.",
+                permissions: ["ManageGuild"],
             },
         },
     },

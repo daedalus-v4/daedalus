@@ -8,8 +8,6 @@
     $: $permissionModalStore && (description = permissions[$permissionModalStore as keyof typeof permissions].description);
 </script>
 
-<Modal open={$permissionModalStore !== null} on:close={() => ($permissionModalStore = null)}>
-    {#if $permissionModalStore}
-        <P>{@html description}</P>
-    {/if}
+<Modal z={80} open={$permissionModalStore !== null} on:close={() => ($permissionModalStore = null)}>
+    <P>{@html description}</P>
 </Modal>
