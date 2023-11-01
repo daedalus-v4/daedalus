@@ -14,6 +14,7 @@ export const roleSelectorModalStore = writable<{
 } | null>(null);
 
 export const channelSelectorModalStore = writable<{
+    types: number[] | null;
     select: (id: string, set: (ids: string[]) => unknown) => unknown;
     selected: string[];
 } | null>(null);

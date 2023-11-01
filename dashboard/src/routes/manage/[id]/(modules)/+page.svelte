@@ -10,7 +10,7 @@
     import PermissionLink from "$lib/components/PermissionLink.svelte";
     import RoleSelector from "$lib/components/RoleSelector.svelte";
     import SingleRoleSelector from "$lib/components/SingleRoleSelector.svelte";
-    import { diffGuildSettings } from "$lib/modules";
+    import { diffGuildSettings } from "$lib/modules/guild-settings";
     import type { FESettings } from "$lib/types";
     import { SlideToggle } from "@skeletonlabs/skeleton";
 

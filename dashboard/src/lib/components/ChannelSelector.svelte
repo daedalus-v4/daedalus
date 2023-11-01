@@ -6,6 +6,7 @@
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
 
+    export let types: number[] | null = null;
     export let selected: string[];
 
     const map: Record<string, TFChannel> = Object.fromEntries($page.data.channels.map((x: TFChannel) => [x.id, x]));
@@ -21,6 +22,7 @@
 
     function open() {
         $channelSelectorModalStore = {
+            types,
             select(id: string, set: any) {
                 if (selected.includes(id)) set((selected = selected.filter((x) => x !== id)));
                 else set((selected = [...selected, id].sort((x, y) => indexes[x] - indexes[y])));

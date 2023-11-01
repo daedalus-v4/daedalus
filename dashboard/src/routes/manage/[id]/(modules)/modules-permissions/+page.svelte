@@ -6,7 +6,7 @@
     import ModuleSaver from "$lib/components/ModuleSaver.svelte";
     import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
-    import { diffModulesPermissionsSettings } from "$lib/modules";
+    import { diffModulesPermissionsSettings } from "$lib/modules/modules-permissions-settings";
     import { commandPermissionsModalStore } from "$lib/stores";
     import type { FEModulesPermissionsSettings } from "$lib/types";
     import { fuzzy } from "$lib/utils";

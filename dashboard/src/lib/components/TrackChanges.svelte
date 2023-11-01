@@ -1,9 +1,6 @@
 <script lang="ts">
     import { beforeNavigate } from "$app/navigation";
-    import { getModalStore } from "@skeletonlabs/skeleton";
     import Button from "./Button.svelte";
-
-    const modalStore = getModalStore();
 
     export let base: unknown;
     export let data: unknown;
@@ -24,12 +21,7 @@
             await save();
             base = structuredClone(data);
         } catch (error) {
-            modalStore.trigger({
-                type: "alert",
-                body: `${error}`,
-                buttonTextCancel: "OK",
-                modalClasses: "dark:bg-surface-600",
-            });
+            alert(`${error}`);
         }
 
         saving = false;

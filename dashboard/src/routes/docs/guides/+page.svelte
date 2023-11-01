@@ -24,6 +24,6 @@
         >Learn the technical details about how Discord permissions work, how to ensure your server is safe, and how to set up common structures and features in
         the easiest and most reliable way.</P
     >
-    <a href="/docs/custom-messages"><Button variant="primary-text"><Icon icon="message" /> Permissions</Button></a>
+    <a href="/docs/custom-messages"><Button variant="primary-text"><Icon icon="message" /> Custom Messages</Button></a>
     <P>Learn how to write fully custom messages with Daedalus to give your members an immersive environment.</P>
 </Container>

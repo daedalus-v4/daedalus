@@ -41,6 +41,7 @@
     "dependencies": {
         "@floating-ui/dom": "1.5.3",
         "discord.js": "^14.13.0",
+        "highlight.js": "^11.9.0",
         "path": "^0.12.7",
         "zod": "^3.22.4"
     }

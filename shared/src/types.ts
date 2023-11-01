@@ -25,19 +25,29 @@ export type ModuleData = Record<
     }
 >;
 
+export type IField = { name: string; value: string; inline: boolean };
+
+export type IEmbed = {
+    colorMode: "guild" | "member" | "user" | "fixed";
+    color: number;
+    author: { name: string; iconURL: string; url: string };
+    title: string;
+    description: string;
+    url: string;
+    fields: IField[];
+    image: { url: string };
+    thumbnail: { url: string };
+    footer: { text: string; iconURL: string };
+};
+
 export type MessageData = {
     content: string;
-    embeds: {
-        color: number;
-        author: { name: string; iconURL: string; url: string };
-        title: string;
-        description: string;
-        url: string;
-        fields: { name: string; value: string; inline: boolean }[];
-        image: { url: string };
-        thumbnail: { url: string };
-        footer: { text: string; iconURL: string };
-    }[];
+    embeds: IEmbed[];
+};
+
+export type FEMessageData = {
+    content: string;
+    embeds: (Omit<IEmbed, "fields"> & { fields: (IField & { _meta?: any })[]; _meta?: any })[];
 };
 
 export type TFRole = {

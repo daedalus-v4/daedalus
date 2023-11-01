@@ -5,8 +5,15 @@
     import RoleSelectorModal from "$lib/components/RoleSelectorModal.svelte";
     import UpButton from "$lib/components/UpButton.svelte";
     import { arrow, autoUpdate, computePosition, flip, offset, shift } from "@floating-ui/dom";
-    import { initializeStores, storePopup } from "@skeletonlabs/skeleton";
+    import { initializeStores, storeHighlightJs, storePopup } from "@skeletonlabs/skeleton";
     import "../app.postcss";
+
+    import hljs from "highlight.js/lib/core";
+    import json from "highlight.js/lib/languages/json";
+    import "highlight.js/styles/github-dark.css";
+
+    hljs.registerLanguage("json", json);
+    $storeHighlightJs = hljs;
 
     initializeStores();
     $storePopup = { computePosition, autoUpdate, flip, shift, offset, arrow };

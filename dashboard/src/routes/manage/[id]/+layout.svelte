@@ -43,8 +43,9 @@
             </div>
             <div>Modules &amp; Permissions</div>
         </a>
-        {#each [] as mid}
+        {#each ["welcome"] as mid}
             {@const module = modules[mid]}
+
             <a
                 href="/manage/{id}/{mid}"
                 class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam === 'mid'

@@ -1,4 +1,4 @@
-import type { TFChannel, TFRole } from "shared";
+import type { FEMessageData, TFChannel, TFRole } from "shared";
 
 export type FEData = {
     guild: string;
@@ -33,4 +33,9 @@ export type FEModulesPermissionsSettings = {
             blockedChannels: string[];
         }
     >;
+};
+
+export type FEWelcomeSettings = {
+    channel: string | null;
+    message: FEMessageData;
 };
