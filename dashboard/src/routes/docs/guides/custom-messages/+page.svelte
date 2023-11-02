@@ -63,7 +63,6 @@
             reason)
         </li>
         <li class="pl-2"><code class="code">{"{bot?}"}</code>: whether the user is a bot</li>
-        <li class="pl-2"><code class="code">{"{user-color}"}</code>: the user's accent color (based on their profile settings)</li>
         <li class="pl-2"><code class="code">{"{user-avatar}"}</code>: the user's global avatar (ignores their server profile)</li>
     </ul>
     <h2 class="h2">Roles</h2>
@@ -73,7 +72,7 @@
         <li class="pl-2"><code class="code">{"{role-members}"}</code>: the number of members with the role</li>
         <li class="pl-2"><code class="code">{"{role-name}"}</code>: the role's name</li>
         <li class="pl-2">
-            <code class="code">{"{hoist?"}</code>: whether or not the role is hoisted (displays members with the role separately on the member list)
+            <code class="code">{"{hoist?}"}</code>: whether or not the role is hoisted (displays members with the role separately on the member list)
         </li>
     </ul>
     <h2 class="h2">Guilds</h2>
@@ -96,7 +95,7 @@
     <h2 class="h2">Functions</h2>
     <P>
         The following functions are globally available to manipulate the values. Most values are strings (text), but some are numbers and yes/no values are
-        booleans (<code class="code">true</code>/<code class="code">false</code>).
+        represented as <code class="code">0</code> for false and <code class="code">1</code> for true.
     </P>
     <P>
         Note that these may be confusing to people who have no experience with programming. For the most part, you do not need to use these. The most important
@@ -108,19 +107,18 @@
     </P>
     <ul class="list-disc pl-4">
         <li class="pl-2">
-            <code class="code">{"{? a b [c]}"}</code>: if <code class="code">a</code> is true-like (non-empty string, non-zero number, or
-            <code class="code">true</code>), returns <code class="code">b</code>, and otherwise returns <code class="code">c</code> (or
-            <code class="code">""</code>
-            if <code class="code">c</code> is missing)
+            <code class="code">{"{? a b [c]}"}</code>: if <code class="code">a</code> is true-like (non-empty string or non-zero number), returns
+            <code class="code">b</code>, and otherwise returns <code class="code">c</code> (or <code class="code">""</code> if <code class="code">c</code> is missing)
         </li>
         <li class="pl-2">
-            <code class="code">{"{!= ...}"}</code>: returns <code class="code">true</code> if all provided values are unique (at least 2 values)
+            <code class="code">{"{!= ...}"}</code>: returns <code class="code">1</code> if all provided values are unique and <code class="code">0</code> otherwise
+            (at least 2 values)
         </li>
         <li class="pl-2"><code class="code">{"{random ...}"}</code>: randomly choose one of the given values (least 1 value)</li>
         <li class="pl-2"><code class="code">{"{list ...}"}</code>: create a list from the provided values</li>
         <li class="pl-2">
-            <code class="code">{"{! x}"}</code>: returns <code class="code">true</code> if <code class="code">x</code> is false-like (empty string, 0, or
-            <code class="code">false</code>) and <code class="code">false</code> otherwise
+            <code class="code">{"{! x}"}</code>: returns <code class="code">1</code> if <code class="code">x</code> is false-like (empty string or
+            <code class="code">0</code>) and <code class="code">0</code> otherwise
         </li>
         <li class="pl-2"><code class="code">{"{length x}"}</code>: returns the length of a list</li>
         <li class="pl-2">
@@ -163,15 +161,24 @@
             <code class="code">{"{|| ...}"}</code>: logical OR (return the first true-like value or the last value if all are false-like) (at least 1 value)
         </li>
         <li class="pl-2"><code class="code">{"{++ ...}"}</code>: concatenate lists together (at least 1 value)</li>
-        <li class="pl-2"><code class="code">{"{= ...}"}</code>: returns <code class="code">true</code> if all provided values are equal</li>
+        <li class="pl-2"><code class="code">{"{= ...}"}</code>: returns <code class="code">1</code> if all provided values are equal</li>
+        and<code class="code">0</code> otherwise
         <li class="pl-2">
-            <code class="code">{"{> ...}"}</code>: returns <code class="code">true</code> if all provided values are in strictly descending order
+            <code class="code">{"{> ...}"}</code>: returns <code class="code">1</code> if all provided values are in strictly descending order and
+            <code class="code">0</code> otherwise
         </li>
-        <li class="pl-2"><code class="code">{"{>= ...}"}</code>: returns <code class="code">true</code> if all provided values are in non-increasing order</li>
         <li class="pl-2">
-            <code class="code">{"{< ...}"}</code>: returns <code class="code">true</code> if all provided values are in strictly increasing order
+            <code class="code">{"{>= ...}"}</code>: returns <code class="code">1</code> if all provided values are in non-increasing order and
+            <code class="code">0</code> otherwise
         </li>
-        <li class="pl-2"><code class="code">{"{<= ...}"}</code>: returns <code class="code">true</code> if all provided values are non-decreasing order</li>
+        <li class="pl-2">
+            <code class="code">{"{< ...}"}</code>: returns <code class="code">1</code> if all provided values are in strictly increasing order and
+            <code class="cod">0</code> otherwise
+        </li>
+        <li class="pl-2">
+            <code class="code">{"{<= ...}"}</code>: returns <code class="code">1</code> if all provided values are non-decreasing order and
+            <code class="code">0</code> otherwise
+        </li>
         <li class="pl-2">
             <code class="code">{"{... fn values}"}</code>: call a function with the provided list as arguments; e.g.
             <code class="code">{"{... fn {list 1 2 3}}"}</code>
@@ -187,9 +194,5 @@
         You can also insert values into functions. To include a number, just enter the number. To include a string, surround it with quotes. Both
         <code class="code">"..."</code> and <code class="code">'...'</code> work the same way. If you wish to include the same type of quotes within the string,
         escale them like so: <code class="code">"hello \" world"</code>.
-    </P>
-    <P>
-        There is no way to insert boolean values, but you can simply use <code class="code">0</code> and <code class="code">1</code> for
-        <code class="code">false</code> and <code class="code">true</code> respectively.
     </P>
 </Container>

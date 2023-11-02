@@ -1,3 +1,4 @@
+export * from "./src/custom-message-functions.js";
 export * from "./src/custom-messages.js";
 export * from "./src/modules.js";
 export * from "./src/permissions.js";

@@ -5,7 +5,14 @@ const color = z.number().int().min(0).max(0xffffff);
 const snowflake = z.string().regex(/^[1-9][0-9]{16,19}$/, "Expected a Discord ID (17-20 digit number).");
 const snowflakes = z.array(snowflake);
 
-const cmcomponent: z.ZodType<CustomMessageComponent> = z.tuple([z.string()]).rest(z.union([z.string(), z.number(), z.lazy(() => cmcomponent)]));
+function recurse<T>(item: z.ZodType<T>): z.ZodType<[string, ...(string | number | T)[]]> {
+    return z.tuple([z.string()]).rest(z.union([z.string(), z.number(), item]));
+}
+
+let _cmc: z.ZodType<CustomMessageComponent> = z.tuple([z.string()]).rest(z.union([z.string(), z.number()]));
+for (let x = 0; x < 10; x++) _cmc = recurse(_cmc);
+
+const cmcomponent = _cmc;
 const cmstring: z.ZodType<CustomMessageText> = z.array(z.union([z.string(), cmcomponent]));
 
 const message: z.ZodType<MessageData> = z.object({
