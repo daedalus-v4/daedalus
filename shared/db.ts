@@ -8,8 +8,8 @@ import {
     DbGiveawaysSettings,
     DbLoggingSettings,
     DbModmailSettings,
-    DbNukeguardSettings,
     DbModulesPermissionsSettings,
+    DbNukeguardSettings,
     DbPollsSettings,
     DbReactionRolesSettings,
     DbReportsSettings,
@@ -23,6 +23,7 @@ import {
     DbUtilitySettings,
     DbWelcomeSettings,
     DbXpSettings,
+    modules,
 } from ".";
 import { PremiumTier } from "./src/premium.js";
 
@@ -148,4 +149,9 @@ export const db = new Database();
 export async function autoIncrement(sequence: string) {
     const doc = await db.counters.findOneAndUpdate({ sequence }, { $inc: { value: 1 } }, { upsert: true });
     return (doc?.value ?? 0) + 1;
+}
+
+export async function isModuleEnabled(guild: string, module: string) {
+    const doc = await db.modulesPermissionsSettings.findOne({ guild });
+    return doc?.modules[module]?.enabled ?? modules[module]?.default ?? true;
 }

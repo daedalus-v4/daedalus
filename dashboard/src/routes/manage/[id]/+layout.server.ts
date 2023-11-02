@@ -1,11 +1,12 @@
 import { API } from "$env/static/private";
 import { redirect } from "@sveltejs/kit";
 import type { TFChannel, TFRole } from "shared";
+import { isModuleEnabled } from "shared/db.js";
 import type { LayoutServerLoad } from "./$types.js";
 import collections from "./collections.js";
 import { b2f } from "./modules.js";
 
-export const load: LayoutServerLoad = async ({ locals, params, url }) => {
+export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => {
     if (!params.id.match(/^[1-9][0-9]{16,19}$/)) throw redirect(303, "/manage");
     if (!locals.user) throw redirect(303, `/auth/login?${new URLSearchParams({ redirect: url.pathname })}`);
 
@@ -16,11 +17,9 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
     });
 
     const response: { valid: boolean; roles: TFRole[]; channels: TFChannel[] } = await request.json();
+    if (!response.valid) throw redirect(303, "/manage?reload");
 
-    if (!response) throw redirect(303, "/manage?reload");
-
-    let key = url.pathname.split("/").at(-1) ?? "-";
-    if (key.match(/^\d+$/)) key = "-";
+    const key = url.pathname.split("/")[3] ?? "-";
 
     const fe = { guild: params.id, ...response };
 
@@ -44,6 +43,7 @@ export const load: LayoutServerLoad = async ({ locals, params, url }) => {
             roles: response.roles,
             channels: response.channels,
             rootChannels: roots,
+            enabled: await isModuleEnabled(params.id, key),
             data: await b2f[key as keyof typeof b2f](fe, await collections()[key as keyof ReturnType<typeof collections>].findOne({ guild: params.id })),
         };
 };

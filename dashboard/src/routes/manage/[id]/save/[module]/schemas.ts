@@ -19,6 +19,7 @@ const message = z.object({
                 image: z.object({ url: z.string() }),
                 thumbnail: z.object({ url: z.string() }),
                 footer: z.object({ text: z.string(), iconURL: z.string() }),
+                showTimestamp: z.boolean(),
             }),
         )
         .max(10),

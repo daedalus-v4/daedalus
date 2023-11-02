@@ -9,5 +9,7 @@
 </script>
 
 <Modal z={80} open={$permissionModalStore !== null} on:close={() => ($permissionModalStore = null)}>
-    <P>{@html description}</P>
+    <div class="h-full grid items-center justify-center">
+        <P>{@html description}</P>
+    </div>
 </Modal>

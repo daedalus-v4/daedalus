@@ -5,13 +5,11 @@
     import Panel from "$lib/components/Panel.svelte";
     import { modules } from "shared";
 
-    let { id } = $page.params;
+    $: id = $page.params.id;
 
     let open = false;
-    let loading = false;
 
-    page.subscribe(() => (loading = false));
-    $: moduleParam = $page.url.pathname.split("/").at(-1)!;
+    $: moduleParam = $page.url.pathname.split("/")[3] ?? "-";
 </script>
 
 <div class="h-full w-screen grid grid-cols-[min-content_1fr]">
@@ -23,7 +21,7 @@
     >
         <a
             href="/manage/{id}"
-            class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam.match(/^\d+$/)
+            class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam === '-'
                 ? 'bg-black/10 dark:bg-white/5'
                 : ''} hover:bg-black/20 dark:hover:bg-white/10"
         >
@@ -48,7 +46,7 @@
 
             <a
                 href="/manage/{id}/{mid}"
-                class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam === 'mid'
+                class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {moduleParam === mid
                     ? 'bg-black/10 dark:bg-white/5'
                     : ''} hover:bg-black/10 dark:hover:bg-white/5"
             >

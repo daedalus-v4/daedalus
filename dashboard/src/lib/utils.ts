@@ -25,3 +25,17 @@ export function shouldShowChannel(channel: TFChannel, types: number[] | null | u
         ((types?.includes(channel.type) ?? true) && fuzzy(channel.name, input)) || (channel.children ?? []).some((ch) => shouldShowChannel(ch, types, input))
     );
 }
+
+export function without<T>(array: T[], index: number) {
+    return [...array.slice(0, index), ...array.slice(index + 1)];
+}
+
+export function insert<T>(array: T[], index: number, item: T) {
+    return [...array.slice(0, index), item, ...array.slice(index)];
+}
+
+export function swap<T>(array: T[], x: number, y: number) {
+    if (x === y) return array;
+    if (x > y) return swap(array, y, x);
+    return [...array.slice(0, x), array[y], ...array.slice(x + 1, y), array[x], ...array.slice(y + 1)];
+}

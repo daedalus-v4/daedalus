@@ -1,4 +1,4 @@
-import type { IEmbed, MessageData } from "shared";
+import type { FEIEmbed, FEMessageData, IField, MessageData } from "shared";
 
 export function defaults<T extends object>(inputs: Partial<T> | undefined | null, object: T): T {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -7,17 +7,22 @@ export function defaults<T extends object>(inputs: Partial<T> | undefined | null
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function nometa(x: any): any {
+    if (x === undefined || x === null) return x;
     if (typeof x !== "object") return x;
     if (Array.isArray(x)) return x.map(nometa);
-    if ("_meta" in x) delete x._meta;
-    return x;
+
+    return Object.fromEntries(
+        Object.entries(x)
+            .filter(([k]) => k !== "_meta")
+            .map(([k, v]) => [k, nometa(v)]),
+    );
 }
 
 export const defaultMessage: MessageData = { content: "", embeds: [] };
 
-export const defaultEmbed = (): IEmbed & { _meta?: unknown } => ({
+export const defaultEmbed = (): FEIEmbed => ({
     author: { iconURL: "", name: "", url: "" },
-    color: 0,
+    color: "#009688",
     colorMode: "fixed",
     description: "",
     fields: [],
@@ -26,5 +31,35 @@ export const defaultEmbed = (): IEmbed & { _meta?: unknown } => ({
     thumbnail: { url: "" },
     title: "",
     url: "",
+    showTimestamp: false,
     _meta: {},
 });
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const defaultField = (): IField & { _meta?: any } => ({
+    name: "",
+    value: "",
+    inline: false,
+    _meta: {},
+});
+
+export function b2fMessage(message: MessageData): FEMessageData {
+    return {
+        content: message.content,
+        embeds: message.embeds.map((e) => ({
+            ...e,
+            fields: e.fields.map((field) => ({ ...field, _meta: {} })),
+            color: `#${e.color.toString(16).padStart(6, "0")}`,
+            _meta: {},
+        })),
+    };
+}
+
+export function f2bMessage(message: FEMessageData): MessageData {
+    if (message.embeds.some((e) => !e.color.match(/^#[0-9a-f]{6}$/i))) throw "Invalid format for embed color: expected # followed by 6 hexadecimal digits.";
+
+    return {
+        content: message.content,
+        embeds: message.embeds.map((e) => ({ ...e, color: parseInt(e.color.slice(1), 16) })),
+    };
+}

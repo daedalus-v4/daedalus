@@ -38,7 +38,10 @@ export type IEmbed = {
     image: { url: string };
     thumbnail: { url: string };
     footer: { text: string; iconURL: string };
+    showTimestamp: boolean;
 };
+
+export type FEIEmbed = Omit<IEmbed, "color" | "fields"> & { color: string; fields: (IField & { _meta?: any })[]; _meta?: any };
 
 export type MessageData = {
     content: string;
@@ -47,7 +50,7 @@ export type MessageData = {
 
 export type FEMessageData = {
     content: string;
-    embeds: (Omit<IEmbed, "fields"> & { fields: (IField & { _meta?: any })[]; _meta?: any })[];
+    embeds: FEIEmbed[];
 };
 
 export type TFRole = {

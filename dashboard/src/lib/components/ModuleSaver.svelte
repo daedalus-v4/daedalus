@@ -8,8 +8,7 @@
     export let diff: any;
 
     async function save() {
-        let key = $page.url.pathname.split("/").at(-1)!;
-        if (key.match(/^\d+$/)) key = "-";
+        const key = $page.url.pathname.split("/")[3] ?? "-";
 
         const request = await fetch(`/manage/${$page.params.id}/save/${key}`, {
             method: "POST",
