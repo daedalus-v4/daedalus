@@ -43,9 +43,25 @@ export type IEmbed = {
 
 export type FEIEmbed = Omit<IEmbed, "color" | "fields"> & { color: string; fields: (IField & { _meta?: any })[]; _meta?: any };
 
+export type CustomMessageComponent = [string, ...(string | number | CustomMessageComponent)[]];
+export type CustomMessageText = (string | CustomMessageComponent)[];
+
 export type MessageData = {
     content: string;
     embeds: IEmbed[];
+    parsed: {
+        content: CustomMessageText;
+        embeds: (Pick<IEmbed, "colorMode" | "color" | "showTimestamp"> & {
+            author: { name: CustomMessageText; iconURL: CustomMessageText; url: CustomMessageText };
+            title: CustomMessageText;
+            description: CustomMessageText;
+            url: CustomMessageText;
+            fields: { name: CustomMessageText; value: CustomMessageText; inline: boolean }[];
+            image: { url: CustomMessageText };
+            thumbnail: { url: CustomMessageText };
+            footer: { text: CustomMessageText; iconURL: CustomMessageText };
+        })[];
+    };
 };
 
 export type FEMessageData = {

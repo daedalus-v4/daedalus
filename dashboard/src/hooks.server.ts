@@ -1,7 +1,7 @@
-import { DB_NAME, DB_URI, DISCORD_API } from "$env/static/private";
+import { DB_NAME, DB_URI, DISCORD_API, OWNER } from "$env/static/private";
 import { PUBLIC_DOMAIN } from "$env/static/public";
 import type { Handle } from "@sveltejs/kit";
-import { connect } from "shared/db.js";
+import { connect, db } from "shared/db.js";
 
 let connected = false;
 
@@ -51,6 +51,8 @@ export const handle: Handle = async ({ event, resolve }) => {
             event.locals.user = response;
         }
     }
+
+    if (event.locals.user) event.locals.user.admin = event.locals.user.id === OWNER || (await db.admins.countDocuments({ id: event.locals.user.id })) > 0;
 
     return await resolve(event);
 };

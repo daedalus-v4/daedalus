@@ -7,6 +7,16 @@ declare namespace App {
             id: string;
             username: string;
             discriminator: string;
+            admin: boolean;
+        };
+    }
+
+    interface PageData {
+        user: {
+            id: string;
+            username: string;
+            discriminator: string;
+            admin: boolean;
         };
     }
 }

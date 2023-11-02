@@ -1,4 +1,4 @@
-import type { FEIEmbed, FEMessageData, IField, MessageData } from "shared";
+import { parseMessage, type FEIEmbed, type FEMessageData, type IField, type MessageData } from "shared";
 
 export function defaults<T extends object>(inputs: Partial<T> | undefined | null, object: T): T {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -18,7 +18,7 @@ export function nometa(x: any): any {
     );
 }
 
-export const defaultMessage: MessageData = { content: "", embeds: [] };
+export const defaultMessage: MessageData = { content: "", embeds: [], parsed: { content: [], embeds: [] } };
 
 export const defaultEmbed = (): FEIEmbed => ({
     author: { iconURL: "", name: "", url: "" },
@@ -58,8 +58,10 @@ export function b2fMessage(message: MessageData): FEMessageData {
 export function f2bMessage(message: FEMessageData): MessageData {
     if (message.embeds.some((e) => !e.color.match(/^#[0-9a-f]{6}$/i))) throw "Invalid format for embed color: expected # followed by 6 hexadecimal digits.";
 
-    return {
+    const data: Omit<MessageData, "parsed"> = {
         content: message.content,
         embeds: message.embeds.map((e) => ({ ...e, color: parseInt(e.color.slice(1), 16) })),
     };
+
+    return { ...data, parsed: parseMessage(data) };
 }
