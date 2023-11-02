@@ -1,4 +1,12 @@
-import type { CustomMessageComponent, CustomMessageText, DbModulesPermissionsSettings, DbSettings, DbWelcomeSettings, MessageData } from "shared";
+import type {
+    CustomMessageComponent,
+    CustomMessageText,
+    DbLoggingSettings,
+    DbModulesPermissionsSettings,
+    DbSettings,
+    DbWelcomeSettings,
+    MessageData,
+} from "shared";
 import { z } from "zod";
 
 const color = z.number().int().min(0).max(0xffffff);
@@ -87,4 +95,27 @@ export default {
         channel: z.nullable(snowflake),
         message,
     }) satisfies z.ZodType<DbWelcomeSettings>,
+    logging: z.object({
+        useWebhook: z.boolean(),
+        defaultChannel: z.nullable(snowflake),
+        defaultWebhook: z.string(),
+        ignoredChannels: snowflakes,
+        filesOnly: z.boolean(),
+        categories: z.record(
+            z.object({
+                enabled: z.boolean(),
+                useWebhook: z.boolean(),
+                outputChannel: z.nullable(snowflake),
+                outputWebhook: z.string(),
+                events: z.record(
+                    z.object({
+                        enabled: z.boolean(),
+                        useWebhook: z.boolean(),
+                        outputChannel: z.nullable(snowflake),
+                        outputWebhook: z.string(),
+                    }),
+                ),
+            }),
+        ),
+    }) satisfies z.ZodType<DbLoggingSettings>,
 };

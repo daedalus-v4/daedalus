@@ -2,8 +2,10 @@
     import { page } from "$app/stores";
     import A from "$lib/components/A.svelte";
     import Button from "$lib/components/Button.svelte";
+    import UnderConstruction from "$lib/components/UnderConstruction.svelte";
 
     $: enabled = $page.data.enabled;
+    $: missing = $page.data.missing;
 
     let enabling = false;
 
@@ -24,11 +26,15 @@
     }
 </script>
 
-{#if !enabled}
-    <div class="card p-4 bg-error-300 dark:bg-error-400/40 flex items-center gap-2">
-        <span>This module is disabled. You can manage module settings <A to="/manage/{$page.params.id}/modules-permissions">here</A>.</span>
-        <Button disabled={enabling} on:click={enable}>{enabling ? "Enabling..." : "Enable Module"}</Button>
-    </div>
-{/if}
+{#if missing}
+    <UnderConstruction />
+{:else}
+    {#if !enabled}
+        <div class="card p-4 bg-error-300 dark:bg-error-400/40 flex items-center gap-2">
+            <span>This module is disabled. You can manage module settings <A to="/manage/{$page.params.id}/modules-permissions">here</A>.</span>
+            <Button disabled={enabling} on:click={enable}>{enabling ? "Enabling..." : "Enable Module"}</Button>
+        </div>
+    {/if}
 
-<slot />
+    <slot />
+{/if}

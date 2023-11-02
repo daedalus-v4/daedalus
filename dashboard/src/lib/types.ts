@@ -39,3 +39,29 @@ export type FEWelcomeSettings = {
     channel: string | null;
     message: FEMessageData;
 };
+
+export type FELoggingSettings = {
+    useWebhook: boolean;
+    defaultChannel: string | null;
+    defaultWebhook: string;
+    ignoredChannels: string[];
+    filesOnly: boolean;
+    categories: Record<
+        string,
+        {
+            enabled: boolean;
+            useWebhook: boolean;
+            outputChannel: string | null;
+            outputWebhook: string;
+            events: Record<
+                string,
+                {
+                    enabled: boolean;
+                    useWebhook: boolean;
+                    outputChannel: string | null;
+                    outputWebhook: string;
+                }
+            >;
+        }
+    >;
+};

@@ -14,6 +14,7 @@
         if (!open) return;
 
         open = false;
+        fullscreen = false;
         dispatch("close");
     }
 </script>

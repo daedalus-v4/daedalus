@@ -46,4 +46,6 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
             enabled: await isModuleEnabled(params.id, key),
             data: await b2f[key as keyof typeof b2f](fe, await collections()[key as keyof ReturnType<typeof collections>].findOne({ guild: params.id })),
         };
+
+    return { missing: true };
 };

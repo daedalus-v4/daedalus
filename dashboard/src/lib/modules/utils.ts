@@ -55,12 +55,20 @@ export function b2fMessage(message: MessageData): FEMessageData {
     };
 }
 
+export function recursiveTrim<T>(object: T): T {
+    if (typeof object === "string") return object.trim() as T;
+    if (!object) return object;
+    if (typeof object !== "object") return object;
+    if (Array.isArray(object)) return object.map((x) => recursiveTrim(x)) as T;
+    return Object.fromEntries(Object.entries(object).map(([k, v]) => [k, recursiveTrim(v)])) as T;
+}
+
 export function f2bMessage(message: FEMessageData): MessageData {
     if (message.embeds.some((e) => !e.color.match(/^#[0-9a-f]{6}$/i))) throw "Invalid format for embed color: expected # followed by 6 hexadecimal digits.";
 
     const data: Omit<MessageData, "parsed"> = {
-        content: message.content,
-        embeds: message.embeds.map((e) => ({ ...e, color: parseInt(e.color.slice(1), 16) })),
+        content: message.content.trim(),
+        embeds: message.embeds.map((e) => ({ ...recursiveTrim(e), color: parseInt(e.color.slice(1), 16) })),
     };
 
     return { ...data, parsed: parseMessage(data) };

@@ -118,19 +118,25 @@ export type DbModulesPermissionsSettings = {
 };
 
 export type DbLoggingSettings = {
-    defaultChannelOrWebhook: string | null;
+    useWebhook: boolean;
+    defaultChannel: string | null;
+    defaultWebhook: string;
     ignoredChannels: string[];
     filesOnly: boolean;
     categories: Record<
         string,
         {
             enabled: boolean;
-            outputChannelOrWebhook: string | null;
+            useWebhook: boolean;
+            outputChannel: string | null;
+            outputWebhook: string;
             events: Record<
                 string,
                 {
                     enabled: boolean;
-                    outputChannelOrWebhook: string | null;
+                    useWebhook: boolean;
+                    outputChannel: string | null;
+                    outputWebhook: string;
                 }
             >;
         }

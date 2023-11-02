@@ -24,7 +24,6 @@
         {#if !flat}
             <Button on:click={() => (open = true)}><Icon icon="edit" /> Edit Message</Button>
         {/if}
-        <Button><Icon icon="code" /> Edit JSON</Button>
     </div>
 </div>
 
