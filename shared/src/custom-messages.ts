@@ -24,7 +24,7 @@ class CharArray {
 }
 
 function purgeWS(chars: CharArray) {
-    while (!chars.empty && /\s/.test(chars.peek())) chars.pop();
+    while (!chars.empty() && /\s/.test(chars.peek())) chars.pop();
 }
 
 function parseCustomMessageComponent(chars: CharArray, depth: number = 0): CustomMessageComponent {
@@ -34,7 +34,7 @@ function parseCustomMessageComponent(chars: CharArray, depth: number = 0): Custo
     if (chars.empty()) throw "Parsing error: unclosed {";
 
     let fname = "";
-    while (!chars.empty() && /\S/.test(chars.peek())) fname += chars.pop();
+    while (!chars.empty() && /[^\s}]/.test(chars.peek())) fname += chars.pop();
 
     const output: CustomMessageComponent = [fname];
 
