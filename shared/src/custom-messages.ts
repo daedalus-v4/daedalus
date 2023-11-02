@@ -168,6 +168,9 @@ function formatCustomMessageString(input: CustomMessageText, ctx: CustomMessageC
 }
 
 export function formatMessage(input: MessageData["parsed"], ctx: CustomMessageContext): Omit<MessageData, "parsed"> {
+    ctx.user ??= ctx.member?.user;
+    ctx.guild ??= ctx.member?.guild ?? ctx.role?.guild;
+
     const u = (x: CustomMessageText) => formatCustomMessageString(x, ctx);
 
     return {

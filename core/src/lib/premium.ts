@@ -24,6 +24,11 @@ export async function getClient(ctx?: string | APIGuild | Guild | { guild: APIGu
     }
 }
 
+export async function isAssignedClient(ctx: Guild | { guild: Guild }) {
+    const guild = "guild" in ctx ? ctx.guild : ctx;
+    return guild.client.token === (await getClient(ctx)).token;
+}
+
 export async function getClients(ctx?: (string | APIGuild | Guild | { guild: APIGuild | Guild })[]) {
     return await Promise.all((await getTokens(ctx)).map((token) => getClientFromToken(token).catch(() => getClientFromToken(Bun.env.TOKEN!))));
 }

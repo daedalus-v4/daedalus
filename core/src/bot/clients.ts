@@ -8,7 +8,7 @@ export async function getClientFromToken(token: string) {
     if (!clientCache[token]) {
         log.info(`Obtaining client ${token.slice(0, 5)}...${token.slice(-5)}`);
 
-        clientCache[token] = new Client({ intents: IntentsBitField.Flags.Guilds });
+        clientCache[token] = new Client({ intents: IntentsBitField.Flags.Guilds | IntentsBitField.Flags.GuildMembers });
         await clientCache[token].login(token);
 
         await argentium.preApply(clientCache[token]);

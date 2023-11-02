@@ -14,4 +14,5 @@ export const template = {
     success: (body: string) => embed("OK!", body, Colors.Green),
     error: (body: string) => embed("Error!", body, Colors.Red),
     info: (body: string) => embed("Info", body, Colors.Blue),
+    logerror: (context: string, body: string) => embed(`Bot Error: ${context}`, body, Colors.Red),
 };
