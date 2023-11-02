@@ -167,9 +167,14 @@ function formatCustomMessageString(input: CustomMessageText, ctx: CustomMessageC
     return input.map((x) => (typeof x === "string" ? x : `${formatCustomMessageComponent(x, ctx)}`)).join("");
 }
 
-export function formatMessage(input: MessageData["parsed"], ctx: CustomMessageContext): Omit<MessageData, "parsed"> {
+export async function formatMessage(input: MessageData["parsed"], ctx: CustomMessageContext): Promise<Omit<MessageData, "parsed">> {
     ctx.user ??= ctx.member?.user;
     ctx.guild ??= ctx.member?.guild ?? ctx.role?.guild;
+
+    await ctx.member?.fetch();
+    await ctx.user?.fetch();
+    await ctx.guild?.fetch();
+    await ctx.guild?.members.fetch();
 
     const u = (x: CustomMessageText) => formatCustomMessageString(x, ctx);
 

@@ -121,9 +121,6 @@
             <code class="code">0</code>) and <code class="code">0</code> otherwise
         </li>
         <li class="pl-2"><code class="code">{"{length x}"}</code>: returns the length of a list</li>
-        <li class="pl-2">
-            <code class="code">{"{escape x}"}</code>: markdown-escape <code class="code">x</code> so it is displayed as-is in Discord
-        </li>
         <li class="pl-2"><code class="code">{"{ordinal #}"}</code>: s the "Nth" form of a number (1st, 2nd, 3rd, etc.) (works for negative numbers)</li>
         <li class="pl-2">
             <code class="code">{"{join x y}"}</code>: returns the values in list <code class="code">x</code> as strings joined on string
@@ -161,32 +158,25 @@
             <code class="code">{"{|| ...}"}</code>: logical OR (return the first true-like value or the last value if all are false-like) (at least 1 value)
         </li>
         <li class="pl-2"><code class="code">{"{++ ...}"}</code>: concatenate lists together (at least 1 value)</li>
-        <li class="pl-2"><code class="code">{"{= ...}"}</code>: returns <code class="code">1</code> if all provided values are equal</li>
-        and<code class="code">0</code> otherwise
+        <li class="pl-2">
+            <code class="code">{"{= ...}"}</code>: returns <code class="code">1</code> if all provided values are equal and <code class="code">0</code> otherwise
+            (at least 1 value)
+        </li>
         <li class="pl-2">
             <code class="code">{"{> ...}"}</code>: returns <code class="code">1</code> if all provided values are in strictly descending order and
-            <code class="code">0</code> otherwise
+            <code class="code">0</code> otherwise (at least 1 value)
         </li>
         <li class="pl-2">
             <code class="code">{"{>= ...}"}</code>: returns <code class="code">1</code> if all provided values are in non-increasing order and
-            <code class="code">0</code> otherwise
+            <code class="code">0</code> otherwise (at least 1 value)
         </li>
         <li class="pl-2">
             <code class="code">{"{< ...}"}</code>: returns <code class="code">1</code> if all provided values are in strictly increasing order and
-            <code class="cod">0</code> otherwise
+            <code class="cod">0</code> otherwise (at least 1 value)
         </li>
         <li class="pl-2">
             <code class="code">{"{<= ...}"}</code>: returns <code class="code">1</code> if all provided values are non-decreasing order and
-            <code class="code">0</code> otherwise
-        </li>
-        <li class="pl-2">
-            <code class="code">{"{... fn values}"}</code>: call a function with the provided list as arguments; e.g.
-            <code class="code">{"{... fn {list 1 2 3}}"}</code>
-            is equivalent to <code class="code">{"{fn 1 2 3}"}</code>
-        </li>
-        <li class="pl-2">
-            <code class="code">{"{map fn values}"}</code>: call a function over each element of a list; e.g. <code class="code">{"{map fn {list 1 2 3}}"}</code>
-            is equivalent to <code class="code">{"{list {fn 1} {fn 2} {fn 3}}"}</code>
+            <code class="code">0</code> otherwise (at least 1 value)
         </li>
     </ul>
     <h2 class="h2">Values</h2>

@@ -18,6 +18,6 @@
 <Panel>
     <h3 class="h3">Welcome Channel</h3>
     <SingleChannelSelector types={textlike} bind:selected={data.channel} />
-    <h4 class="h4">Message Data</h4>
+    <h3 class="h3">Message Data</h3>
     <MessageEditor bind:message={data.message} />
 </Panel>

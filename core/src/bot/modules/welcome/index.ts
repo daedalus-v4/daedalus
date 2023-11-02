@@ -35,7 +35,7 @@ export default (app: Argentium) =>
             );
 
         try {
-            await channel.send(formatMessage(settings.message.parsed, { member: await member.fetch() }));
+            await channel.send(await formatMessage(settings.message.parsed, { member: await member.fetch() }));
         } catch (error) {
             invokeLog("botError", member.guild, ({ ignoredChannels }) =>
                 ignoredChannels.includes(settings.channel!)

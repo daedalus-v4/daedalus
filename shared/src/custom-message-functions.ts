@@ -32,7 +32,7 @@ const functions: Record<"member" | "user" | "role" | "guild" | "global", Record<
     },
     guild: {
         server: { arity: 0, apply: (ctx) => ctx.guild!.name },
-        members: { arity: 0, apply: (ctx) => ctx.guild!.memberCount },
+        members: { arity: 0, apply: (ctx) => ctx.guild!.members.cache.size },
         boosts: { arity: 0, apply: (ctx) => ctx.guild!.premiumSubscriptionCount ?? 0 },
         tier: { arity: 0, apply: (ctx) => ctx.guild!.premiumTier },
         "server-icon": { arity: 0, apply: (ctx) => ctx.guild!.iconURL() ?? "" },
@@ -55,6 +55,49 @@ const functions: Record<"member" | "user" | "role" | "guild" | "global", Record<
         list: { arity: [0, Infinity], apply: (_, ...args) => args },
         "!": { arity: 1, apply: (_, x) => (x ? 0 : 1) },
         length: { arity: 1, apply: (_, x) => (Array.isArray(x) ? x.length : raise("`{length x}` can only be used on a list.")) },
+        ordinal: {
+            arity: 1,
+            apply(_, x) {
+                if (typeof x !== "number") throw "`{ordinal #}` can only be used on a number.";
+                if (!Number.isInteger(x)) throw "`{ordinal #}` can only be used on an integer.";
+
+                const n = Math.abs(x);
+
+                if (n === 0 || (n > 10 && n < 20)) return `${x}th`;
+                if (n % 10 === 1) return `${x}st`;
+                if (n % 10 === 2) return `${x}nd`;
+                if (n % 10 === 3) return `${x}rd`;
+                return `${x}th`;
+            },
+        },
+        join: { arity: 2, apply: (_, x, y) => [x].flat().join(`${y}`) },
+        "+": { arity: [1, Infinity], apply: (_, ...x) => x.map((k) => +k).reduce((x, y) => x + y) },
+        "-": { arity: [1, Infinity], apply: (_, ...x) => x.map((k) => +k).reduce((x, y) => x - y) },
+        "*": { arity: [1, Infinity], apply: (_, ...x) => x.map((k) => +k).reduce((x, y) => x * y) },
+        "/": { arity: [1, Infinity], apply: (_, ...x) => x.map((k) => +k).reduce((x, y) => x / y) },
+        "\\": { arity: [1, Infinity], apply: (_, ...x) => x.map((k) => +k).reduce((x, y) => Math.floor(x / y)) },
+        "#": {
+            arity: [1, Infinity],
+            apply: (_, ...x) =>
+                x.length === 1
+                    ? Array.isArray(x[0])
+                        ? x[0].length
+                        : raise("`{# x}` can only be used on a list.")
+                    : x
+                          .slice(1)
+                          .map((k) => +k)
+                          .reduce((x, y) => (Array.isArray(x) ? x[y] : raise("`{# x ...}` can only be used so long as all indexed elements are lists.")), x[0]),
+        },
+        "%": { arity: [1, Infinity], apply: (_, ...x) => x.map((k) => +k).reduce((x, y) => x % y) },
+        "^": { arity: [1, Infinity], apply: (_, ...x) => x.map((k) => +k).reduce((x, y) => x ** y) },
+        "&&": { arity: [1, Infinity], apply: (_, ...x) => x.reduce((x, y) => x && y) },
+        "||": { arity: [1, Infinity], apply: (_, ...x) => x.reduce((x, y) => x || y) },
+        "++": { arity: [1, Infinity], apply: (_, ...x) => x.map((k) => (Array.isArray(k) ? k : [k])).flat() },
+        "=": { arity: [1, Infinity], apply: (_, ...x) => (new Set(x.map((k) => JSON.stringify(k))).size === 1 ? 1 : 0) },
+        ">": { arity: [1, Infinity], apply: (_, ...x) => (x.map((k, i) => i === x.length - 1 || +k > +x[i + 1]).every((k) => k) ? 1 : 0) },
+        ">=": { arity: [1, Infinity], apply: (_, ...x) => (x.map((k, i) => i === x.length - 1 || +k >= +x[i + 1]).every((k) => k) ? 1 : 0) },
+        "<": { arity: [1, Infinity], apply: (_, ...x) => (x.map((k, i) => i === x.length - 1 || +k < +x[i + 1]).every((k) => k) ? 1 : 0) },
+        "<=": { arity: [1, Infinity], apply: (_, ...x) => (x.map((k, i) => i === x.length - 1 || +k <= +x[i + 1]).every((k) => k) ? 1 : 0) },
     },
 };
 
