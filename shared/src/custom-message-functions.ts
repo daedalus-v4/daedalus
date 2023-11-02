@@ -1,4 +1,4 @@
-import { Guild, GuildMember, Role, User } from "discord.js";
+import type { Guild, GuildMember, Role, User } from "discord.js";
 
 export type CustomMessageContext = { member?: GuildMember; user?: User; role?: Role; guild?: Guild };
 export type Value = string | number | Value[];
