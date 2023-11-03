@@ -42,8 +42,6 @@ export const logEvents: Record<string, { name: string; category: string }> = {
     guildMemberUpdateRoles: { name: "Member Role Update", category: "member" },
     guildMemberUpdateName: { name: "Member Name Update", category: "member" },
     guildMemberUpdateAvatar: { name: "Member Avatar Update", category: "member" },
-    interactionCreate: { name: "Command Invoked", category: "debug" },
-    botError: { name: "Bot Error", category: "debug" },
     inviteCreate: { name: "Invite Created", category: "invite" },
     inviteDelete: { name: "Invite Deleted", category: "invite" },
     messageDelete: { name: "Message Deleted", category: "message" },
@@ -55,4 +53,6 @@ export const logEvents: Record<string, { name: string; category: string }> = {
     voiceMove: { name: "Voice Move", category: "voice" },
     voiceLeave: { name: "Voice Leave", category: "voice" },
     voiceStateUpdate: { name: "Voice State Change", category: "voice" },
+    interactionCreate: { name: "Command Invoked", category: "debug" },
+    botError: { name: "Bot Error", category: "debug" },
 };

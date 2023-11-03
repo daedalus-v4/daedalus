@@ -1,7 +1,7 @@
 import Argentium from "argentium";
 import { Events } from "discord.js";
-import { formatMessage } from "shared";
 import { db, isModuleEnabled } from "shared/db.js";
+import { formatMessage } from "shared/format-custom-message.js";
 import { template } from "../../lib/format.js";
 import { invokeLog } from "../../lib/logging.js";
 

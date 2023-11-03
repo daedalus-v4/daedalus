@@ -7,7 +7,8 @@
         "discord.js": "^14.13.0",
         "elysia": "latest",
         "mongodb": "^6.2.0",
-        "pino": "^8.16.1"
+        "pino": "^8.16.1",
+        "zx": "^7.2.3"
     },
     "devDependencies": {
         "bun-types": "latest"

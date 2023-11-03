@@ -1,6 +1,6 @@
 import { Awaitable, Guild, GuildChannel, MessageCreateOptions, TextBasedChannel, ThreadChannel } from "discord.js";
 import { DbLoggingSettings, logEvents } from "shared";
-import { db } from "shared/db.js";
+import { db, isModuleEnabled } from "shared/db.js";
 import { log } from "../../lib/log.js";
 import { isAssignedClient } from "../../lib/premium.js";
 
@@ -13,6 +13,7 @@ export async function invokeLog(
 
     const guild = "guild" in context ? context.guild : context;
     if (!(await isAssignedClient(guild))) return;
+    if (!(await isModuleEnabled(guild.id, "logging"))) return;
 
     const settings = await db.loggingSettings.findOne({ guild: guild.id });
     if (!settings) return;

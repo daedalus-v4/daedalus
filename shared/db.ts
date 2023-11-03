@@ -1,3 +1,4 @@
+import type { APIGuild, Guild } from "discord.js";
 import { Db, MongoClient } from "mongodb";
 import {
     DbAutomodSettings,
@@ -154,4 +155,18 @@ export async function autoIncrement(sequence: string) {
 export async function isModuleEnabled(guild: string, module: string) {
     const doc = await db.modulesPermissionsSettings.findOne({ guild });
     return doc?.modules[module]?.enabled ?? modules[module]?.default ?? true;
+}
+
+export async function getColor<T extends boolean>(
+    ctx?: string | APIGuild | Guild | { guild: APIGuild | Guild },
+    blank: T = false as T,
+): Promise<T extends false ? number | undefined : number> {
+    if (ctx) {
+        const id = typeof ctx === "string" ? ctx : "guild" in ctx ? ctx.guild.id : ctx.id;
+
+        const { embedColor } = (await db.guildSettings.findOne({ guild: id })) ?? {};
+        if (embedColor !== undefined) return embedColor;
+    }
+
+    return blank ? (undefined as any) : 0x009688;
 }
