@@ -5,7 +5,6 @@
     import ModuleSaver from "$lib/components/ModuleSaver.svelte";
     import Panel from "$lib/components/Panel.svelte";
     import SingleChannelSelector from "$lib/components/SingleChannelSelector.svelte";
-    import { diffWelcomeSettings } from "$lib/modules/welcome";
     import type { FEWelcomeSettings } from "$lib/types";
     import { textlike } from "$lib/utils";
 
@@ -13,7 +12,7 @@
     let data = browser ? structuredClone(base) : base;
 </script>
 
-<ModuleSaver bind:base bind:data diff={diffWelcomeSettings} />
+<ModuleSaver bind:base bind:data />
 
 <Panel>
     <h3 class="h3">Welcome Channel</h3>

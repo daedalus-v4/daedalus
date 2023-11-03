@@ -9,7 +9,6 @@
     import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
     import SingleChannelSelector from "$lib/components/SingleChannelSelector.svelte";
-    import { diffLoggingSettings } from "$lib/modules/logging";
     import type { FELoggingSettings } from "$lib/types";
     import { textlike } from "$lib/utils";
     import { SlideToggle } from "@skeletonlabs/skeleton";
@@ -24,7 +23,7 @@
     $: openkey = open ?? openkey;
 </script>
 
-<ModuleSaver bind:base bind:data diff={diffLoggingSettings} />
+<ModuleSaver bind:base bind:data />
 
 <Panel>
     <h3 class="h3">Default Log Output Location</h3>

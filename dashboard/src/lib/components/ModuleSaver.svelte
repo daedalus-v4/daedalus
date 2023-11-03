@@ -1,11 +1,12 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import { nometa } from "$lib/modules/utils";
     import { f2b } from "../../routes/manage/[id]/modules";
     import TrackChanges from "./TrackChanges.svelte";
 
     export let base: any;
     export let data: any;
-    export let diff: any;
+    export let disabled: boolean = false;
 
     async function save() {
         const key = $page.url.pathname.split("/")[3] ?? "-";
@@ -20,4 +21,4 @@
     }
 </script>
 
-<TrackChanges {save} bind:base bind:data {diff} />
+<TrackChanges bind:disabled {save} bind:base bind:data diff={(x, y) => JSON.stringify(nometa(x)) !== JSON.stringify(nometa(y))} />

@@ -1,7 +1,7 @@
 import { API } from "$env/static/private";
 import { redirect } from "@sveltejs/kit";
-import type { TFChannel, TFRole } from "shared";
-import { isModuleEnabled } from "shared/db.js";
+import { premiumBenefits, PremiumTier, type TFChannel, type TFRole } from "shared";
+import { db, isModuleEnabled } from "shared/db.js";
 import type { LayoutServerLoad } from "./$types.js";
 import collections from "./collections.js";
 import { b2f } from "./modules.js";
@@ -44,6 +44,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
             channels: response.channels,
             rootChannels: roots,
             enabled: await isModuleEnabled(params.id, key),
+            premium: premiumBenefits[(await db.guilds.findOne({ id: params.id }))?.tier ?? PremiumTier.FREE],
             data: await b2f[key as keyof typeof b2f](fe, await collections()[key as keyof ReturnType<typeof collections>].findOne({ guild: params.id })),
         };
 

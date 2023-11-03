@@ -1,4 +1,4 @@
-import { modules, type DbModulesPermissionsSettings as DbModulesPermissionsSettings } from "shared";
+import { modules, type DbModulesPermissionsSettings } from "shared";
 import type { FEData, FEModulesPermissionsSettings } from "../types.js";
 import { defaults } from "./utils.js";
 
@@ -32,8 +32,4 @@ export async function b2fModulesPermissionsSettings(fe: FEData, data: Partial<Db
 
 export async function f2bModulesPermissionsSettings(data: FEModulesPermissionsSettings): Promise<DbModulesPermissionsSettings> {
     return data;
-}
-
-export function diffModulesPermissionsSettings(x: FEModulesPermissionsSettings, y: FEModulesPermissionsSettings): boolean {
-    return JSON.stringify(x) !== JSON.stringify(y);
 }

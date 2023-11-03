@@ -4,6 +4,7 @@ import type {
     DbLoggingSettings,
     DbModulesPermissionsSettings,
     DbSettings,
+    DbSupporterAnnouncementsSettings,
     DbWelcomeSettings,
     MessageData,
 } from "shared";
@@ -91,10 +92,6 @@ export default {
             }),
         ),
     }) satisfies z.ZodType<DbModulesPermissionsSettings>,
-    welcome: z.object({
-        channel: z.nullable(snowflake),
-        message,
-    }) satisfies z.ZodType<DbWelcomeSettings>,
     logging: z.object({
         useWebhook: z.boolean(),
         defaultChannel: z.nullable(snowflake),
@@ -118,4 +115,18 @@ export default {
             }),
         ),
     }) satisfies z.ZodType<DbLoggingSettings>,
+    welcome: z.object({
+        channel: z.nullable(snowflake),
+        message,
+    }) satisfies z.ZodType<DbWelcomeSettings>,
+    "supporter-announcements": z.object({
+        entries: z.array(
+            z.object({
+                channel: z.nullable(snowflake),
+                boosts: z.boolean(),
+                role: z.nullable(snowflake),
+                message,
+            }),
+        ),
+    }) satisfies z.ZodType<DbSupporterAnnouncementsSettings>,
 };

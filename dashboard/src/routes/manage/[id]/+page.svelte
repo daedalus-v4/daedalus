@@ -10,7 +10,6 @@
     import PermissionLink from "$lib/components/PermissionLink.svelte";
     import RoleSelector from "$lib/components/RoleSelector.svelte";
     import SingleRoleSelector from "$lib/components/SingleRoleSelector.svelte";
-    import { diffGuildSettings } from "$lib/modules/guild-settings";
     import type { FESettings } from "$lib/types";
     import { SlideToggle } from "@skeletonlabs/skeleton";
 
@@ -18,7 +17,7 @@
     let data = browser ? structuredClone(base) : base;
 </script>
 
-<ModuleSaver bind:base bind:data diff={diffGuildSettings} />
+<ModuleSaver bind:base bind:data />
 
 <Panel>
     <h3 class="h3">Dashboard Permissions</h3>

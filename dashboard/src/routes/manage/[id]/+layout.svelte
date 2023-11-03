@@ -41,7 +41,7 @@
             </div>
             <div>Modules &amp; Permissions</div>
         </a>
-        {#each ["logging", "welcome"] as mid}
+        {#each ["logging", "welcome", "supporter-announcements"] as mid}
             {@const module = modules[mid]}
             <a
                 href="/manage/{id}/{mid}"

@@ -65,3 +65,12 @@ export type FELoggingSettings = {
         }
     >;
 };
+
+export type FESupporterAnnouncementsSettings = {
+    entries: {
+        channel: string | null;
+        boosts: boolean;
+        role: string | null;
+        message: FEMessageData;
+    }[];
+};

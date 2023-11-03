@@ -1,6 +1,6 @@
 import type { Guild, GuildMember, Role, User } from "discord.js";
 
-export type CustomMessageContext = { member?: GuildMember; user?: User; role?: Role; guild?: Guild };
+export type CustomMessageContext = { member?: GuildMember | null; user?: User | null; role?: Role | null; guild?: Guild | null };
 export type Value = string | number | Value[];
 export type FN = { arity: number | [number, number]; apply: (ctx: CustomMessageContext, ...args: Value[]) => Value };
 

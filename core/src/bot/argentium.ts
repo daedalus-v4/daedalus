@@ -1,14 +1,21 @@
 import Argentium from "argentium";
-import { Events } from "discord.js";
-import { readdirSync } from "fs";
+import { existsSync, readdirSync } from "fs";
 import path from "path";
 import { autoIncrement } from "shared/db.js";
 import { log } from "../lib/log.js";
+import { getClient } from "../lib/premium.js";
 import { template } from "./lib/format.js";
 
 export default new Argentium()
-    .use((x) => readdirSync(path.join(__dirname, "modules")).reduce((x, y) => x.use(require(`./modules/${y}`).default), x))
-    .beforeAllCommands(({ _ }) => {
+    .use((x) =>
+        readdirSync(path.join(__dirname, "modules"))
+            .filter((x) => existsSync(path.join(__dirname, "modules", x, "index.ts")))
+            .reduce((x, y) => x.use(require(`./modules/${y}`).default), x),
+    )
+    .beforeAllCommands(async ({ _ }, escape) => {
+        if (!_.guild) return;
+        if (_.client.token !== (await getClient(_.guild)).token) escape(template.error("Incorrect client in use; please use this guild's bot."));
+
         log.info(
             `${
                 _.isChatInputCommand()
@@ -25,5 +32,4 @@ export default new Argentium()
         log.error(e);
 
         return template.error(`An unexpected error occurred. If contacting support, please mention the error ID **\`${e.id}\`**.`);
-    })
-    .on(Events.ClientReady, () => log.info("Bot online."));
+    });

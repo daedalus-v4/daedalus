@@ -5,6 +5,7 @@
     export let base: unknown;
     export let data: unknown;
     export let diff: (x: any, y: any) => boolean;
+    export let disabled: boolean = false;
 
     export let save: () => any = () => {};
 
@@ -46,7 +47,7 @@
     <p class="text-surface-500 dark:text-surface-300">YOU HAVE UNSAVED CHANGES</p>
     <flex class="flex items-center gap-2">
         <Button variant="error-text-only" disabled={saving} on:click={reset}>RESET</Button>
-        <Button variant="primary" disabled={saving} on:click={onsave}>SAVE</Button>
+        <Button variant="primary" disabled={disabled || saving} on:click={onsave}>SAVE</Button>
     </flex>
 </div>
 

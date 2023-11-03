@@ -18,7 +18,8 @@ export function nometa(x: any): any {
     );
 }
 
-export const defaultMessage: MessageData = { content: "", embeds: [], parsed: { content: [], embeds: [] } };
+export const defaultMessage: () => MessageData = () => ({ content: "", embeds: [], parsed: { content: [], embeds: [] } });
+export const defaultFEMessage: () => FEMessageData = () => ({ content: "", embeds: [], _meta: {} });
 
 export const defaultEmbed = (): FEIEmbed => ({
     author: { iconURL: "", name: "", url: "" },

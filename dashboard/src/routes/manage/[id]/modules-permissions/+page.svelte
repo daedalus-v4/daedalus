@@ -6,7 +6,6 @@
     import ModuleSaver from "$lib/components/ModuleSaver.svelte";
     import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
-    import { diffModulesPermissionsSettings } from "$lib/modules/modules-permissions-settings";
     import { commandPermissionsModalStore } from "$lib/stores";
     import type { FEModulesPermissionsSettings } from "$lib/types";
     import { fuzzy } from "$lib/utils";
@@ -25,7 +24,7 @@
     }
 </script>
 
-<ModuleSaver bind:base bind:data diff={diffModulesPermissionsSettings} />
+<ModuleSaver bind:base bind:data />
 
 <input type="search" class="input" placeholder="Find Modules / Commands" bind:value={input} />
 

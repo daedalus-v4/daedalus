@@ -28,7 +28,3 @@ export async function f2bGuildSettings(data: FESettings): Promise<DbSettings> {
     if (!data.embedColor.match(/^#[0-9a-f]{6}$/i)) throw "Invalid format for embed color: expected # followed by 6 hexadecimal digits.";
     return { ...data, embedColor: parseInt(data.embedColor.slice(1), 16) };
 }
-
-export function diffGuildSettings(x: FESettings, y: FESettings): boolean {
-    return JSON.stringify(x) !== JSON.stringify(y);
-}

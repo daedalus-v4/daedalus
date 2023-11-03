@@ -24,9 +24,11 @@ import {
     DbUtilitySettings,
     DbWelcomeSettings,
     DbXpSettings,
+    getLimit,
+    limits,
     modules,
 } from ".";
-import { PremiumTier } from "./src/premium.js";
+import { PremiumTier, premiumBenefits } from "./src/premium.js";
 
 export let _db: Db;
 export let client: MongoClient;
@@ -169,4 +171,8 @@ export async function getColor<T extends boolean>(
     }
 
     return blank ? (undefined as any) : 0x009688;
+}
+
+export async function getLimitFor(guild: Guild | APIGuild, key: keyof typeof limits) {
+    return getLimit(key, premiumBenefits[(await db.guilds.findOne({ guild: guild.id }))?.tier ?? PremiumTier.FREE]);
 }

@@ -28,7 +28,7 @@ function formatCustomMessageString(input: CustomMessageText, ctx: CustomMessageC
     return input.map((x) => (typeof x === "string" ? x : `${formatCustomMessageComponent(x, ctx)}`)).join("");
 }
 
-export async function formatMessage(input: MessageData["parsed"], ctx: CustomMessageContext): Promise<MessageCreateOptions> {
+export async function formatMessage(input: MessageData["parsed"], ctx: CustomMessageContext, allowPings: boolean = false): Promise<MessageCreateOptions> {
     ctx.user ??= ctx.member?.user;
     ctx.guild ??= ctx.member?.guild ?? ctx.role?.guild;
 
@@ -41,6 +41,7 @@ export async function formatMessage(input: MessageData["parsed"], ctx: CustomMes
 
     return {
         content: u(input.content),
+        allowedMentions: allowPings ? { parse: ["everyone", "roles", "users"] } : undefined,
         embeds: await Promise.all(
             input.embeds.map(async (e) => ({
                 color:

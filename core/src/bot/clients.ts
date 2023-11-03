@@ -27,11 +27,15 @@ export async function getClientFromToken(token: string) {
             failIfNotExists: false,
             presence: { activities: [{ type: ActivityType.Watching, name: "for /help" }] },
         });
-        await clientCache[token].login(token);
 
         await argentium.preApply(clientCache[token]);
-        await new Promise((r) => clientCache[token].on(Events.ClientReady, r));
-        await argentium.postApply(clientCache[token]);
+
+        clientCache[token].on(Events.ClientReady, async () => {
+            await argentium.postApply(clientCache[token]);
+            log.info(`Client ${token.slice(0, 5)}...${token.slice(-5)} is ready.`);
+        });
+
+        await clientCache[token].login(token);
     }
 
     return clientCache[token];

@@ -1,6 +1,7 @@
 <script lang="ts" context="module">
     const styles = {
         normal: "bg-surface-50 dark:bg-surface-900",
+        dim: "bg-transparent text-surface-500 dark:text-surface-300",
         medium: "bg-surface-300 dark:bg-surface-600",
         primary: "bg-primary-400 dark:bg-primary-500",
         "primary-text": "bg-surface-50 text-primary-800 dark:bg-surface-900 dark:text-primary-400",

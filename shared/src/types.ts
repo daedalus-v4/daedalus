@@ -25,6 +25,11 @@ export type ModuleData = Record<
     }
 >;
 
+export type PremiumBenefits = {
+    vanityClient: boolean;
+    increasedLimits: boolean;
+};
+
 export type IField = { name: string; value: string; inline: boolean };
 
 export type IEmbed = {

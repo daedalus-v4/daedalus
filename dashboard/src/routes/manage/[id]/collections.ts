@@ -5,4 +5,5 @@ export default () => ({
     "modules-permissions": db.modulesPermissionsSettings,
     logging: db.loggingSettings,
     welcome: db.welcomeSettings,
+    "supporter-announcements": db.supporterAnnouncementSettings,
 });

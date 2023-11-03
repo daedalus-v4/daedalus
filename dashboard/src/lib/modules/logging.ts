@@ -61,7 +61,3 @@ export async function f2bLoggingSettings(data: FELoggingSettings): Promise<DbLog
 
     return data;
 }
-
-export function diffLoggingSettings(x: FELoggingSettings, y: FELoggingSettings): boolean {
-    return JSON.stringify(x) != JSON.stringify(y);
-}
