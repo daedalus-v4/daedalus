@@ -5,6 +5,7 @@ import { fetchAndSendCustom, skip } from "../utils.js";
 
 export default (app: Argentium) =>
     app.on(Events.GuildMemberAdd, async (member) => {
+        if (member.user.bot) return;
         if (await skip(member.guild, "welcome")) return;
 
         const settings = await db.welcomeSettings.findOne({ guild: member.guild.id });
