@@ -34,9 +34,16 @@ class StickerCache {
         }
     }
 
-    async fetch(sticker: Sticker): Promise<string> {
+    async fetch(sticker: Sticker): Promise<string | null> {
         const sticker_path = this.path(sticker);
-        if (!existsSync(sticker_path)) await this.store(sticker);
+
+        if (!existsSync(sticker_path))
+            try {
+                await this.store(sticker);
+            } catch {
+                return null;
+            }
+
         return sticker_path;
     }
 

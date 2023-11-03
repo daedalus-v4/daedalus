@@ -1,14 +1,28 @@
 import Argentium from "argentium";
-import { APIEmbed, AuditLogEvent, Events, Guild, GuildChannel, MessageCreateOptions, OverwriteType, PermissionsBitField, escapeMarkdown } from "discord.js";
-import { SpoilerLevel, copyMedia } from "../../lib/copy-media.js";
+import {
+    APIEmbed,
+    AuditLogEvent,
+    ChannelType,
+    Events,
+    Guild,
+    GuildChannel,
+    MessageCreateOptions,
+    OverwriteType,
+    PermissionsBitField,
+    escapeMarkdown,
+} from "discord.js";
+import { permissions } from "shared";
+import { getAllClients } from "../../clients.js";
+import { SpoilerLevel, copyFiles, copyMedia } from "../../lib/copy-media.js";
 import { DurationStyle, code, colors, embed, englishList, expand, formatDuration, timeinfo } from "../../lib/format.js";
 import getMuteRole from "../../lib/get-mute-role.js";
 import { invokeLog } from "../../lib/logging.js";
+import stickerCache from "../../lib/sticker-cache.js";
 import { archiveDurations, audit, auditEntry, channelTypes, fieldsFor, statuses, to } from "./utils.js";
 
 export default (app: Argentium) =>
     app
-        .on(Events.ChannelCreate, async (channel) =>
+        .on(Events.ChannelCreate, (channel) =>
             invokeLog("channelCreate", channel, async () => {
                 const user = await audit(channel.guild, AuditLogEvent.ChannelCreate, channel);
                 return embed("Channel Created", `${expand(user, "System")} created ${expand(channel)}`, colors.actions.create);
@@ -16,7 +30,7 @@ export default (app: Argentium) =>
         )
         .on(
             Events.ChannelDelete,
-            async (channel) =>
+            (channel) =>
                 !channel.isDMBased() &&
                 invokeLog("channelDelete", channel, async () => {
                     const user = await audit(channel.guild, AuditLogEvent.ChannelDelete, channel);
@@ -29,7 +43,7 @@ export default (app: Argentium) =>
         )
         .on(
             Events.ChannelUpdate,
-            async (before, after) =>
+            (before, after) =>
                 !before.isDMBased() &&
                 !after.isDMBased() &&
                 invokeLog("channelUpdate", after, async () => {
@@ -59,8 +73,8 @@ export default (app: Argentium) =>
                                 before.defaultAutoArchiveDuration !== after.defaultAutoArchiveDuration
                             )
                                 rows.push(
-                                    `- default auto-archive duration: ${code(archiveDurations[before.defaultAutoArchiveDuration ?? 4320])} ${to} ${code(
-                                        archiveDurations[after.defaultAutoArchiveDuration ?? 4320],
+                                    `- default auto-archive duration: ${code(archiveDurations[before.defaultAutoArchiveDuration ?? 0])} ${to} ${code(
+                                        archiveDurations[after.defaultAutoArchiveDuration ?? 0],
                                     )}`,
                                 );
 
@@ -134,7 +148,7 @@ export default (app: Argentium) =>
                     }
                 }),
         )
-        .on(Events.GuildEmojiCreate, async (emoji) =>
+        .on(Events.GuildEmojiCreate, (emoji) =>
             invokeLog("emojiCreate", emoji.guild, async () => {
                 const user = await audit(emoji.guild, AuditLogEvent.EmojiCreate, emoji);
 
@@ -150,7 +164,7 @@ export default (app: Argentium) =>
                 };
             }),
         )
-        .on(Events.GuildEmojiDelete, async (emoji) =>
+        .on(Events.GuildEmojiDelete, (emoji) =>
             invokeLog("emojiDelete", emoji.guild, async () => {
                 const user = await audit(emoji.guild, AuditLogEvent.EmojiDelete, emoji);
 
@@ -166,7 +180,7 @@ export default (app: Argentium) =>
                 };
             }),
         )
-        .on(Events.GuildEmojiUpdate, async (before, after) =>
+        .on(Events.GuildEmojiUpdate, (before, after) =>
             invokeLog("emojiUpdate", after.guild, async () => {
                 const user = await audit(after.guild, AuditLogEvent.EmojiUpdate, after);
                 const enabled = after.roles.cache.filter((role) => !before.roles.cache.has(role.id));
@@ -188,7 +202,7 @@ export default (app: Argentium) =>
                 };
             }),
         )
-        .on(Events.GuildBanAdd, async (ban) =>
+        .on(Events.GuildBanAdd, (ban) =>
             invokeLog("guildBanAdd", ban.guild, async () => {
                 if (ban.partial) ban = await ban.fetch();
 
@@ -201,7 +215,7 @@ export default (app: Argentium) =>
                 );
             }),
         )
-        .on(Events.GuildBanRemove, async (ban) =>
+        .on(Events.GuildBanRemove, (ban) =>
             invokeLog("guildBanRemove", ban.guild, async () => {
                 const entry = await auditEntry(ban.guild, AuditLogEvent.MemberBanRemove, ban.user);
 
@@ -212,7 +226,7 @@ export default (app: Argentium) =>
                 );
             }),
         )
-        .on(Events.GuildMemberAdd, async (member) =>
+        .on(Events.GuildMemberAdd, (member) =>
             invokeLog("guildMemberAdd", member.guild, async () =>
                 embed(
                     "Member Joined",
@@ -228,7 +242,7 @@ export default (app: Argentium) =>
             const entry = await auditEntry(member.guild, AuditLogEvent.MemberKick, member);
 
             if (entry)
-                invokeLog("guildMemberKick", member.guild, async () =>
+                invokeLog("guildMemberKick", member.guild, () =>
                     embed(
                         "Member Kicked",
                         `${expand(entry.executor, "Unknown User")} kicked ${expand(member)}${entry.reason ? ` with reason ${code(entry.reason)}` : ""}`,
@@ -236,7 +250,7 @@ export default (app: Argentium) =>
                     ),
                 );
 
-            invokeLog("guildMemberRemove", member.guild, async () =>
+            invokeLog("guildMemberRemove", member.guild, () =>
                 embed(
                     "Member Left",
                     `${expand(member)} just left the server — joined ${formatDuration(
@@ -255,7 +269,7 @@ export default (app: Argentium) =>
 
             if (before.communicationDisabledUntilTimestamp !== after.communicationDisabledUntilTimestamp)
                 if ((before.communicationDisabledUntilTimestamp ?? 0) <= Date.now())
-                    invokeLog("guildMemberTimeout", after.guild, async () =>
+                    invokeLog("guildMemberTimeout", after.guild, () =>
                         embed(
                             "Member Timed Out",
                             `${expand(user, "System")} timed out ${expand(after)} until ${timeinfo(after.communicationDisabledUntil!)}${reason}`,
@@ -263,7 +277,7 @@ export default (app: Argentium) =>
                         ),
                     );
                 else if ((after.communicationDisabledUntilTimestamp ?? 0) <= Date.now())
-                    invokeLog("guildMemberTimeoutRemove", after.guild, async () =>
+                    invokeLog("guildMemberTimeoutRemove", after.guild, () =>
                         embed(
                             "Member Timeout Removed",
                             `${expand(user, "System")} removed the timeout for ${expand(after)} originally until ${timeinfo(
@@ -273,7 +287,7 @@ export default (app: Argentium) =>
                         ),
                     );
                 else
-                    invokeLog("guildMemberTimeout", after.guild, async () =>
+                    invokeLog("guildMemberTimeout", after.guild, () =>
                         embed(
                             "Member Timeout Duration Changed",
                             `${expand(user, "System")} changed the timeout for ${expand(after)} from until ${timeinfo(
@@ -284,7 +298,7 @@ export default (app: Argentium) =>
                     );
 
             if (before.nickname !== after.nickname)
-                invokeLog("guildMemberUpdateName", after.guild, async () =>
+                invokeLog("guildMemberUpdateName", after.guild, () =>
                     embed(
                         "Member Display Name Changed",
                         `${expand(user, "Unknown User")} changed ${user?.id === after.id ? "their own" : `${expand(after)}'s`} nickname from ${
@@ -298,7 +312,7 @@ export default (app: Argentium) =>
             const afterAvatar = after.displayAvatarURL({ size: 256 });
 
             if (beforeAvatar !== afterAvatar)
-                invokeLog("guildMemberUpdateAvatar", after.guild, async () => ({
+                invokeLog("guildMemberUpdateAvatar", after.guild, () => ({
                     embeds: [
                         { title: "Member Avatar Changed From...", description: expand(after), color: colors.actions.update, thumbnail: { url: beforeAvatar } },
                         { title: "...To", color: colors.actions.update, thumbnail: { url: afterAvatar } },
@@ -313,7 +327,7 @@ export default (app: Argentium) =>
                 const roleEditor = roleEditEntry?.executor;
                 const reason = roleEditEntry?.reason ? ` with reason ${code(roleEditEntry.reason)}` : "";
 
-                invokeLog("guildMemberUpdateRoles", after.guild, async () =>
+                invokeLog("guildMemberUpdateRoles", after.guild, () =>
                     embed(
                         "Member Roles Update",
                         `${expand(roleEditor, "System")} updated ${roleEditor?.id === after.id ? "their own" : `${expand(after)}'s`} roles: ${[
@@ -331,11 +345,11 @@ export default (app: Argentium) =>
                     const mutedAfter = after.roles.cache.has(muteRole.id);
 
                     if (!mutedBefore && mutedAfter)
-                        invokeLog("guildMemberMute", after.guild, async () =>
+                        invokeLog("guildMemberMute", after.guild, () =>
                             embed("Member Muted", `${expand(roleEditor, "Unknown User")} muted ${expand(after)}${reason}`, colors.actions.delete),
                         );
                     else if (mutedBefore && !mutedAfter)
-                        invokeLog("guildMemberUnmute", after.guild, async () =>
+                        invokeLog("guildMemberUnmute", after.guild, () =>
                             embed("Member Unmuted", `${expand(roleEditor, "Unknown User")} unmuted ${expand(after)}${reason}`, colors.actions.create),
                         );
                 }
@@ -345,7 +359,7 @@ export default (app: Argentium) =>
             Events.GuildScheduledEventCreate,
             (event) =>
                 event.guild &&
-                invokeLog("guildScheduledEventCreate", event.channel ?? event.guild, async () => ({
+                invokeLog("guildScheduledEventCreate", event.channel ?? event.guild, () => ({
                     embeds: [
                         {
                             title: "Event Created",
@@ -381,7 +395,7 @@ export default (app: Argentium) =>
         )
         .on(
             Events.GuildScheduledEventUpdate,
-            async (before, after) =>
+            (before, after) =>
                 before &&
                 after.guild &&
                 invokeLog("guildScheduledEventUpdate", after.channel ?? after.guild, async () => {
@@ -456,7 +470,7 @@ export default (app: Argentium) =>
                     return { embeds };
                 }),
         )
-        .on(Events.GuildUpdate, async (before, after) =>
+        .on(Events.GuildUpdate, (before, after) =>
             invokeLog("guildUpdate", after, async () => {
                 const user = await audit(after, AuditLogEvent.GuildUpdate, after);
 
@@ -571,10 +585,10 @@ export default (app: Argentium) =>
         )
         .on(
             Events.InviteCreate,
-            async (invite) =>
+            (invite) =>
                 invite.channel &&
                 !invite.channel.isDMBased() &&
-                invokeLog("inviteCreate", invite.channel, async () =>
+                invokeLog("inviteCreate", invite.channel, () =>
                     embed(
                         "Invite Created",
                         `${expand(invite.inviter, "System")} created discord.gg/${invite.code} to ${expand(invite.channel)} expiring ${
@@ -586,16 +600,16 @@ export default (app: Argentium) =>
         )
         .on(
             Events.InviteDelete,
-            async (invite) =>
+            (invite) =>
                 invite.channel &&
                 !invite.channel.isDMBased() &&
-                invokeLog("inviteDelete", invite.channel, async () =>
+                invokeLog("inviteDelete", invite.channel, () =>
                     embed("Invite Deleted", `discord.gg/${invite.code} to ${expand(invite.channel)} was deleted`, colors.actions.delete),
                 ),
         )
         .on(
             Events.MessageDelete,
-            async (message) =>
+            (message) =>
                 !message.channel.isDMBased() &&
                 invokeLog("messageDelete", message.channel, async ({ filesOnly }) => {
                     if (filesOnly && message.attachments.size === 0 && message.stickers.size === 0) return;
@@ -638,7 +652,7 @@ export default (app: Argentium) =>
         )
         .on(
             Events.MessageBulkDelete,
-            async (messages, channel) =>
+            (messages, channel) =>
                 messages.size > 0 &&
                 invokeLog("messageDeleteBulk", channel, async ({ filesOnly }) => {
                     const references: MessageCreateOptions[] = [];
@@ -699,9 +713,9 @@ export default (app: Argentium) =>
         )
         .on(
             Events.MessageReactionAdd,
-            async (reaction, user) =>
+            (reaction, user) =>
                 reaction.message.guild &&
-                invokeLog("messageReactionAdd", reaction.message.guild, async () => ({
+                invokeLog("messageReactionAdd", reaction.message.guild, () => ({
                     embeds: [
                         {
                             title: "Reaction Added",
@@ -714,9 +728,9 @@ export default (app: Argentium) =>
         )
         .on(
             Events.MessageReactionRemove,
-            async (reaction, user) =>
+            (reaction, user) =>
                 !reaction.message.channel.isDMBased() &&
-                invokeLog("messageReactionRemove", reaction.message.channel, async () => ({
+                invokeLog("messageReactionRemove", reaction.message.channel, () => ({
                     embeds: [
                         {
                             title: "Reaction Removed",
@@ -731,9 +745,9 @@ export default (app: Argentium) =>
         )
         .on(
             Events.MessageReactionRemoveAll,
-            async (message, reactions) =>
+            (message, reactions) =>
                 !message.channel.isDMBased() &&
-                invokeLog("messageReactionRemove", message.channel, async () => ({
+                invokeLog("messageReactionRemove", message.channel, () => ({
                     embeds: [
                         {
                             title: "All Reactions Purged",
@@ -748,9 +762,9 @@ export default (app: Argentium) =>
         )
         .on(
             Events.MessageReactionRemoveEmoji,
-            async (reaction) =>
+            (reaction) =>
                 !reaction.message.channel.isDMBased() &&
-                invokeLog("messageReactionRemove", reaction.message.channel, async () => ({
+                invokeLog("messageReactionRemove", reaction.message.channel, () => ({
                     embeds: [
                         {
                             title: "Reaction Emoji Purged",
@@ -760,4 +774,371 @@ export default (app: Argentium) =>
                         },
                     ],
                 })),
+        )
+        .on(
+            Events.MessageUpdate,
+            (before, after) =>
+                !before.channel.isDMBased() &&
+                !after.channel.isDMBased() &&
+                invokeLog("messageUpdate", after.channel, ({ filesOnly }) => {
+                    if ((filesOnly || before.content === after.content) && before.attachments.size === after.attachments.size) return;
+
+                    const files = copyFiles(before.attachments.filter((attachment) => !after.attachments.has(attachment.id)).toJSON(), SpoilerLevel.HIDE);
+                    const long = (before.content?.length ?? 0) > 1024 || (after.content?.length ?? 0) > 1024;
+
+                    const embeds: APIEmbed[] = [
+                        {
+                            title: "Message Updated",
+                            description:
+                                files.length === 0 ? "" : `${files.length === 1 ? "An attachment was" : "Attachments were"} removed from this message.`,
+                            color: colors.actions.update,
+                            fields: [
+                                fieldsFor(after),
+                                filesOnly || long || before.content === after.content
+                                    ? []
+                                    : [
+                                          before.content ? { name: "Before", value: before.content } : [],
+                                          after.content ? { name: "After", value: after.content } : [],
+                                      ].flat(),
+                            ].flat(),
+                            url: after.url,
+                        },
+                        !filesOnly && long && before.content !== after.content
+                            ? [
+                                  { title: "Before", description: before.content ?? "", color: colors.actions.update },
+                                  { title: "After", description: after.content ?? "", color: colors.actions.update },
+                              ]
+                            : [],
+                    ].flat();
+
+                    const length = embeds
+                        .map(
+                            (e) =>
+                                (e.title?.length ?? 0) +
+                                (e.description?.length ?? 0) +
+                                (e.fields ?? []).map((f) => f.name.length + f.value.length).reduce((x, y) => x + y),
+                        )
+                        .reduce((x, y) => x + y);
+
+                    return length > 6000 ? [{ embeds: [embeds.shift()!], files }, ...embeds.map((embed) => ({ embeds: [embed] }))] : { embeds, files };
+                }),
+        )
+        .on(Events.GuildRoleCreate, (role) =>
+            invokeLog("roleCreate", role.guild, async () => {
+                const user = await audit(role.guild, AuditLogEvent.RoleCreate, role);
+                const perms = role.permissions.toArray();
+
+                return embed(
+                    "Role Created",
+                    `${expand(user, "System")} created ${expand(role)} with permission${perms.length === 1 ? "" : "s"} ${englishList(
+                        perms.map((key) => permissions[key]?.name ?? key),
+                    )}`,
+                    colors.actions.create,
+                );
+            }),
+        )
+        .on(Events.GuildRoleDelete, (role) =>
+            invokeLog("roleDelete", role.guild, async () => {
+                const user = await audit(role.guild, AuditLogEvent.RoleDelete, role);
+                const perms = role.permissions.toArray();
+
+                return embed(
+                    "Role Created",
+                    `${expand(user, "System")} deleted ${role.name} (\`${role.id}\`) with permission${perms.length === 1 ? "" : "s"} ${englishList(
+                        perms.map((key) => permissions[key]?.name ?? key),
+                    )}`,
+                    colors.actions.delete,
+                );
+            }),
+        )
+        .on(Events.GuildRoleUpdate, (before, after) =>
+            invokeLog("roleUpdate", after.guild, async () => {
+                const user = await audit(after.guild, AuditLogEvent.RoleUpdate, after);
+
+                const rows: string[] = [];
+                let thumbnail: { url: string } | undefined;
+
+                if (before.name !== after.name) rows.push(`- name: ${code(before.name)} ${to} ${code(after.name)}`);
+                if (before.color !== after.color) rows.push(`- color: ${code(before.hexColor)} ${to} ${code(after.hexColor)}`);
+
+                if (before.hoist && !after.hoist) rows.push(`- role no longer appears separately on the member list (unhoisted)`);
+                else if (!before.hoist && after.hoist) rows.push(`- role now appears separately on the member list (hoisted)`);
+
+                if (before.mentionable && !after.mentionable) rows.push(`- role is no longer able to be pinged by everyone`);
+                else if (!before.mentionable && after.mentionable) rows.push(`- role is now able to be pinged by everyone`);
+
+                const afterIcon = after.iconURL();
+
+                if (before.iconURL() !== afterIcon) {
+                    if (afterIcon) {
+                        rows.push(`- role icon changed to ${afterIcon}`);
+                        thumbnail = { url: afterIcon! };
+                    } else rows.push(`- role icon removed`);
+                }
+
+                if (!before.permissions.equals(after.permissions)) {
+                    const beforePerms = before.permissions.toArray();
+                    const afterPerms = after.permissions.toArray();
+
+                    const added = afterPerms.filter((x) => !beforePerms.includes(x));
+                    const removed = beforePerms.filter((x) => !afterPerms.includes(x));
+
+                    rows.push(
+                        `- permissions have been changed:\n\`\`\`diff\n${[
+                            ...added.map((x) => `+ ${permissions[x]?.name ?? x}`),
+                            ...removed.map((x) => `- ${permissions[x]?.name ?? x}`),
+                        ].join("\n")}\n\`\`\``,
+                    );
+                }
+
+                if (rows.length === 0) return;
+
+                return {
+                    embeds: [
+                        {
+                            title: "Role Updated",
+                            description: `${expand(user, "System")} updated ${expand(after)}\n\n${rows.join("\n")}`,
+                            color: colors.actions.update,
+                            thumbnail,
+                        },
+                    ],
+                };
+            }),
+        )
+        .on(
+            Events.GuildStickerCreate,
+            (sticker) =>
+                sticker.guild &&
+                invokeLog("stickerCreate", sticker.guild, async () => {
+                    const user = await audit(sticker.guild!, AuditLogEvent.StickerCreate, sticker);
+                    const url = await stickerCache.fetch(sticker);
+
+                    return {
+                        embeds: [
+                            {
+                                title: "Sticker Created",
+                                description: `${expand(user, "Unknown User")} created ${sticker.name} (\`${sticker.id}\`)`,
+                                color: colors.actions.create,
+                            },
+                        ],
+                        files: url ? [{ attachment: url }] : [],
+                    };
+                }),
+        )
+        .on(
+            Events.GuildStickerDelete,
+            (sticker) =>
+                sticker.guild &&
+                invokeLog("stickerDelete", sticker.guild, async () => {
+                    const user = await audit(sticker.guild!, AuditLogEvent.StickerDelete, sticker);
+                    const url = await stickerCache.fetch(sticker);
+
+                    return {
+                        embeds: [
+                            {
+                                title: "Sticker Deleted",
+                                description: `${expand(user, "Unknown User")} deleted ${sticker.name} (\`${sticker.id}\`)`,
+                                color: colors.actions.delete,
+                            },
+                        ],
+                        files: url ? [{ attachment: url }] : [],
+                    };
+                }),
+        )
+        .on(
+            Events.GuildStickerUpdate,
+            (before, after) =>
+                before.guild &&
+                after.guild &&
+                invokeLog("stickerUpdate", after.guild, async () => {
+                    if (before.name === after.name && before.description === after.description) return;
+
+                    const user = await audit(after.guild!, AuditLogEvent.StickerUpdate, after);
+                    const url = await stickerCache.fetch(after);
+
+                    return {
+                        embeds: [
+                            {
+                                title: "Sticker Updated",
+                                description: `${expand(user, "Unknown User")} updated ${after.name} (\`${after.id}\`)\n${
+                                    before.name === after.name ? "" : `\n- name: ${code(before.name)} ${to} ${code(after.name)}`
+                                }${
+                                    before.description === after.description
+                                        ? ""
+                                        : `\n- description: ${before.description ? code(before.description) : "(none)"} ${to} ${
+                                              after.description ? code(after.description) : "(none)"
+                                          }`
+                                }`,
+                                color: colors.actions.update,
+                            },
+                        ],
+                        files: url ? [{ attachment: url }] : [],
+                    };
+                }),
+        )
+        .on(
+            Events.ThreadCreate,
+            (thread) =>
+                thread.parent &&
+                invokeLog("threadCreate", thread.parent, async () => {
+                    const user = await audit(thread.guild, AuditLogEvent.ThreadCreate, thread);
+                    const forum = thread.parent!.type === ChannelType.GuildForum;
+
+                    return embed(
+                        forum ? "Forum Post Created" : "Thread Created",
+                        `${expand(user, "System")} created ${expand(thread)}${
+                            forum ? "" : ` (${thread.type === ChannelType.PublicThread ? "public" : "private"})`
+                        }`,
+                        colors.actions.create,
+                    );
+                }),
+        )
+        .on(
+            Events.ThreadDelete,
+            (thread) =>
+                thread.parent &&
+                invokeLog("threadDelete", thread.parent, async () => {
+                    const user = await audit(thread.guild, AuditLogEvent.ThreadDelete, thread);
+                    const forum = thread.parent!.type === ChannelType.GuildForum;
+
+                    return embed(
+                        forum ? "Forum Post Deleted" : "Thread Deleted",
+                        `${expand(user, "System")} deleted ${thread.name} (\`${thread.id}\`) in ${expand(thread.parent)}${
+                            forum ? "" : ` (${thread.type === ChannelType.PublicThread ? "public" : "private"})`
+                        }`,
+                        colors.actions.delete,
+                    );
+                }),
+        )
+        .on(
+            Events.ThreadUpdate,
+            (before, after) =>
+                before.parent &&
+                after.parent &&
+                invokeLog("threadUpdate", after.parent, async () => {
+                    const user = await audit(after.guild, AuditLogEvent.ThreadUpdate, after);
+                    const rows: string[] = [];
+
+                    if (before.name !== after.name) rows.push(`- name: ${code(before.name)} ${to} ${code(after.name)}`);
+
+                    if (before.locked && !after.locked) rows.push(`- unlocked`);
+                    else if (!before.locked && after.locked) rows.push(`- locked`);
+
+                    if (before.archived && !after.archived) rows.push(`- unarchived`);
+                    else if (!before.archived && after.archived) rows.push(`- archived`);
+
+                    if (before.autoArchiveDuration !== after.autoArchiveDuration)
+                        rows.push(
+                            `- auto-archive duration: ${code(archiveDurations[before.autoArchiveDuration ?? 0])} ${to} ${code(
+                                archiveDurations[after.autoArchiveDuration ?? 0],
+                            )}`,
+                        );
+
+                    if (before.rateLimitPerUser !== after.rateLimitPerUser)
+                        rows.push(
+                            `- slowmode: ${formatDuration((before.rateLimitPerUser ?? 0) * 1000, DurationStyle.Blank)} ${to} ${formatDuration(
+                                (after.rateLimitPerUser ?? 0) * 1000,
+                                DurationStyle.Blank,
+                            )}`,
+                        );
+
+                    if (rows.length === 0) return;
+
+                    const forum = after.parent!.type === ChannelType.GuildForum;
+
+                    return embed(
+                        forum ? "Forum Post Updated" : "Thread Updated",
+                        `${expand(user, "System")} updated ${expand(after)}${
+                            forum ? "" : ` (${after.type === ChannelType.PublicThread ? "public" : "private"})`
+                        }\n\n${rows.join("\n")}`,
+                        colors.actions.update,
+                    );
+                }),
+        )
+        .on(Events.UserUpdate, (before, after) => {
+            const beforeAvatar = before.displayAvatarURL({ size: 256 });
+            const afterAvatar = after.displayAvatarURL({ size: 256 });
+
+            if (beforeAvatar !== afterAvatar || before.username !== after.username) {
+                const members = getAllClients().flatMap((client) => client.guilds.cache.map((guild) => guild.members.cache.get(after.id) ?? []).flat());
+                if (members.length === 0) return;
+
+                if (before.username !== after.username)
+                    for (const member of members)
+                        invokeLog("guildMemberUpdateName", member.guild, () =>
+                            embed(
+                                "Username Changed",
+                                `${expand(after)} changed their username from ${code(before.username ?? "(unknown)")} to ${code(after.username)}`,
+                                colors.actions.update,
+                            ),
+                        );
+
+                if (beforeAvatar !== afterAvatar)
+                    for (const member of members)
+                        invokeLog("guildMemberUpdateAvatar", member.guild, () => ({
+                            embeds: [
+                                {
+                                    title: "User Avatar Changed From...",
+                                    description: expand(after),
+                                    color: colors.actions.update,
+                                    thumbnail: { url: beforeAvatar },
+                                },
+                                {
+                                    title: "...To",
+                                    color: colors.actions.update,
+                                    thumbnail: { url: afterAvatar },
+                                },
+                            ],
+                        }));
+            }
+        })
+        .on(Events.VoiceStateUpdate, (before, after) =>
+            before.channel
+                ? after.channel
+                    ? before.channelId === after.channelId
+                        ? invokeLog("voiceStateUpdate", after.channel ?? after.guild, async () => {
+                              const user = await audit(after.guild, AuditLogEvent.MemberUpdate, after.member);
+
+                              const changes: string[] = [];
+
+                              if (before.selfVideo !== after.selfVideo) changes.push(`turned their camera ${after.selfVideo ? "on" : "off"}`);
+                              if (before.streaming !== after.streaming) changes.push(`${after.streaming ? "started" : "stopped"} streaming`);
+                              if (before.selfMute !== after.selfMute) changes.push(`${after.selfMute ? "" : "un"}muted themselves`);
+                              if (before.selfDeaf !== after.selfDeaf) changes.push(`${after.selfDeaf ? "" : "un"}deafened themselves`);
+
+                              if (before.serverMute !== after.serverMute)
+                                  changes.push(`was ${after.serverMute ? "suppressed" : "permitted to speak"} by ${expand(user)}`);
+
+                              if (before.serverDeaf !== after.serverDeaf) changes.push(`was server-${after.serverDeaf ? "" : "un"}deafened by ${expand(user)}`);
+                              if (before.suppress !== after.suppress) changes.push(`became ${after.suppress ? "an audience member" : "a speaker"}`);
+
+                              if (changes.length === 0) return;
+
+                              return embed("Voice State Update", `${expand(after.member)} ${englishList(changes)}`, colors.actions.update);
+                          })
+                        : invokeLog("voiceMove", after.channel ?? after.guild, async () => {
+                              const user = await audit(after.guild, AuditLogEvent.MemberMove);
+
+                              return embed(
+                                  "Voice Channel Changed",
+                                  `${expand(after.member)} ${user ? "was (maybe) " : ""}moved from ${expand(before.channel)} to ${expand(after.channel)}${
+                                      user ? ` by ${expand(user)}` : ""
+                                  }`,
+                                  colors.actions.update,
+                              );
+                          })
+                    : invokeLog("voiceLeave", before.channel ?? before.guild, async () => {
+                          const user = await audit(before.guild, AuditLogEvent.MemberDisconnect);
+
+                          return embed(
+                              "Voice Disconnect",
+                              `${expand(before.member)} ${user ? "was (maybe) kicked from" : "left"} ${expand(before.channel)}${
+                                  user ? ` by ${expand(user)}` : ""
+                              }`,
+                              colors.actions.delete,
+                          );
+                      })
+                : invokeLog("voiceJoin", after.channel ?? after.guild, () =>
+                      embed("Voice Connect", `${expand(after.member)} joined ${expand(after.channel)}`, colors.actions.create),
+                  ),
         );
