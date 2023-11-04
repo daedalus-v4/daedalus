@@ -9,6 +9,7 @@
         ["/docs", "book", "Docs"],
         [invite(), "plus", "Invite", false, true],
         ["https://discord.gg/7TRKfSK7EU", "discord", "Support", true, true],
+        ["/premium", "crown", "Premium"],
     ];
 
     let dark = true;
@@ -40,8 +41,8 @@
             <span class="text-2xl font-bold">Daedalus</span>
         </a>
         {#each links as [href, icon, label, brand, external]}
-            <span class="divider-vertical h-8 hidden lg:block" />
-            <a {href} target={external ? "_blank" : null} class="flex items-center text-lg p-4 hidden lg:block">
+            <span class="divider-vertical h-8 hidden xl:block" />
+            <a {href} target={external ? "_blank" : null} class="flex items-center text-lg p-4 hidden xl:block">
                 <Icon {icon} {brand} class="pr-2" />
                 {label}
             </a>
@@ -49,16 +50,16 @@
     </div>
     <div class="flex items-center">
         {#if $page.data.user}
-            <div class="hidden lg:block">
+            <div class="hidden xl:block">
                 <LoggedInAs />
             </div>
-            <span class="divider-vertical h-8 hidden lg:block" />
-            <a href="/auth/logout?{new URLSearchParams({ redirect: $page.url.pathname })}" class="flex items-center gap-2 text-lg p-4 hidden lg:block">
+            <span class="divider-vertical h-8 hidden xl:block" />
+            <a href="/auth/logout?{new URLSearchParams({ redirect: $page.url.pathname })}" class="flex items-center gap-2 text-lg p-4 hidden xl:block">
                 <Icon icon="right-from-bracket" />
                 Log Out
             </a>
         {:else}
-            <a href="/auth/login?{new URLSearchParams({ redirect: $page.url.pathname })}" class="flex items-center gap-2 text-lg p-4 hidden lg:block">
+            <a href="/auth/login?{new URLSearchParams({ redirect: $page.url.pathname })}" class="flex items-center gap-2 text-lg p-4 hidden xl:block">
                 <Icon icon="right-to-bracket" />
                 Log In
             </a>
@@ -67,12 +68,12 @@
             <Icon icon="sun" class="hidden dark:block" />
             <Icon icon="moon" class="block dark:hidden" />
         </button>
-        <button class="w-16 py-6 flex flex-col items-center block lg:hidden" on:click={() => (sidebarOpen = true)}>
+        <button class="w-16 py-6 flex flex-col items-center block xl:hidden" on:click={() => (sidebarOpen = true)}>
             <Icon icon="bars" />
         </button>
     </div>
 </nav>
-<div id="sidebar" class="{sidebarOpen ? 'open' : ''} z-20 block lg:hidden fixed inset-0 dark:bg-surface-900/40 backdrop-blur-sm">
+<div id="sidebar" class="{sidebarOpen ? 'open' : ''} z-20 block xl:hidden fixed inset-0 dark:bg-surface-900/40 backdrop-blur-sm">
     <button class="h-full w-1/4 cursor-default" on:click={() => (sidebarOpen = false)} />
     <div class="fixed top-0 left-1/4 right-0 bottom-0 flex flex-col dark:bg-surface-900/80 backdrop-blur-sm">
         <div class="h-full flex flex-col justify-between">
