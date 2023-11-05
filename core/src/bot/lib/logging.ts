@@ -76,7 +76,6 @@ export async function invokeLog(
             if (useWebhook) await fetch(webhook!, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(entry) });
             else await location!.send(entry);
         } catch (error: any) {
-            error.location = "ee988e02-c7b1-48c9-b388-0bb4f6bd01b7";
-            log.error(error);
+            log.error(error, "ee988e02-c7b1-48c9-b388-0bb4f6bd01b7");
         }
 }

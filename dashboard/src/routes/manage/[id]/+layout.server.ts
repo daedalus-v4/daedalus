@@ -8,7 +8,11 @@ import { b2f } from "./modules.js";
 
 export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => {
     if (!params.id.match(/^[1-9][0-9]{16,19}$/)) throw redirect(303, "/manage");
-    if (!locals.user) throw redirect(303, `/auth/login?${new URLSearchParams({ redirect: url.pathname })}`);
+
+    if (!locals.user) {
+        locals.unauthorized = true;
+        throw redirect(303, `/auth/login?${new URLSearchParams({ redirect: url.pathname })}`);
+    }
 
     const request = await fetch(`${API}/check-guild`, {
         method: "POST",
@@ -16,8 +20,12 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
         headers: { "Content-Type": "application/json" },
     });
 
-    const response: { valid: boolean; roles: TFRole[]; channels: TFChannel[] } = await request.json();
-    if (!response.valid) throw redirect(303, "/manage?reload");
+    const response: { owner: boolean; valid: boolean; roles: TFRole[]; channels: TFChannel[] } = await request.json();
+
+    if (!response.valid) {
+        locals.unauthorized = true;
+        throw redirect(303, "/manage?reload");
+    }
 
     const key = url.pathname.split("/")[3] ?? "-";
 
@@ -40,6 +48,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
 
     if (key in collections())
         return {
+            owner: response.owner,
             roles: response.roles,
             channels: response.channels,
             rootChannels: roots,
@@ -48,5 +57,5 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
             data: await b2f[key as keyof typeof b2f](fe, await collections()[key as keyof ReturnType<typeof collections>].findOne({ guild: params.id })),
         };
 
-    return { missing: true };
+    return { owner: response.owner, missing: true };
 };

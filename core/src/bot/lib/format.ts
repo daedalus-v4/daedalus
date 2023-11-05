@@ -1,14 +1,14 @@
 import { BaseMessageOptions, Colors, GuildChannel, GuildMember, Role, User, escapeMarkdown } from "discord.js";
 
-export function embed(title: string, description: string, color: number): BaseMessageOptions {
-    return { embeds: [{ title, description, color }] };
+export function embed(title: string, description: string, color: number, ephemeral: boolean = true): BaseMessageOptions & { ephemeral: boolean } {
+    return { embeds: [{ title, description, color }], ephemeral };
 }
 
 export const template = {
-    success: (body: string) => embed("OK!", body, Colors.Green),
-    error: (body: string) => embed("Error!", body, Colors.Red),
-    info: (body: string) => embed("Info", body, Colors.Blue),
-    logerror: (context: string, body: string) => embed(`Bot Error: ${context}`, body, Colors.Red),
+    success: (body: string, ephemeral?: boolean) => embed("OK!", body, Colors.Green, ephemeral),
+    error: (body: string, ephemeral?: boolean) => embed("Error!", body, Colors.Red, ephemeral),
+    info: (body: string, ephemeral?: boolean) => embed("Info", body, Colors.Blue, ephemeral),
+    logerror: (context: string, body: string, ephemeral?: boolean) => embed(`Bot Error: ${context}`, body, Colors.Red, ephemeral),
 };
 
 export function expand(item: any, ifAbsent?: string): string {

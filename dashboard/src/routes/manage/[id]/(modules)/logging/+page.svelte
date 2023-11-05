@@ -9,12 +9,11 @@
     import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
     import SingleChannelSelector from "$lib/components/SingleChannelSelector.svelte";
-    import type { FELoggingSettings } from "$lib/types";
     import { textlike } from "$lib/utils";
     import { SlideToggle } from "@skeletonlabs/skeleton";
     import { logCategories, logEvents } from "shared";
 
-    let base: FELoggingSettings = $page.data.data;
+    let base = $page.data.data;
     let data = browser ? structuredClone(base) : base;
 
     let open: string | null = null;

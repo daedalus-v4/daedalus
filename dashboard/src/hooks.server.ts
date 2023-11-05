@@ -1,5 +1,6 @@
 import { DB_NAME, DB_URI, DISCORD_API, OWNER } from "$env/static/private";
 import { PUBLIC_DOMAIN } from "$env/static/public";
+import recalculate from "$lib/recalculate-premium.js";
 import type { Handle } from "@sveltejs/kit";
 import { connect, db } from "shared/db.js";
 
@@ -8,6 +9,8 @@ let connected = false;
 export const handle: Handle = async ({ event, resolve }) => {
     if (!connected) {
         await connect(DB_URI, DB_NAME);
+        recalculate();
+        setInterval(recalculate, 24 * 60 * 60 * 1000);
         connected = true;
     }
 

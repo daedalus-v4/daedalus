@@ -8,8 +8,6 @@
     $: $permissionModalStore && (description = permissions[$permissionModalStore as keyof typeof permissions].description);
 </script>
 
-<Modal z={80} open={$permissionModalStore !== null} on:close={() => ($permissionModalStore = null)}>
-    <div class="h-full grid items-center justify-center">
-        <P>{@html description}</P>
-    </div>
+<Modal z={80} open={$permissionModalStore !== null} hideFullscreenToggle on:close={() => ($permissionModalStore = null)}>
+    <P>{@html description}</P>
 </Modal>

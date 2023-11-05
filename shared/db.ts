@@ -42,6 +42,22 @@ export async function connect(uri: string, name: string) {
 type WithGuild<T> = T & { guild: string };
 
 class Database {
+    public get customers() {
+        return _db.collection<{ discord: string; stripe: string }>("customers");
+    }
+
+    public get paymentLinks() {
+        return _db.collection<{ key: string; links: [string, string, string, string] }>("payment_links");
+    }
+
+    public get premiumKeys() {
+        return _db.collection<{ user: string; keys: string[] }>("premium_keys");
+    }
+
+    public get premiumKeyBindings() {
+        return _db.collection<{ key: string; guild: string; disabled?: boolean }>("activated_keys");
+    }
+
     public get counters() {
         return _db.collection<{ sequence: string; value: number }>("counters");
     }

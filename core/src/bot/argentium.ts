@@ -13,8 +13,8 @@ export default new Argentium()
             .reduce((x, y) => x.use(require(`./modules/${y}`).default), x),
     )
     .beforeAllCommands(async ({ _ }, escape) => {
-        if (!_.guild) return;
-        if (_.client.token !== (await getClient(_.guild)).token) escape(template.error("Incorrect client in use; please use this guild's bot."));
+        if (_.guild && !(_.isChatInputCommand() && _.commandName === "admin") && _.client.token !== (await getClient(_.guild)).token)
+            escape(template.error("Incorrect client in use; please use this guild's bot."));
 
         log.info(
             `${
@@ -28,8 +28,7 @@ export default new Argentium()
         if (typeof e === "string") return template.error(e);
 
         e.id = await autoIncrement("unexpected-errors");
-        e.location = "8a282b5e-0d0c-4ad1-9277-0f667ec00d88";
-        log.error(e);
+        log.error(e, "8a282b5e-0d0c-4ad1-9277-0f667ec00d88");
 
         return template.error(`An unexpected error occurred. If contacting support, please mention the error ID **\`${e.id}\`**.`);
     });

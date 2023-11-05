@@ -9,6 +9,7 @@ declare namespace App {
             discriminator: string;
             admin: boolean;
         };
+        unauthorized?: boolean;
     }
 
     interface PageData {

@@ -5,7 +5,7 @@ import { db } from "shared/db.js";
 import { getClient } from "../../lib/premium.js";
 import { App } from "../app.js";
 
-const invalid = { valid: false, roles: [], channels: [] };
+const invalid = { owner: false, valid: false, roles: [], channels: [] };
 
 export default (app: App) =>
     app.post(
@@ -45,6 +45,7 @@ export default (app: App) =>
             const me = await guild.members.fetchMe();
 
             return {
+                owner: user === Bun.env.OWNER || user === guild.ownerId,
                 valid: true,
                 roles: guild.roles.cache
                     .sort((x, y) => -x.comparePositionTo(y))
@@ -82,6 +83,7 @@ export default (app: App) =>
                 guild: t.String(),
             }),
             response: t.Object({
+                owner: t.Boolean(),
                 valid: t.Boolean(),
                 roles: t.Array(
                     t.Object({

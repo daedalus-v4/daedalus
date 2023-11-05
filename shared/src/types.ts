@@ -26,6 +26,7 @@ export type ModuleData = Record<
 >;
 
 export type PremiumBenefits = {
+    name: string;
     vanityClient: boolean;
     increasedLimits: boolean;
 };

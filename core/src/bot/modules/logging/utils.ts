@@ -38,8 +38,7 @@ export async function auditEntry(
             if (entry.target && key in entry.target && entry.target[key as keyof typeof entry.target] === target) return entry;
         }
     } catch (error: any) {
-        error.location = "91574df4-6549-46f6-894a-8b54f67db6db";
-        log.error(error);
+        log.error(error, "91574df4-6549-46f6-894a-8b54f67db6db");
     }
 }
 
