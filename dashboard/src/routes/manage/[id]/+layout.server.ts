@@ -53,7 +53,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
             channels: response.channels,
             rootChannels: roots,
             enabled: await isModuleEnabled(params.id, key),
-            premium: premiumBenefits[(await db.guilds.findOne({ id: params.id }))?.tier ?? PremiumTier.FREE],
+            premium: premiumBenefits[(await db.guilds.findOne({ guild: params.id }))?.tier ?? PremiumTier.FREE],
             data: await b2f[key as keyof typeof b2f](fe, await collections()[key as keyof ReturnType<typeof collections>].findOne({ guild: params.id })),
         };
 
