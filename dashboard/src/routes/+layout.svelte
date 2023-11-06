@@ -8,6 +8,7 @@
     import { initializeStores, storeHighlightJs, storePopup } from "@skeletonlabs/skeleton";
     import "../app.postcss";
 
+    import { modalStackStore } from "$lib/stores";
     import hljs from "highlight.js/lib/core";
     import json from "highlight.js/lib/languages/json";
     import plaintext from "highlight.js/lib/languages/plaintext";
@@ -21,6 +22,8 @@
     initializeStores();
     $storePopup = { computePosition, autoUpdate, flip, shift, offset, arrow };
 </script>
+
+<svelte:window on:keydown={(e) => e.key === "Escape" && [$modalStackStore.at(-1)?.()]} />
 
 <PermissionModal />
 <RoleSelectorModal />

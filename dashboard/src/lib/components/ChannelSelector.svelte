@@ -23,7 +23,7 @@
     function open() {
         $channelSelectorModalStore = {
             types,
-            select(id: string, set: any) {
+            select(id, set) {
                 if (selected.includes(id)) set((selected = selected.filter((x) => x !== id)));
                 else set((selected = [...selected, id].sort((x, y) => indexes[x] - indexes[y])));
             },

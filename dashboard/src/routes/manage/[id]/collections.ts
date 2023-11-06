@@ -7,4 +7,5 @@ export default () => ({
     welcome: db.welcomeSettings,
     "supporter-announcements": db.supporterAnnouncementSettings,
     xp: db.xpSettings,
+    "reaction-roles": db.reactionRolesSettings,
 });

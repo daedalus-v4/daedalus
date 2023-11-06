@@ -44,7 +44,7 @@
                         class="p-2 text-surface-500 dark:text-surface-300"
                         on:click={() => (message.embeds = insert(message.embeds, index, structuredClone(embed)))}
                     >
-                        <Icon icon="copy" />
+                        <Icon icon="clone" />
                     </button>
                     <button class="p-2 text-error-400" on:click={() => (message.embeds = without(message.embeds, index))}>
                         <Icon icon="trash" />
@@ -162,7 +162,7 @@
                                         class="p-2 text-surface-500 dark:text-surface-300"
                                         on:click={() => (embed.fields = insert(embed.fields, fi, structuredClone(field)))}
                                     >
-                                        <Icon icon="copy" />
+                                        <Icon icon="clone" />
                                     </button>
                                     <button class="p-2 text-error-400" on:click={() => (embed.fields = without(embed.fields, fi))}>
                                         <Icon icon="trash" />

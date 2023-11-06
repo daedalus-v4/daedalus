@@ -2,10 +2,7 @@ import { API, DISCORD_API } from "$env/static/private";
 import type { RequestHandler } from "@sveltejs/kit";
 import type { DDLGuild } from "shared";
 
-export const GET: RequestHandler = async ({ cookies, fetch, locals }) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { user } = locals as any;
-
+export const GET: RequestHandler = async ({ cookies, fetch, locals: { user } }) => {
     const access_token = cookies.get("discord_access_token");
     if (!access_token) return new Response('{"error":"Missing access token in request."}');
 

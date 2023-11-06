@@ -32,7 +32,7 @@
             </div>
             <div class="flex items-center gap-4">
                 {#if !limited}
-                    <Button variant="dim" on:click={() => (data.entries = insert(data.entries, index, structuredClone(entry)))}><Icon icon="copy" /></Button>
+                    <Button variant="dim" on:click={() => (data.entries = insert(data.entries, index, structuredClone(entry)))}><Icon icon="clone" /></Button>
                 {/if}
                 <Button variant="error-text-only" on:click={() => (data.entries = without(data.entries, index))}><Icon icon="trash" /></Button>
             </div>

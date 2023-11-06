@@ -1,4 +1,4 @@
-import Elysia from "elysia";
+import { app } from "./app.js";
 import routes from "./routes.js";
 
-new Elysia().use(routes).listen(Bun.env.PORT || 4000);
+app.use(routes).listen(Bun.env.PORT || 4000);

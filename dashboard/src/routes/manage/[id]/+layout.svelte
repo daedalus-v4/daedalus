@@ -1,5 +1,6 @@
 <script lang="ts">
     import { page } from "$app/stores";
+    import EmojiSelectorModal from "$lib/components/EmojiSelectorModal.svelte";
     import LeftNavLayout from "$lib/components/LeftNavLayout.svelte";
     import { modules } from "shared";
 
@@ -15,7 +16,7 @@
             label: "Modules & Permissions",
             selected: moduleParam === "modules-permissions",
         },
-        ...["logging", "welcome", "supporter-announcements", "xp"].map((mid) => ({
+        ...["logging", "welcome", "supporter-announcements", "xp", "reaction-roles"].map((mid) => ({
             link: `/manage/${id}/${mid}`,
             icon: modules[mid].icon ?? "gear",
             label: modules[mid].name,
@@ -24,4 +25,5 @@
     ];
 </script>
 
+<EmojiSelectorModal />
 <LeftNavLayout {links}><slot /></LeftNavLayout>

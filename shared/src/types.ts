@@ -95,6 +95,12 @@ export type TFChannel = {
     children?: TFChannel[];
 };
 
+export type TFEmoji = {
+    id: string;
+    name: string;
+    url: string;
+};
+
 export type DbGlobals = {
     lastXpPurge: number;
 };
@@ -183,6 +189,7 @@ export type DbXpSettings = {
 
 export type DbReactionRolesSettings = {
     entries: {
+        id: number;
         name: string;
         addReactionsToExistingMessage: boolean;
         channel: string | null;
@@ -191,7 +198,7 @@ export type DbReactionRolesSettings = {
         type: "normal" | "unique" | "verify" | "lock";
         dropdownData: { emoji: string | null; role: string | null; label: string; description: string }[];
         buttonData: { emoji: string | null; role: string | null; color: "gray" | "blue" | "green" | "red"; label: string }[][];
-        reactionData: { emoji: string | null; role: string | null };
+        reactionData: { emoji: string | null; role: string | null }[];
         promptMessage: MessageData;
     }[];
 };

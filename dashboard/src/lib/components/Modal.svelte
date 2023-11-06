@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { modalStackStore } from "$lib/stores";
     import { createEventDispatcher } from "svelte";
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
@@ -17,10 +18,12 @@
         open = false;
         fullscreen = false;
         dispatch("close");
-    }
-</script>
 
-<svelte:window on:keydown={(e) => open && e.key === "Escape" && [close(), e.stopPropagation()]} />
+        modalStackStore.update((x) => x.filter((k) => k !== close));
+    }
+
+    $: open && modalStackStore.update((x) => [...x, close]);
+</script>
 
 <div
     class="{open ? '' : 'opacity-0 scale-90 translate-y-12'} pointer-events-none fixed inset-0 flex items-center justify-center transition-all duration-400"

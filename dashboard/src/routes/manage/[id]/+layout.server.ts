@@ -1,6 +1,6 @@
 import { API } from "$env/static/private";
 import { redirect } from "@sveltejs/kit";
-import type { TFChannel, TFRole } from "shared";
+import type { TFChannel, TFEmoji, TFRole } from "shared";
 import { getPremiumBenefitsFor, isModuleEnabled } from "shared/db.js";
 import type { LayoutServerLoad } from "./$types.js";
 import collections from "./collections.js";
@@ -10,7 +10,6 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
     if (!params.id.match(/^[1-9][0-9]{16,19}$/)) throw redirect(303, "/manage");
 
     if (!locals.user) {
-        locals.unauthorized = true;
         throw redirect(303, `/auth/login?${new URLSearchParams({ redirect: url.pathname })}`);
     }
 
@@ -20,12 +19,13 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
         headers: { "Content-Type": "application/json" },
     });
 
-    const response: { owner: boolean; valid: boolean; roles: TFRole[]; channels: TFChannel[] } = await request.json();
+    const response: { owner: boolean; valid: boolean; roles: TFRole[]; channels: TFChannel[]; emojis: TFEmoji[] } = await request.json();
 
     if (!response.valid) {
-        locals.unauthorized = true;
         throw redirect(303, "/manage?reload");
     }
+
+    locals.authorized = true;
 
     const key = url.pathname.split("/")[3] ?? "-";
 
@@ -51,10 +51,15 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
             owner: response.owner,
             roles: response.roles,
             channels: response.channels,
+            emojis: response.emojis,
             rootChannels: roots,
             enabled: await isModuleEnabled(params.id, key),
             premium: await getPremiumBenefitsFor(params.id),
-            data: await b2f[key as keyof typeof b2f](fe, await collections()[key as keyof ReturnType<typeof collections>].findOne({ guild: params.id })),
+            data: await b2f[key as keyof typeof b2f](
+                fe,
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (await collections()[key as keyof ReturnType<typeof collections>].findOne({ guild: params.id })) as any,
+            ),
         };
 
     return { owner: response.owner, missing: true };

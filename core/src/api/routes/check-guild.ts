@@ -1,11 +1,11 @@
 import { Guild, PermissionFlagsBits } from "discord.js";
 import { t } from "elysia";
-import { TFChannel, TFRole } from "shared";
+import { TFChannel, TFEmoji, TFRole } from "shared";
 import { db } from "shared/db.js";
 import { getClient } from "../../lib/premium.js";
 import { App } from "../app.js";
 
-const invalid = { owner: false, valid: false, roles: [], channels: [] };
+const invalid = { owner: false, valid: false, roles: [], channels: [], emojis: [] };
 
 export default (app: App) =>
     app.post(
@@ -75,6 +75,15 @@ export default (app: App) =>
 
                     return output;
                 }),
+                emojis: guild.emojis.cache.map((emoji) => {
+                    const output: TFEmoji = {
+                        id: emoji.id,
+                        name: emoji.name ?? "[Unnamed Emoji]",
+                        url: emoji.url,
+                    };
+
+                    return output;
+                }),
             };
         },
         {
@@ -103,6 +112,13 @@ export default (app: App) =>
                         name: t.String(),
                         parent: t.Optional(t.String()),
                         readonly: t.Optional(t.Boolean()),
+                    }),
+                ),
+                emojis: t.Array(
+                    t.Object({
+                        id: t.String(),
+                        name: t.String(),
+                        url: t.String(),
                     }),
                 ),
             }),

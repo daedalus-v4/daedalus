@@ -1,6 +1,7 @@
 import { b2fGuildSettings, f2bGuildSettings } from "$lib/modules/guild-settings.js";
 import { b2fLoggingSettings, f2bLoggingSettings } from "$lib/modules/logging.js";
 import { b2fModulesPermissionsSettings, f2bModulesPermissionsSettings } from "$lib/modules/modules-permissions-settings.js";
+import { b2fReactionRolesSettings, f2bReactionRolesSettings } from "$lib/modules/reaction-roles.js";
 import { b2fSupporterAnnouncementsSettings, f2bSupporterAnnouncementsSettings } from "$lib/modules/supporter-announcements.js";
 import { b2fWelcomeSettings, f2bWelcomeSettings } from "$lib/modules/welcome.js";
 import { b2fXpSettings, f2bXpSettings } from "$lib/modules/xp.js";
@@ -12,6 +13,7 @@ export const b2f = {
     welcome: b2fWelcomeSettings,
     "supporter-announcements": b2fSupporterAnnouncementsSettings,
     xp: b2fXpSettings,
+    "reaction-roles": b2fReactionRolesSettings,
 };
 
 export const f2b = {
@@ -21,4 +23,5 @@ export const f2b = {
     welcome: f2bWelcomeSettings,
     "supporter-announcements": f2bSupporterAnnouncementsSettings,
     xp: f2bXpSettings,
+    "reaction-roles": f2bReactionRolesSettings,
 };

@@ -8,8 +8,9 @@ declare namespace App {
             username: string;
             discriminator: string;
             admin: boolean;
+            avatar: string;
         };
-        unauthorized?: boolean;
+        authorized?: boolean;
     }
 
     interface PageData {
@@ -18,6 +19,7 @@ declare namespace App {
             username: string;
             discriminator: string;
             admin: boolean;
+            avatar: string;
         };
     }
 }
