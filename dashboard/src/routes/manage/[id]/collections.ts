@@ -6,4 +6,5 @@ export default () => ({
     logging: db.loggingSettings,
     welcome: db.welcomeSettings,
     "supporter-announcements": db.supporterAnnouncementSettings,
+    xp: db.xpSettings,
 });

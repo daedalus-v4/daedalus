@@ -7,7 +7,7 @@ export enum PremiumTier {
 }
 
 export const premiumBenefits: Record<PremiumTier, PremiumBenefits> = {
-    [PremiumTier.FREE]: { name: "Free Tier", vanityClient: false, increasedLimits: false },
-    [PremiumTier.BASIC]: { name: "Daedalus Premium (Basic)", vanityClient: false, increasedLimits: true },
-    [PremiumTier.ULTIMATE]: { name: "Daedalus Premium (Ultimate)", vanityClient: true, increasedLimits: true },
+    [PremiumTier.FREE]: { name: "Free Tier", vanityClient: false, increasedLimits: false, customizeXpBackgrounds: false },
+    [PremiumTier.BASIC]: { name: "Daedalus Premium (Basic)", vanityClient: false, increasedLimits: true, customizeXpBackgrounds: true },
+    [PremiumTier.ULTIMATE]: { name: "Daedalus Premium (Ultimate)", vanityClient: true, increasedLimits: true, customizeXpBackgrounds: true },
 };

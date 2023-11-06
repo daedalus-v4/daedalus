@@ -1,14 +1,16 @@
 import { ActivityType, Client, Events, IntentsBitField, Partials } from "discord.js";
+import clientTasks from "../lib/client-tasks.js";
 import { log } from "../lib/log.js";
 import argentium from "./argentium.js";
 
 export const clientCache: Record<string, Client> = {};
+export const clientLoops: Record<string, NodeJS.Timer[]> = {};
 
 export async function getClientFromToken(token: string) {
     if (!clientCache[token]) {
         log.info(`Obtaining client ${token.slice(0, 5)}...${token.slice(-5)}`);
 
-        clientCache[token] = new Client({
+        const client = (clientCache[token] = new Client({
             intents:
                 IntentsBitField.Flags.Guilds |
                 IntentsBitField.Flags.GuildMembers |
@@ -26,16 +28,16 @@ export async function getClientFromToken(token: string) {
             allowedMentions: { parse: [] },
             failIfNotExists: false,
             presence: { activities: [{ type: ActivityType.Watching, name: "for /help" }] },
-        });
+        }));
 
-        await argentium.preApply(clientCache[token]);
-
-        clientCache[token].on(Events.ClientReady, async () => {
-            await argentium.postApply(clientCache[token]);
+        client.on(Events.ClientReady, async () => {
+            await argentium.postApply(client);
+            clientTasks(client);
             log.info(`Client ${token.slice(0, 5)}...${token.slice(-5)} is ready.`);
         });
 
-        await clientCache[token].login(token);
+        await argentium.preApply(client);
+        await client.login(token);
     }
 
     return clientCache[token];

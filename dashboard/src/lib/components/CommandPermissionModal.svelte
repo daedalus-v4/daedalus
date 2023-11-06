@@ -1,6 +1,7 @@
 <script lang="ts">
     import { commandPermissionsModalStore } from "$lib/stores";
     import type { FEModulesPermissionsSettings } from "$lib/types";
+    import { textlikeAndParents } from "$lib/utils";
     import { SlideToggle } from "@skeletonlabs/skeleton";
     import { modules } from "shared";
     import ChannelSelector from "./ChannelSelector.svelte";
@@ -68,12 +69,12 @@
                 <h5 class="h5">Allowed Roles</h5>
                 <span class="text-surface-600 dark:text-surface-300">(This is overridden by blocked roles.)</span>
             </span>
-            <RoleSelector bind:selected={__.allowedRoles} />
+            <RoleSelector showEveryone showHigher showManaged bind:selected={__.allowedRoles} />
             <span class="flex items-center gap-2">
                 <h5 class="h5">Blocked Roles</h5>
                 <span class="text-surface-600 dark:text-surface-300">(This overrides allowed roles.)</span>
             </span>
-            <RoleSelector bind:selected={__.blockedRoles} />
+            <RoleSelector showEveryone showHigher showManaged bind:selected={__.blockedRoles} />
         </Panel>
         <Panel class="w-full">
             <h3 class="h3">Channel Permissions</h3>
@@ -89,9 +90,9 @@
                 If a channel and its parent category differ, the channel's settings will take precedence. If a channel is both allowed and blocked at the same
                 level, it will be blocked.
             </P>
-            <ChannelSelector bind:selected={__.allowedChannels} />
+            <ChannelSelector types={textlikeAndParents} bind:selected={__.allowedChannels} />
             <h5 class="h5">Blocked Channels</h5>
-            <ChannelSelector bind:selected={__.blockedChannels} />
+            <ChannelSelector types={textlikeAndParents} bind:selected={__.blockedChannels} />
         </Panel>
     {/if}
 </Modal>

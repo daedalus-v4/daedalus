@@ -7,6 +7,7 @@ import {
     Guild,
     GuildChannel,
     MessageCreateOptions,
+    MessageFlags,
     OverwriteType,
     PermissionsBitField,
     escapeMarkdown,
@@ -329,7 +330,7 @@ export default (app: Argentium) =>
 
                 invokeLog("guildMemberUpdateRoles", after.guild, () =>
                     embed(
-                        "Member Roles Update",
+                        "Member Roles Updated",
                         `${expand(roleEditor, "System")} updated ${roleEditor?.id === after.id ? "their own" : `${expand(after)}'s`} roles: ${[
                             ...added.map((x) => `+${x}`),
                             ...removed.map((x) => `-${x}`),
@@ -778,10 +779,11 @@ export default (app: Argentium) =>
         .on(
             Events.MessageUpdate,
             (before, after) =>
+                !before.flags.has(MessageFlags.Loading) &&
                 !before.channel.isDMBased() &&
                 !after.channel.isDMBased() &&
                 invokeLog("messageUpdate", after.channel, ({ filesOnly }) => {
-                    if ((filesOnly || before.content === after.content) && before.attachments.size === after.attachments.size) return;
+                    if ((filesOnly || (before.content ?? "") === (after.content ?? "")) && before.attachments.size === after.attachments.size) return;
 
                     const files = copyFiles(before.attachments.filter((attachment) => !after.attachments.has(attachment.id)).toJSON(), SpoilerLevel.HIDE);
                     const long = (before.content?.length ?? 0) > 1024 || (after.content?.length ?? 0) > 1024;
@@ -1114,7 +1116,7 @@ export default (app: Argentium) =>
 
                               if (changes.length === 0) return;
 
-                              return embed("Voice State Update", `${expand(after.member)} ${englishList(changes)}`, colors.actions.update);
+                              return embed("Voice State Updated", `${expand(after.member)} ${englishList(changes)}`, colors.actions.update);
                           })
                         : invokeLog("voiceMove", after.channel ?? after.guild, async () => {
                               const user = await audit(after.guild, AuditLogEvent.MemberMove);

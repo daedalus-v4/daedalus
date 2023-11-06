@@ -1,6 +1,7 @@
 import { connect, db } from "shared/db.js";
 import "./api";
 import { getClientFromToken } from "./bot/clients.js";
+import "./lib/global-tasks.js";
 import { log } from "./lib/log.js";
 import { getClient } from "./lib/premium.js";
 

@@ -74,3 +74,16 @@ export type FESupporterAnnouncementsSettings = {
         message: FEMessageData;
     }[];
 };
+
+export type FEXpSettings = {
+    blockedChannels: string[];
+    blockedRoles: string[];
+    bonusChannels: { channel: string | null; multiplier: number | null }[];
+    bonusRoles: { role: string | null; multiplier: number | null }[];
+    rankCardBackground: string;
+    announceLevelUp: boolean;
+    announceInChannel: boolean;
+    announceChannel: string | null;
+    announcementBackground: string;
+    rewards: { text: number | null; voice: number | null; role: string | null; removeOnHigher: boolean; dmOnReward: boolean }[];
+};

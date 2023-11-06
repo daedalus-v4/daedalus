@@ -1,16 +1,24 @@
 import Argentium from "argentium";
 import { BaseMessageOptions } from "discord.js";
 import { db } from "shared/db.js";
-import { getToken } from "../../../lib/premium.js";
+import { log } from "../../../lib/log.js";
 import { template } from "../../lib/format.js";
 import { defer } from "../../lib/hooks.js";
 
 export default (app: Argentium) =>
     app.commands((x) =>
         x
-            .beforeAll(async ({ _ }) => {
+            .beforeAll(async ({ _, ...data }, escape) => {
                 if (_.user.id === Bun.env.OWNER) return;
-                if ((await db.admins.countDocuments({ user: _.user.id })) === 0) return template.error("You are not a Daedalus admin.");
+
+                if ((await db.admins.countDocuments({ user: _.user.id })) === 0) {
+                    log.warn(
+                        { command: _.isChatInputCommand() ? _.options.getSubcommand() : null, data },
+                        `${_.user.id} attempted to use an admin command while unauthorized:`,
+                    );
+
+                    escape(template.error("You are not a Daedalus admin."));
+                }
             })
             .slash((x) =>
                 x

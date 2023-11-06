@@ -12,7 +12,7 @@
     const raised = getLimit(key, true);
     const showPromo = raised > limit;
 
-    export let limited: boolean;
+    export let limited: boolean = amount >= limit;
     $: limited = amount >= limit;
 </script>
 

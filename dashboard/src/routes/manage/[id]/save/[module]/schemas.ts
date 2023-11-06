@@ -6,6 +6,7 @@ import type {
     DbSettings,
     DbSupporterAnnouncementsSettings,
     DbWelcomeSettings,
+    DbXpSettings,
     MessageData,
 } from "shared";
 import { z } from "zod";
@@ -129,4 +130,24 @@ export default {
             }),
         ),
     }) satisfies z.ZodType<DbSupporterAnnouncementsSettings>,
+    xp: z.object({
+        blockedChannels: snowflakes,
+        blockedRoles: snowflakes,
+        bonusChannels: z.array(z.object({ channel: z.nullable(snowflake), multiplier: z.nullable(z.number().min(0).max(10)) })),
+        bonusRoles: z.array(z.object({ role: z.nullable(snowflake), multiplier: z.nullable(z.number().min(0).max(10)) })),
+        rankCardBackground: z.string().trim(),
+        announceLevelUp: z.boolean(),
+        announceInChannel: z.boolean(),
+        announceChannel: z.nullable(snowflake),
+        announcementBackground: z.string().trim(),
+        rewards: z.array(
+            z.object({
+                text: z.nullable(z.number().int().min(1)),
+                voice: z.nullable(z.number().int().min(1)),
+                role: z.nullable(snowflake),
+                removeOnHigher: z.boolean(),
+                dmOnReward: z.boolean(),
+            }),
+        ),
+    }) satisfies z.ZodType<DbXpSettings>,
 };

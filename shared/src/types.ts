@@ -29,6 +29,7 @@ export type PremiumBenefits = {
     name: string;
     vanityClient: boolean;
     increasedLimits: boolean;
+    customizeXpBackgrounds: boolean;
 };
 
 export type IField = { name: string; value: string; inline: boolean };
@@ -92,6 +93,10 @@ export type TFChannel = {
     parent?: string;
     readonly?: boolean;
     children?: TFChannel[];
+};
+
+export type DbGlobals = {
+    lastXpPurge: number;
 };
 
 export type DbSettings = {
@@ -164,16 +169,16 @@ export type DbSupporterAnnouncementsSettings = {
 };
 
 export type DbXpSettings = {
-    blockedRoles: string[];
     blockedChannels: string[];
-    bonusChannels: { channel: string | null; multiplier: number }[];
-    bonusRoles: { role: string | null; multiplier: number }[];
+    blockedRoles: string[];
+    bonusChannels: { channel: string | null; multiplier: number | null }[];
+    bonusRoles: { role: string | null; multiplier: number | null }[];
     rankCardBackground: string;
     announceLevelUp: boolean;
     announceInChannel: boolean;
     announceChannel: string | null;
     announcementBackground: string;
-    rewards: { text: number; voice: number; role: string | null; removeOnHigher: boolean; dmOnReward: boolean }[];
+    rewards: { text: number | null; voice: number | null; role: string | null; removeOnHigher: boolean; dmOnReward: boolean }[];
 };
 
 export type DbReactionRolesSettings = {
@@ -431,4 +436,13 @@ export type DDLGuild = {
     hasBot?: boolean;
     features: string[];
     notIn?: boolean;
+};
+
+export type DbXpAmounts = {
+    guild: string;
+    user: string;
+    daily: { text: number; voice: number };
+    weekly: { text: number; voice: number };
+    monthly: { text: number; voice: number };
+    total: { text: number; voice: number };
 };

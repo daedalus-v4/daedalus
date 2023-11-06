@@ -18,7 +18,16 @@ export const POST: RequestHandler = async ({ fetch, locals, params: { id, module
         if (!(module in schemas)) throw "Missing schema (this is our fault).";
         if (!(module in collections())) throw "Missing database collection (this is our fault).";
 
-        const data = schemas[module as keyof typeof schemas].parse(await request.json());
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let data: any;
+
+        try {
+            data = schemas[module as keyof typeof schemas].parse(await request.json());
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        } catch (error: any) {
+            throw error.errors.map(({ message }: { message: string }) => message).join(" ");
+        }
+
         await collections()[module as keyof ReturnType<typeof collections>].updateOne({ guild: id }, { $set: data }, { upsert: true });
 
         return new Response();

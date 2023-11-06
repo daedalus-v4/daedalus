@@ -1,4 +1,4 @@
-import { Awaitable, Guild, TextBasedChannel } from "discord.js";
+import { Awaitable, Guild, MessageCreateOptions, OAuth2Guild, TextBasedChannel } from "discord.js";
 import { CustomMessageContext, MessageData } from "shared";
 import { isModuleEnabled } from "shared/db.js";
 import { formatMessage } from "shared/format-custom-message.js";
@@ -6,7 +6,7 @@ import { isAssignedClient } from "../../lib/premium.js";
 import { template } from "../lib/format.js";
 import { invokeLog } from "../lib/logging.js";
 
-export async function skip(guild: Guild, module: string) {
+export async function skip(guild: Guild | OAuth2Guild, module: string) {
     return !((await isAssignedClient(guild)) && (await isModuleEnabled(guild.id, module)));
 }
 
@@ -55,6 +55,20 @@ export async function sendCustomMessage(
     }
 }
 
+export async function sendMessage(channel: TextBasedChannel, data: MessageCreateOptions, moduleTitle: string, errorMessage: string) {
+    try {
+        return await channel.send(data);
+    } catch (error) {
+        !channel.isDMBased() &&
+            invokeLog("botError", channel, () =>
+                template.logerror(
+                    `Bot Error — Sending Message — ${moduleTitle} Module`,
+                    `${errorMessage} Check the bot's permissions in ${channel} and ensure your custom message is valid. Here's some details about the error:\n\`\`\`\n${error}\n\`\`\``,
+                ),
+            );
+    }
+}
+
 export async function fetchAndSendCustom(
     guild: Guild,
     id: string,
@@ -67,4 +81,16 @@ export async function fetchAndSendCustom(
 ) {
     const channel = await getTextChannel(guild, id, moduleTitle, contextName);
     if (channel) return await sendCustomMessage(channel, data, moduleTitle, errorMessage, await context?.(), allowPings);
+}
+
+export async function fetchAndSendMessage(
+    guild: Guild,
+    id: string,
+    moduleTitle: string,
+    contextName: string,
+    data: MessageCreateOptions,
+    errorMessage: string,
+) {
+    const channel = await getTextChannel(guild, id, moduleTitle, contextName);
+    if (channel) return await sendMessage(channel, data, moduleTitle, errorMessage);
 }

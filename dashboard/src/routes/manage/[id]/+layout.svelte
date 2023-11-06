@@ -15,7 +15,7 @@
             label: "Modules & Permissions",
             selected: moduleParam === "modules-permissions",
         },
-        ...["logging", "welcome", "supporter-announcements"].map((mid) => ({
+        ...["logging", "welcome", "supporter-announcements", "xp"].map((mid) => ({
             link: `/manage/${id}/${mid}`,
             icon: modules[mid].icon ?? "gear",
             label: modules[mid].name,

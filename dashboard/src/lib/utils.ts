@@ -19,6 +19,7 @@ export function sortRoles(input: string[], roles: TFRole[]) {
 }
 
 export const textlike = [0, 2, 5, 10, 11, 12, 13];
+export const textlikeAndParents = [...textlike, 4, 15, 16];
 
 export function shouldShowChannel(channel: TFChannel, types: number[] | null | undefined, input: string): boolean {
     return (

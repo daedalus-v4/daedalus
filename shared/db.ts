@@ -7,6 +7,7 @@ import {
     DbCountSettings,
     DbCustomRolesSettings,
     DbGiveawaysSettings,
+    DbGlobals,
     DbLoggingSettings,
     DbModmailSettings,
     DbModulesPermissionsSettings,
@@ -23,7 +24,9 @@ import {
     DbTicketsSettings,
     DbUtilitySettings,
     DbWelcomeSettings,
+    DbXpAmounts,
     DbXpSettings,
+    PremiumBenefits,
     getLimit,
     limits,
     modules,
@@ -42,6 +45,10 @@ export async function connect(uri: string, name: string) {
 type WithGuild<T> = T & { guild: string };
 
 class Database {
+    public get globals() {
+        return _db.collection<DbGlobals>("globals");
+    }
+
     public get customers() {
         return _db.collection<{ discord: string; stripe: string }>("customers");
     }
@@ -68,6 +75,10 @@ class Database {
 
     public get guilds() {
         return _db.collection<{ guild: string; tier: PremiumTier; token: string | null }>("guilds");
+    }
+
+    public get premiumOverrides() {
+        return _db.collection<{ guild: string } & Partial<PremiumBenefits>>("premium_overrides");
     }
 
     public get guildSettings() {
@@ -161,6 +172,10 @@ class Database {
     public get utilitySettings() {
         return _db.collection<DbUtilitySettings>("utility_settings");
     }
+
+    public get xpAmounts() {
+        return _db.collection<DbXpAmounts>("xp_amounts");
+    }
 }
 
 export const db = new Database();
@@ -191,4 +206,11 @@ export async function getColor<T extends boolean>(
 
 export async function getLimitFor(guild: Guild | APIGuild, key: keyof typeof limits) {
     return getLimit(key, premiumBenefits[(await db.guilds.findOne({ guild: guild.id }))?.tier ?? PremiumTier.FREE]);
+}
+
+export async function getPremiumBenefitsFor(guild: string) {
+    return {
+        ...Object.assign(premiumBenefits[(await db.guilds.findOne({ guild }))?.tier ?? PremiumTier.FREE], (await db.premiumOverrides.findOne({ guild })) ?? {}),
+        _id: undefined,
+    };
 }

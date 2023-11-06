@@ -1,7 +1,7 @@
-import { BaseMessageOptions, Colors, GuildChannel, GuildMember, Role, User, escapeMarkdown } from "discord.js";
+import { BaseMessageOptions, ButtonStyle, Colors, ComponentType, GuildChannel, GuildMember, Role, User, escapeMarkdown } from "discord.js";
 
 export function embed(title: string, description: string, color: number, ephemeral: boolean = true): BaseMessageOptions & { ephemeral: boolean } {
-    return { embeds: [{ title, description, color }], ephemeral };
+    return { embeds: [{ title, description, color }], files: [], components: [], ephemeral };
 }
 
 export const template = {
@@ -9,6 +9,23 @@ export const template = {
     error: (body: string, ephemeral?: boolean) => embed("Error!", body, Colors.Red, ephemeral),
     info: (body: string, ephemeral?: boolean) => embed("Info", body, Colors.Blue, ephemeral),
     logerror: (context: string, body: string, ephemeral?: boolean) => embed(`Bot Error: ${context}`, body, Colors.Red, ephemeral),
+    confirm: (
+        body: string,
+        user: string,
+        key: string,
+        { yesLabel, noLabel, ephemeral }: { yesLabel?: string; noLabel?: string; ephemeral?: boolean } = {},
+    ): BaseMessageOptions => ({
+        ...embed("Confirm", body, colors.prompts.confirm, ephemeral),
+        components: [
+            {
+                type: ComponentType.ActionRow,
+                components: [
+                    { type: ComponentType.Button, customId: `:${user}:${key}`, style: ButtonStyle.Success, label: yesLabel ?? "Confirm" },
+                    { type: ComponentType.Button, customId: `:${user}:cancel`, style: ButtonStyle.Danger, label: noLabel ?? "Cancel" },
+                ],
+            },
+        ],
+    }),
 };
 
 export function expand(item: any, ifAbsent?: string): string {
@@ -30,12 +47,18 @@ export function code(x: string): string {
 export const colors = {
     continued: Colors.DarkButNotBlack,
     default: 0x009688,
+    error: Colors.Red,
     actions: {
         create: Colors.Green,
         delete: Colors.Red,
         update: Colors.Blue,
         importantUpdate: Colors.Gold,
         bulkDelete: Colors.Purple,
+    },
+    prompts: {
+        confirm: 0xaa4477,
+        canceled: Colors.Red,
+        inProgress: Colors.Blue,
     },
 };
 

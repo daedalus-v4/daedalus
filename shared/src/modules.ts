@@ -40,6 +40,7 @@ export const modules: ModuleData = {
                 permissions: ["ManageGuild"],
             },
         },
+        default: false,
     },
     "reaction-roles": {
         name: "Reaction Roles",
@@ -494,3 +495,7 @@ export const modules: ModuleData = {
         },
     },
 };
+
+export const commandMap = Object.fromEntries(
+    Object.entries(modules).flatMap(([mid, module]) => Object.entries(module.commands ?? {}).map(([k, v]) => [k, { ...v, module: mid }])),
+);

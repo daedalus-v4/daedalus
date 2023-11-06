@@ -1,14 +1,16 @@
-import { APIGuild, Guild } from "discord.js";
+import { APIGuild, Guild, OAuth2Guild } from "discord.js";
 import { premiumBenefits } from "shared";
 import { db } from "shared/db.js";
-import { clientCache, getClientFromToken } from "../bot/clients.js";
+import { clientCache, clientLoops, getClientFromToken } from "../bot/clients.js";
 import { log } from "./log.js";
 
-export async function getToken(ctx?: string | APIGuild | Guild | { guild: APIGuild | Guild }) {
+type GuildLike = APIGuild | Guild | OAuth2Guild;
+
+export async function getToken(ctx?: string | GuildLike | { guild: GuildLike }) {
     return (await getTokens([ctx ?? ""]))[0];
 }
 
-export async function getTokens(ctx?: (string | APIGuild | Guild | { guild: APIGuild | Guild })[]) {
+export async function getTokens(ctx?: (string | GuildLike | { guild: GuildLike })[]) {
     if (!ctx?.length) return [];
 
     const guilds = ctx.map((x) => (typeof x === "string" ? x : "guild" in x ? x.guild.id : x.id));
@@ -17,7 +19,7 @@ export async function getTokens(ctx?: (string | APIGuild | Guild | { guild: APIG
     return guilds.map((guild) => (!docs[guild]?.token || !premiumBenefits[docs[guild].tier].vanityClient ? Bun.env.TOKEN! : docs[guild].token!));
 }
 
-export async function getClient(ctx?: string | APIGuild | Guild | { guild: APIGuild | Guild }) {
+export async function getClient(ctx?: string | GuildLike | { guild: GuildLike }) {
     try {
         return await getClientFromToken(await getToken(ctx));
     } catch {
@@ -25,7 +27,7 @@ export async function getClient(ctx?: string | APIGuild | Guild | { guild: APIGu
     }
 }
 
-export async function isAssignedClient(ctx: Guild | { guild: Guild }) {
+export async function isAssignedClient(ctx: Guild | OAuth2Guild | { guild: Guild }) {
     const guild = "guild" in ctx ? ctx.guild : ctx;
     return guild.client.token === (await getClient(ctx)).token;
 }
@@ -66,6 +68,11 @@ export async function resetClient(guild: string) {
 
             const client = await getClientFromToken(token);
             await client.application?.commands.set([]);
+            await client.destroy();
+
+            clientLoops[token].forEach(clearInterval);
+
+            delete clientLoops[token];
             delete clientCache[token];
 
             log.info(`Liberated client with token ${token.slice(0, 5)}...${token.slice(-5)}`);
