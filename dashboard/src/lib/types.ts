@@ -95,6 +95,7 @@ export type FEReactionRolesSettings = {
         addReactionsToExistingMessage: boolean;
         channel: string | null;
         message: string | null;
+        url: string;
         style: "dropdown" | "buttons" | "reactions";
         type: "normal" | "unique" | "verify" | "lock";
         dropdownData: { emoji: string | null; role: string | null; label: string; description: string }[];

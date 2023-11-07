@@ -6,7 +6,11 @@ export default async function () {
     const reverseMap: Record<string, any> = {};
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    for (const [key, value] of Object.entries(global.emojis) as any) reverseMap[value.skins[0]?.native] = key;
+    for (const [key, value] of Object.entries(global.emojis) as any)
+        reverseMap[value.skins[0]?.native] = key
+            .split("_")
+            .map((block: string) => `${block[0].toUpperCase()}${block.slice(1)}`)
+            .join(" ");
 
     return { global, reverseMap };
 }

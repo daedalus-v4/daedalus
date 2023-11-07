@@ -24,7 +24,7 @@
 
 {#each data.entries as entry, index}
     <Panel>
-        <div class="w-full flex items-center justify-between">
+        <div class="w-full flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
             <div class="flex items-center gap-4">
                 <b>Detect Role</b>
                 <SlideToggle name="" size="sm" bind:checked={entry.boosts} />
@@ -37,7 +37,7 @@
                 <Button variant="error-text-only" on:click={() => (data.entries = without(data.entries, index))}><Icon icon="trash" /></Button>
             </div>
         </div>
-        <div class="grid grid-cols-[auto_1fr] items-center gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-[auto_1fr] items-center gap-4">
             <b class={entry.boosts ? "hidden" : ""}>Role:</b>
             <div class={entry.boosts ? "hidden" : ""}>
                 <SingleRoleSelector bind:selected={entry.role} />

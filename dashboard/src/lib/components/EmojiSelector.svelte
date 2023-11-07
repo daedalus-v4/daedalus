@@ -1,7 +1,9 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import { emojiSelectorModalStore } from "$lib/stores";
+    import getGlobalEmojis from "$lib/get-global-emojis";
+    import { emojiSelectorModalStore, globalEmojiHasBeenLoadedStore, globalEmojiStore } from "$lib/stores";
     import type { TFEmoji } from "shared";
+    import { onMount } from "svelte";
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
 
@@ -19,16 +21,22 @@
             },
         };
     }
+
+    onMount(() => globalEmojiHasBeenLoadedStore.update((x) => (!x && getGlobalEmojis().then((k) => globalEmojiStore.set(k)), (x = true))));
 </script>
 
 <div class="flex flex-wrap gap-3">
     {#each selected as id}
         <span class="badge px-4 text-sm flex items-center rounded outline outline-surface-500 dark:outline-surface-300">
             <button class="w-4" on:click={() => (selected = selected.filter((x) => x !== id))}>
-                <img src={emojiMap[id]?.url} alt={emojiMap[id]?.name ?? "x"} />
+                {#if id.match(/^[1-9][0-9]{16,19}$/)}
+                    <img src={emojiMap[id]?.url} alt={emojiMap[id]?.name ?? ""} />
+                {:else}
+                    {id}
+                {/if}
             </button>
             <span class="text-surface-600 dark:text-surface-100">
-                {emojiMap[id]?.name ?? `Invalid Emoji: ${id}`}
+                {id.match(/^[1-9][0-9]{16,19}$/) ? emojiMap[id]?.name ?? `Invalid Emoji: ${id}` : $globalEmojiStore.reverseMap[id] ?? "Unknown Emoji"}
             </span>
         </span>
     {/each}

@@ -11,9 +11,9 @@
     $: select = _?.select;
     $: selected = _?.selected;
 
-    const emojis: TFEmoji[] = $page.data.emojis;
+    const emojis: TFEmoji[] = $page.data.emojis ?? [];
 
-    $: ({ global, reverseMap } = $globalEmojiStore);
+    $: ({ global } = $globalEmojiStore);
 
     function pick(id: string) {
         select?.(id, (x: any) => (selected = x));
@@ -35,20 +35,17 @@
                     </button>
                 </div>
             {/each}
+            {#each global.categories as category}
+                {@const filtered = new Set(category.emojis.filter((name) => fuzzy(name, input?.replace(" ", "_"))))}
+                {#each category.emojis as name}
+                    {@const char = global.emojis[name]?.skins[0].native}
+                    {#if char}
+                        <div class={filtered.has(name) ? "" : "hidden"}>
+                            <button class="btn p-1 text-3xl {selected?.includes(char) ? 'outline' : ''}" on:click={() => pick(char)}>{char}</button>
+                        </div>
+                    {/if}
+                {/each}
+            {/each}
         </div>
     </div>
-    {#each global.categories as category}
-        {@const filtered = new Set(category.emojis.filter((emoji) => emoji in global.emojis && fuzzy(global[emoji]?.name, input)))}
-
-        <div class={filtered.size > 0 ? "" : "hidden"}>
-            <h4 class="h4">{category.id}</h4>
-            <div class="grid grid-cols-[repeat(auto-fill,40px)] gap-1 p-4 overflow-y-auto">
-                {#each category.emojis as name}
-                    <div class={filtered.has(name) ? "" : "hidden"}>
-                        <button class="btn p-1 text-3xl">{global.emojis[name]?.skins[0].native}</button>
-                    </div>
-                {/each}
-            </div>
-        </div>
-    {/each}
 </Modal>

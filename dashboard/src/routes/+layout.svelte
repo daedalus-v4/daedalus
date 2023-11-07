@@ -8,6 +8,7 @@
     import { initializeStores, storeHighlightJs, storePopup } from "@skeletonlabs/skeleton";
     import "../app.postcss";
 
+    import MessageEditorModal from "$lib/components/MessageEditorModal.svelte";
     import { modalStackStore } from "$lib/stores";
     import hljs from "highlight.js/lib/core";
     import json from "highlight.js/lib/languages/json";
@@ -28,6 +29,7 @@
 <PermissionModal />
 <RoleSelectorModal />
 <ChannelSelectorModal />
+<MessageEditorModal />
 
 <Navbar />
 <UpButton />

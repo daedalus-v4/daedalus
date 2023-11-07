@@ -104,7 +104,7 @@
         {@const name = logCategories[openkey]}
         {@const category = data.categories[openkey]}
         <h2 class="h2 pb-4">{name}</h2>
-        <div class="hidden md:grid w-full grid-cols-[auto_auto_1fr] items-center gap-4">
+        <div class="min-w-[max-content] w-full grid grid-cols-[auto_auto_1fr] items-center gap-4 pr-8">
             <span />
             <span>Event Name</span>
             <span>Override Output Location</span>

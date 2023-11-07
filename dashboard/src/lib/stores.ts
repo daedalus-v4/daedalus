@@ -1,9 +1,12 @@
+import type { FEMessageData } from "shared";
 import { writable } from "svelte/store";
 import type { FEModulesPermissionsSettings } from "./types.js";
 
 export const modalStackStore = writable<(() => unknown)[]>([]);
 
 export const permissionModalStore = writable<string | null>(null);
+
+export const messageEditorModalStore = writable<FEMessageData | null>(null);
 
 export const roleSelectorModalStore = writable<{
     showManaged: boolean;

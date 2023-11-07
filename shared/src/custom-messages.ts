@@ -121,8 +121,8 @@ export function parseCustomMessageString(input: string): CustomMessageText {
     return output;
 }
 
-export function parseMessage(input: Omit<MessageData, "parsed">): MessageData["parsed"] {
-    const p = parseCustomMessageString;
+export function parseMessage(input: Omit<MessageData, "parsed">, isStatic: boolean): MessageData["parsed"] {
+    const p: (s: string) => CustomMessageText = isStatic ? (s) => [s] : parseCustomMessageString;
 
     return {
         content: p(input.content),

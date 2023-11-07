@@ -31,7 +31,7 @@
 </script>
 
 <Modal max open={!!$commandPermissionsModalStore} on:close={() => ($commandPermissionsModalStore = null)}>
-    <h2 class="h2 flex gap-2">
+    <h2 class="h2 flex flex-wrap gap-2">
         Managing the <b class="flex items-center gap-2">
             {#if command?.icon}<Icon icon={command.icon} />{/if}
             {command?.name}
@@ -85,11 +85,11 @@
                     (this command can only be used in allowed channels)
                 </span>
             </div>
-            <h5 class="h5">Allowed Channels</h5>
             <P>
                 If a channel and its parent category differ, the channel's settings will take precedence. If a channel is both allowed and blocked at the same
                 level, it will be blocked.
             </P>
+            <h5 class="h5">Allowed Channels</h5>
             <ChannelSelector types={textlikeAndParents} bind:selected={__.allowedChannels} />
             <h5 class="h5">Blocked Channels</h5>
             <ChannelSelector types={textlikeAndParents} bind:selected={__.blockedChannels} />

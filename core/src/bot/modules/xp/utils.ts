@@ -1,6 +1,6 @@
 import { Channel, Guild, GuildMember, User } from "discord.js";
 import { DbXpSettings } from "shared";
-import { db, getColor, getPremiumBenefitsFor } from "shared/db.js";
+import { db, getColor, getLimitFor, getPremiumBenefitsFor } from "shared/db.js";
 import { log } from "../../../lib/log.js";
 import { template } from "../../lib/format.js";
 import { invokeLog } from "../../lib/logging.js";
@@ -37,9 +37,11 @@ export function xpToLevel(xp: number, floor = true) {
     return floor ? Math.floor(level) : level;
 }
 
-function scale(channel: Channel, settings: DbXpSettings | null) {
+async function scale(channel: Channel, settings: DbXpSettings | null) {
     if (channel.isDMBased()) return 0;
     if (settings === null) return 1;
+
+    const channels = settings.bonusChannels.slice(0, await getLimitFor(channel.guild, "xpBonusChannelCount"));
 
     let current: Channel | null = channel;
 
@@ -58,12 +60,13 @@ export async function addXp(channel: Channel, member: GuildMember, text = 0, voi
     try {
         settings ??= await db.xpSettings.findOne({ guild: member.guild.id });
 
-        const channelRatio = scale(channel, settings);
+        const channelRatio = await scale(channel, settings);
         text *= channelRatio;
         voice *= channelRatio;
 
         const roleRatio = settings
             ? settings.bonusRoles
+                  .slice(0, await getLimitFor(member.guild, "xpBonusRoleCount"))
                   .filter((x) => x.role && member.roles.cache.has(x.role))
                   .map((x) => x.multiplier)
                   .filter((x) => x !== null)
@@ -102,7 +105,7 @@ export async function addXp(channel: Channel, member: GuildMember, text = 0, voi
             let dmRole: string | undefined;
             const threshold = { text: 0, voice: 0 };
 
-            for (const reward of settings!.rewards) {
+            for (const reward of settings?.rewards.slice(0, await getLimitFor(member.guild, "xpRewardCount")) ?? []) {
                 if (reward.role === null) continue;
 
                 let award = false;

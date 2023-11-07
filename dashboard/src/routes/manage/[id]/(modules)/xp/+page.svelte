@@ -34,16 +34,20 @@
     <h4 class="h4">Channels</h4>
     <P>If a category and channel both have overrides, the channel's own will override the category's. They do not stack.</P>
     <div class="w-full overflow-x-auto">
-        <div class="grid grid-cols-[auto_auto_auto_1fr] items-center gap-x-8 gap-y-2">
-            <span />
-            <b>Channel</b>
-            <b>Multiplier</b>
+        <div class="grid grid-cols-1 sm:grid-cols-[auto_auto_auto_1fr] sm:items-center gap-x-8 gap-y-2">
+            <span class="hidden sm:block" />
+            <b class="hidden sm:block">Channel</b>
+            <b class="hidden sm:block">Multiplier</b>
             <span />
             {#each data.bonusChannels as bonus, index}
-                <Button variant="error-text-only" on:click={() => (data.bonusChannels = without(data.bonusChannels, index))}><Icon icon="trash" /></Button>
+                <div>
+                    <Button variant="error-text-only" on:click={() => (data.bonusChannels = without(data.bonusChannels, index))}><Icon icon="trash" /></Button>
+                </div>
+                <b class="block sm:hidden">Channel</b>
                 <span>
                     <SingleChannelSelector types={textlike} bind:selected={bonus.channel} />
                 </span>
+                <b class="block sm:hidden">Multiplier</b>
                 <input type="number" class="input" bind:value={bonus.multiplier} />
                 <span />
             {/each}
@@ -57,16 +61,20 @@
     <h4 class="h4">Roles</h4>
     <P>If a user has multiple of these roles, the highest multiplier will apply. They do not stack.</P>
     <div class="w-full overflow-x-auto">
-        <div class="grid grid-cols-[auto_auto_auto_1fr] items-center gap-x-8 gap-y-2">
-            <span />
-            <b>Role</b>
-            <b>Multiplier</b>
+        <div class="grid grid-cols-1 sm:grid-cols-[auto_auto_auto_1fr] sm:items-center gap-x-8 gap-y-2">
+            <span class="hidden sm:block" />
+            <b class="hidden sm:block">Role</b>
+            <b class="hidden sm:block">Multiplier</b>
             <span />
             {#each data.bonusRoles as bonus}
-                <Button variant="error-text-only"><Icon icon="trash" /></Button>
+                <div>
+                    <Button variant="error-text-only"><Icon icon="trash" /></Button>
+                </div>
+                <b class="block sm:hidden">Role</b>
                 <span>
                     <SingleRoleSelector showEveryone showHigher showManaged bind:selected={bonus.role} />
                 </span>
+                <b class="block sm:hidden">Multiplier</b>
                 <input type="number" class="input" bind:value={bonus.multiplier} />
                 <span />
             {/each}
@@ -106,7 +114,9 @@
 <Panel>
     <h3 class="h3">Role Rewards</h3>
     <div class="max-w-full overflow-x-auto">
-        <div class="grid grid-cols-[minmax(100px,auto)_minmax(100px,auto)_1fr_auto_auto_auto] items-center gap-x-8 gap-y-2">
+        <div
+            class="w-full grid grid-cols-[minmax(100px,auto)_minmax(100px,auto)_1fr_minmax(100px,auto)_minmax(100px,auto)_minmax(100px,auto)] items-center gap-x-8 gap-y-2"
+        >
             <b>Text Level</b>
             <b>Voice Level</b>
             <b>Role</b>

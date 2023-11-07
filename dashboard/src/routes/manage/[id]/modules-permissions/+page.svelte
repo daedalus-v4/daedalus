@@ -35,7 +35,7 @@
         : Object.entries(module.commands ?? {}).filter(([, command]) => fuzzy(command.name, input))}
 
     <Panel class={showModule || commands.length > 0 ? "" : "hidden"}>
-        <h3 class="h3 flex items-center gap-4 pl-2">
+        <h3 class="h3 flex flex-wrap items-center gap-4 pl-2">
             <button class="text-sm" on:click={() => (closed[mid] = !closed[mid])}>
                 <div class="{closed[mid] ? '-rotate-90' : ''} transition-rotate duration-100"><Icon icon="angle-down" /></div>
             </button>
@@ -53,7 +53,7 @@
                             ? ""
                             : "outline outline-2 outline-primary-600/50 dark:outline-primary-500"}
                     >
-                        <h4 class="h4 flex items-center gap-4">
+                        <h4 class="h4 flex flex-wrap items-center gap-4">
                             <button on:click={() => open(mid, cid)}><Icon icon="gear" /></button>
                             <SlideToggle name="" size="sm" bind:checked={data.commands[cid].enabled} />
                             {#if command.icon}<Icon icon={command.icon} />{/if}

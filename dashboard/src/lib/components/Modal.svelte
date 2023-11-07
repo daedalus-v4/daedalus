@@ -31,9 +31,9 @@
 >
     <div class="{fullscreen ? 'h-full w-full' : 'max-h-[75vh] max-w-[90vw]'} relative">
         <div
-            class="{open ? 'pointer-events-auto' : ''} {fullscreen ? 'h-full w-full' : 'rounded-md max-h-[75vh] max-w-[90vw]'} p-8 {hideFullscreenToggle
-                ? ''
-                : 'pr-16'} grid grid-rows-[1fr_auto] gap-4 bg-surface-200 dark:bg-surface-600 drop-shadow-xl overflow-auto"
+            class="{open ? 'pointer-events-auto' : ''} {fullscreen
+                ? 'h-full w-full'
+                : 'rounded-md max-h-[75vh] max-w-[90vw]'} p-8 md:pr-16 grid grid-rows-[1fr_auto] gap-4 bg-surface-200 dark:bg-surface-600 drop-shadow-xl overflow-auto"
         >
             <div
                 class="{max
@@ -47,14 +47,12 @@
             </div>
         </div>
         {#if !hideFullscreenToggle}
-            <div class="{open ? 'pointer-events-auto' : ''} absolute top-2 right-0">
-                <button class="btn" on:click={() => (fullscreen = !fullscreen)}>
-                    <div class={fullscreen ? "hidden" : ""}>
-                        <Icon icon="expand" />
-                    </div>
-                    <div class={fullscreen ? "" : "hidden"}>
-                        <Icon icon="compress" />
-                    </div>
+            <div class="{open ? 'pointer-events-auto' : ''} absolute top-2 right-2">
+                <button class="{fullscreen ? 'hidden' : ''} btn btn-icon variant-filled-surface" on:click={() => (fullscreen = !fullscreen)}>
+                    <Icon icon="expand" />
+                </button>
+                <button class="{fullscreen ? '' : 'hidden'} btn btn-icon variant-filled-surface" on:click={() => (fullscreen = !fullscreen)}>
+                    <Icon icon="compress" />
                 </button>
             </div>
         {/if}

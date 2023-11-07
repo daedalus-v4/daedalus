@@ -6,8 +6,6 @@
     import Modal from "$lib/components/Modal.svelte";
     import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
-    import invite from "$lib/invite";
-    import { CodeBlock } from "@skeletonlabs/skeleton";
     import { PremiumTier, premiumBenefits } from "shared";
 
     let premiumInfoOpen = false;
@@ -105,7 +103,7 @@
     }
 
     let tier: PremiumTier;
-    $: tier = $page.data.settings.tier ?? PremiumTier.FREE;
+    $: tier = $page.data.settings?.tier ?? PremiumTier.FREE;
 
     $: benefits = premiumBenefits[tier];
 </script>
@@ -128,7 +126,7 @@
         <button class="btn-icon variant-soft-secondary" on:click={() => (premiumInfoOpen = true)}><Icon icon="info-circle" /></button>
     </h2>
     <div class="grid grid-cols-2 items-center gap-4">
-        {#if $page.data.keys.length === 0}
+        {#if !$page.data.keys?.length}
             <P class="col-span-2">You have no premium keys active right now.</P>
         {:else}
             {#each $page.data.keys as key}
@@ -207,13 +205,8 @@
         To add your bot, copy-paste the following URL and replace <code class="code">APP_ID</code> with your application ID (you can find this in the General tab
         or just copy-paste the ID out of the URL).
     </P>
-    <CodeBlock language="plaintext" code={invite($page.params.id, "APP_ID")} />
     <P>
         Finally, go back to the bot settings, click "Reset Token", and then copy-paste the token into the input field. For security reasons, we never show you
         your token here after you submit it. <b>Make sure you keep this token secret.</b> Anyone who has your token gains full control of your bot.
     </P>
 </Modal>
-
-<div>
-    <CodeBlock language="json" code={JSON.stringify($page.data, undefined, 4)} />
-</div>

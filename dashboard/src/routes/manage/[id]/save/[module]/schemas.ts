@@ -3,6 +3,7 @@ import type {
     CustomMessageText,
     DbLoggingSettings,
     DbModulesPermissionsSettings,
+    DbReactionRolesSettings,
     DbSettings,
     DbSupporterAnnouncementsSettings,
     DbWelcomeSettings,
@@ -150,4 +151,51 @@ export default {
             }),
         ),
     }) satisfies z.ZodType<DbXpSettings>,
+    "reaction-roles": z.object({
+        entries: z.array(
+            z.object({
+                id: z.number().int(),
+                name: z.string().trim(),
+                addReactionsToExistingMessage: z.boolean(),
+                channel: z.nullable(snowflake),
+                message: z.nullable(snowflake),
+                url: z.string().trim(),
+                style: z.enum(["dropdown", "buttons", "reactions"]),
+                type: z.enum(["normal", "unique", "verify", "lock"]),
+                dropdownData: z
+                    .array(
+                        z.object({
+                            emoji: z.nullable(z.string()),
+                            role: snowflake,
+                            label: z.string().trim().max(100),
+                            description: z.string().trim().max(100),
+                        }),
+                    )
+                    .max(25),
+                buttonData: z
+                    .array(
+                        z
+                            .array(
+                                z.object({
+                                    emoji: z.nullable(z.string()),
+                                    role: snowflake,
+                                    color: z.enum(["gray", "blue", "green", "red"]),
+                                    label: z.string().trim(),
+                                }),
+                            )
+                            .max(5),
+                    )
+                    .max(5),
+                reactionData: z
+                    .array(
+                        z.object({
+                            emoji: z.string(),
+                            role: snowflake,
+                        }),
+                    )
+                    .max(20),
+                promptMessage: message,
+            }),
+        ),
+    }) satisfies z.ZodType<DbReactionRolesSettings>,
 };
