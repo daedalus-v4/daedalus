@@ -1,7 +1,7 @@
 import Argentium from "argentium";
 import { APIEmbedField, BaseMessageOptions, ComponentType, Events, MessageType } from "discord.js";
 import { db, getColor } from "shared/db.js";
-import { template } from "../../lib/format.js";
+import { mdash, template } from "../../lib/format.js";
 import { defer } from "../../lib/hooks.js";
 import { skip } from "../utils.js";
 import { addXp, drawRankcard, isChannelBlocked, isUserBlocked } from "./utils.js";
@@ -78,7 +78,7 @@ export default (app: Argentium) =>
                                             list
                                                 .map(([x, i]) =>
                                                     (x.user === _.user.id ? ["**", "**"] : ["", ""]).join(
-                                                        `\`#${`${i}`.padStart(digits)}.\` <@${x.user}> — \`${Math.floor(x.xp)}\``,
+                                                        `\`#${`${i}`.padStart(digits)}.\` <@${x.user}> ${mdash} \`${Math.floor(x.xp)}\``,
                                                     ),
                                                 )
                                                 .join("\n") || "(nothing here)",

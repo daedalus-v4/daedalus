@@ -1,13 +1,16 @@
 import { BaseMessageOptions, ButtonStyle, Colors, ComponentType, GuildChannel, GuildMember, Role, User, escapeMarkdown } from "discord.js";
 
+export const mdash = "—";
+
 export function embed(title: string, description: string, color: number, ephemeral: boolean = true): BaseMessageOptions & { ephemeral: boolean } {
-    return { embeds: [{ title, description, color }], files: [], components: [], ephemeral };
+    return { content: "", embeds: [{ title, description, color }], files: [], components: [], ephemeral };
 }
 
 export const template = {
     success: (body: string, ephemeral?: boolean) => embed("OK!", body, Colors.Green, ephemeral),
     error: (body: string, ephemeral?: boolean) => embed("Error!", body, Colors.Red, ephemeral),
     info: (body: string, ephemeral?: boolean) => embed("Info", body, Colors.Blue, ephemeral),
+    progress: (body: string, ephemeral?: boolean) => embed("In Progress", body, Colors.Purple, ephemeral),
     logerror: (context: string, body: string, ephemeral?: boolean) => embed(`Bot Error: ${context}`, body, Colors.Red, ephemeral),
     confirm: (
         body: string,
@@ -59,6 +62,9 @@ export const colors = {
         confirm: 0xaa4477,
         canceled: Colors.Red,
         inProgress: Colors.Blue,
+    },
+    statuses: {
+        success: Colors.Green,
     },
 };
 
@@ -162,4 +168,17 @@ export function ordinal(x: number): string {
 
 export function truncate(string: string, length: number): string {
     return string.length > length ? `${string.slice(0, length - 3)}...` : string;
+}
+
+export function formatIdList(ids: string[]): string {
+    let display = "";
+
+    for (let x = 0; x < ids.length; x += 4) {
+        display += `${ids
+            .slice(x, x + 4)
+            .map((x) => x.padStart(20))
+            .join(" ")}\n`;
+    }
+
+    return display;
 }

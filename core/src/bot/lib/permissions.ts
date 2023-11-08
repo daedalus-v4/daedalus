@@ -80,11 +80,13 @@ export async function check(user: User, name: string, channel: Channel, bypass?:
     return false;
 }
 
-export async function check_punishment(
-    ctx: { client: Client; guild: Guild; member: GuildMember | APIInteractionGuildMember },
+export async function checkPunishment(
+    ctx: { client: Client; guild: Guild | null; member: GuildMember | APIInteractionGuildMember | null },
     target: User | GuildMember,
     action: "warn" | "mute" | "timeout" | "kick" | "ban",
 ) {
+    if (!ctx.guild || !ctx.member) throw "Context is not in a guild. This error should not happen; please contact support.";
+
     const member = await ctx.guild.members.fetch(ctx.member.user.id).catch(() => {
         throw "An error occurred fetching you from the guild.";
     });
@@ -96,27 +98,27 @@ export async function check_punishment(
             ? "You cannot warn the bot using its commands. If there are issues with its functionality, please report it in the Daedalus support server [here](https://discord.gg/7TRKfSK7EU)."
             : `The bot cannot ${action} itself, so if you wish to do so, do so manually.`;
 
-    let target_member: GuildMember;
+    let targetMember: GuildMember;
 
     try {
-        target_member = target instanceof GuildMember ? target : await ctx.guild.members.fetch(target);
+        targetMember = target instanceof GuildMember ? target : await ctx.guild.members.fetch(target);
     } catch {
         return;
     }
 
-    if (target_member.id === ctx.guild.ownerId) throw `You cannot ${action} the server owner.`;
+    if (targetMember.id === ctx.guild.ownerId) throw `You cannot ${action} the server owner.`;
 
-    if (action === "timeout" && target_member.permissions.has(PermissionFlagsBits.Administrator)) throw "You cannot timeout server administrators.";
+    if (action === "timeout" && targetMember.permissions.has(PermissionFlagsBits.Administrator)) throw "You cannot timeout server administrators.";
 
     if (ctx.guild.ownerId !== member.id) {
-        const cmp = member.roles.highest.comparePositionTo(target_member.roles.highest);
+        const cmp = member.roles.highest.comparePositionTo(targetMember.roles.highest);
 
         if (cmp < 0)
-            throw `${target_member} is higher in role hierarchy than you, so you cannot ${action} them (${target_member.roles.highest} > ${member.roles.highest}).`;
+            throw `${targetMember} is higher in role hierarchy than you, so you cannot ${action} them (${targetMember.roles.highest} > ${member.roles.highest}).`;
 
-        if (cmp === 0) throw `${target_member} is equal in role hierarchy to you, so you cannot ${action} them (highest role: ${member.roles.highest}).`;
+        if (cmp === 0) throw `${targetMember} is equal in role hierarchy to you, so you cannot ${action} them (highest role: ${member.roles.highest}).`;
     }
 
-    if ((action === "ban" && !target_member.bannable) || (action === "kick" && !target_member.kickable) || (action === "timeout" && !target_member.moderatable))
-        throw `${target_member} is higher than or equal to the bot in role hierarchy, so it cannot ${action} them.`;
+    if ((action === "ban" && !targetMember.bannable) || (action === "kick" && !targetMember.kickable) || (action === "timeout" && !targetMember.moderatable))
+        throw `${targetMember} is higher than or equal to the bot in role hierarchy, so it cannot ${action} them.`;
 }

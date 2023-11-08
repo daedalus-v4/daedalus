@@ -15,7 +15,7 @@ import {
 import { permissions } from "shared";
 import { getAllClients } from "../../clients.js";
 import { SpoilerLevel, copyFiles, copyMedia } from "../../lib/copy-media.js";
-import { DurationStyle, code, colors, embed, englishList, expand, formatDuration, timeinfo } from "../../lib/format.js";
+import { DurationStyle, code, colors, embed, englishList, expand, formatDuration, mdash, timeinfo } from "../../lib/format.js";
 import getMuteRole from "../../lib/get-mute-role.js";
 import { invokeLog } from "../../lib/logging.js";
 import stickerCache from "../../lib/sticker-cache.js";
@@ -231,7 +231,7 @@ export default (app: Argentium) =>
             invokeLog("guildMemberAdd", member.guild, async () =>
                 embed(
                     "Member Joined",
-                    `${expand(member)} just joined the server — account was created ${formatDuration(
+                    `${expand(member)} just joined the server ${mdash} account was created ${formatDuration(
                         Date.now() - member.user.createdTimestamp,
                         DurationStyle.Blank,
                     )} ago${member.user.bot ? ` (added by ${expand(await audit(member.guild, AuditLogEvent.BotAdd, member), "Unknown User")})` : ""}`,
@@ -254,7 +254,7 @@ export default (app: Argentium) =>
             invokeLog("guildMemberRemove", member.guild, () =>
                 embed(
                     "Member Left",
-                    `${expand(member)} just left the server — joined ${formatDuration(
+                    `${expand(member)} just left the server ${mdash} joined ${formatDuration(
                         Date.now() - (member.joinedTimestamp ?? Date.now()),
                         DurationStyle.Blank,
                     )} ago`,

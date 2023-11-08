@@ -2,6 +2,9 @@ import { ButtonInteraction, ButtonStyle, ComponentType } from "discord.js";
 
 export default async function (button: ButtonInteraction) {
     await button.update({
+        content: null,
+        embeds: [],
+        files: [],
         components: [
             {
                 type: ComponentType.ActionRow,

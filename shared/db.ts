@@ -21,12 +21,15 @@ import {
     DbStickyRolesSettings,
     DbSuggestionsSettings,
     DbSupporterAnnouncementsSettings,
+    DbTask,
     DbTicketsSettings,
+    DbUserHistory,
     DbUtilitySettings,
     DbWelcomeSettings,
     DbXpAmounts,
     DbXpSettings,
     PremiumBenefits,
+    commandMap,
     getLimit,
     limits,
     modules,
@@ -47,6 +50,10 @@ type WithGuild<T> = T & { guild: string };
 class Database {
     public get globals() {
         return _db.collection<DbGlobals>("globals");
+    }
+
+    public get tasks() {
+        return _db.collection<DbTask>("tasks");
     }
 
     public get customers() {
@@ -176,6 +183,18 @@ class Database {
     public get xpAmounts() {
         return _db.collection<DbXpAmounts>("xp_amounts");
     }
+
+    public get userHistory() {
+        return _db.collection<DbUserHistory>("user_history");
+    }
+
+    public get userNotes() {
+        return _db.collection<{ guild: string; user: string; notes: string }>("user_notes");
+    }
+
+    public get stickyRoles() {
+        return _db.collection<{ guild: string; user: string; roles: string[] }>("sticky_roles");
+    }
 }
 
 export const db = new Database();
@@ -188,6 +207,11 @@ export async function autoIncrement(sequence: string) {
 export async function isModuleEnabled(guild: string, module: string) {
     const doc = await db.modulesPermissionsSettings.findOne({ guild });
     return doc?.modules[module]?.enabled ?? modules[module]?.default ?? true;
+}
+
+export async function isCommandEnabled(guild: string, command: string) {
+    const doc = await db.modulesPermissionsSettings.findOne({ guild });
+    return doc?.commands[command]?.enabled ?? commandMap[command]?.default ?? true;
 }
 
 export async function getColor<T extends boolean>(

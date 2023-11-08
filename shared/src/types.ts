@@ -105,6 +105,11 @@ export type DbGlobals = {
     lastXpPurge: number;
 };
 
+export type DbTask = {
+    guild: string;
+    time: number;
+} & ({ action: "unban"; user: string } | { action: "unmute"; user: string });
+
 export type DbSettings = {
     dashboardPermissions: "owner" | "admin" | "manager";
     embedColor: number;
@@ -454,4 +459,16 @@ export type DbXpAmounts = {
     weekly: { text: number; voice: number };
     monthly: { text: number; voice: number };
     total: { text: number; voice: number };
+};
+
+export type DbUserHistory = {
+    guild: string;
+    user: string;
+    id: number;
+    type: "ban" | "kick" | "timeout" | "mute" | "informal_warn" | "warn";
+    mod: string;
+    time: number;
+    duration?: number;
+    origin: string;
+    reason: string | null;
 };

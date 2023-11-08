@@ -1,6 +1,6 @@
 import { log } from "./log.js";
 
-export default function (fn: () => unknown, length: number, uuid: string) {
+export default function (fn: () => unknown, length: number, uuid: string, invokeImmediately: boolean = true) {
     async function inner() {
         try {
             await fn();
@@ -11,7 +11,7 @@ export default function (fn: () => unknown, length: number, uuid: string) {
 
     setTimeout(
         () => {
-            inner();
+            if (invokeImmediately) inner();
             setInterval(inner, length);
         },
         length - (Date.now() % length),

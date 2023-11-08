@@ -3,7 +3,7 @@ import { CustomMessageContext, MessageData } from "shared";
 import { isModuleEnabled } from "shared/db.js";
 import { formatMessage } from "shared/format-custom-message.js";
 import { isAssignedClient } from "../../lib/premium.js";
-import { template } from "../lib/format.js";
+import { mdash, template } from "../lib/format.js";
 import { invokeLog } from "../lib/logging.js";
 
 export async function skip(guild: Guild | OAuth2Guild, module: string) {
@@ -48,7 +48,7 @@ export async function sendCustomMessage(
         !channel.isDMBased() &&
             invokeLog("botError", channel, () =>
                 template.logerror(
-                    `Bot Error — Custom Message — ${moduleTitle} Module`,
+                    `Bot Error ${mdash} Custom Message ${mdash} ${moduleTitle} Module`,
                     `${errorMessage} Check the bot's permissions in ${channel} and ensure your custom message is valid. Here's some details about the error:\n\`\`\`\n${error}\n\`\`\``,
                 ),
             );
@@ -62,7 +62,7 @@ export async function sendMessage(channel: TextBasedChannel, data: MessageCreate
         !channel.isDMBased() &&
             invokeLog("botError", channel, () =>
                 template.logerror(
-                    `Bot Error — Sending Message — ${moduleTitle} Module`,
+                    `Bot Error ${mdash} Sending Message ${mdash} ${moduleTitle} Module`,
                     `${errorMessage} Check the bot's permissions in ${channel} and ensure your custom message is valid. Here's some details about the error:\n\`\`\`\n${error}\n\`\`\``,
                 ),
             );

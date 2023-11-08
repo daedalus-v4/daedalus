@@ -2,7 +2,7 @@ import { Channel, Guild, GuildMember, User } from "discord.js";
 import { DbXpSettings } from "shared";
 import { db, getColor, getLimitFor, getPremiumBenefitsFor } from "shared/db.js";
 import { log } from "../../../lib/log.js";
-import { template } from "../../lib/format.js";
+import { mdash, template } from "../../lib/format.js";
 import { invokeLog } from "../../lib/logging.js";
 import { to } from "../logging/utils.js";
 import { fetchAndSendMessage } from "../utils.js";
@@ -91,7 +91,7 @@ export async function addXp(channel: Channel, member: GuildMember, text = 0, voi
                         "XP",
                         "announcement",
                         {
-                            content: `${member} Congratulations — you have leveled up from ${key} level ${levelBefore[key]} to ${levelAfter[key]}!`,
+                            content: `${member} Congratulations ${mdash} you have leveled up from ${key} level ${levelBefore[key]} to ${levelAfter[key]}!`,
                             files: [{ attachment: await drawLevelup(settings!, member, levelBefore[key], levelAfter[key]), name: `${member.id}-levelup.png` }],
                             allowedMentions: { users: [member.id] },
                         },
