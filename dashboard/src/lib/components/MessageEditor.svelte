@@ -13,8 +13,6 @@
     let isStatic: boolean = false;
 
     export { isStatic as static };
-
-    let open = false;
 </script>
 
 <div class="flex flex-col gap-2">
@@ -23,7 +21,7 @@
     {/if}
     <div class="flex flex-wrap gap-2">
         {#if !flat}
-            <Button on:click={() => ($messageEditorModalStore = message)}><Icon icon="edit" /> {label}</Button>
+            <Button on:click={() => ($messageEditorModalStore = { message, set: (data) => (message = data) })}><Icon icon="edit" /> {label}</Button>
         {/if}
     </div>
 </div>

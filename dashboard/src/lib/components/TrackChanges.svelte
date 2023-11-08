@@ -1,5 +1,6 @@
 <script lang="ts">
     import { beforeNavigate } from "$app/navigation";
+    import unfocus from "$lib/unfocus";
     import Button from "./Button.svelte";
 
     export let base: unknown;
@@ -19,6 +20,7 @@
         saving = true;
 
         try {
+            unfocus();
             await save();
             base = structuredClone(data);
         } catch (error) {

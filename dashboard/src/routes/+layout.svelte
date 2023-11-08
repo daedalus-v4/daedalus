@@ -31,6 +31,8 @@
 <ChannelSelectorModal />
 <MessageEditorModal />
 
+<input id="unfocus-dummy" class="fixed opacity-0 pointer-events-none" readonly />
+
 <Navbar />
 <UpButton />
 <div class="h-full pt-16">

@@ -1,4 +1,5 @@
 import getClient from "$lib/get-client.js";
+import { invariant, lazy } from "$lib/utils.js";
 import { ButtonStyle, ComponentType, type BaseMessageOptions, type Message } from "discord.js";
 import type { DbReactionRolesSettings } from "shared";
 import { autoIncrement, db } from "shared/db.js";
@@ -59,7 +60,7 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
                 entry.channel = channel.id;
                 entry.message = message.id;
             } else {
-                const data: BaseMessageOptions = {
+                const data: () => BaseMessageOptions = lazy(() => ({
                     ...entry.promptMessage,
                     components:
                         entry.style === "dropdown"
@@ -94,23 +95,42 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
                                   })),
                               }))
                             : [],
-                };
+                }));
 
                 let message: Message | undefined;
+                const shouldPost = () =>
+                    !invariant(
+                        (x) =>
+                            JSON.stringify([
+                                x.promptMessage,
+                                x.style,
+                                x.style === "dropdown"
+                                    ? x.dropdownData.map((x) => ({ ...x, role: null }))
+                                    : x.style === "buttons"
+                                    ? x.buttonData.map((x) => x.map((x) => ({ ...x, role: null })))
+                                    : [],
+                            ]),
+                        entry,
+                        entryMap[entry.id],
+                    );
 
                 if (entry.id in entryMap) {
                     if (entry.channel === entryMap[entry.id].channel) {
                         const channel = await guild.channels.fetch(entry.channel!).catch(() => {});
                         if (!channel?.isTextBased()) throw "Could not fetch channel.";
 
+                        let edit = false;
+
                         try {
-                            message = await channel.messages.fetch(entryMap[entry.id].message!);
-                            await message.edit(data);
+                            message = await channel.messages.fetch({ message: entryMap[entry.id].message!, force: true });
+                            edit = true;
                         } catch {
-                            message = await channel.send(data).catch(() => {
-                                throw `Could neither edit the message in #${channel.name} or send a new one.`;
+                            message = await channel.send(data()).catch((error) => {
+                                throw `Could neither fetch the message in #${channel.name} to edit nor send a new one: ${error}`;
                             });
                         }
+
+                        if (edit && shouldPost()) await message.edit(data());
                     } else {
                         try {
                             const channel = await guild.channels.fetch(entryMap[entry.id].channel!);
@@ -128,7 +148,7 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
                     const channel = await guild.channels.fetch(entry.channel!).catch(() => {});
                     if (!channel?.isTextBased()) throw "Could not fetch channel.";
 
-                    message = await channel.send(data).catch(() => {
+                    message = await channel.send(data()).catch(() => {
                         throw `Could not send message in #${channel.name}`;
                     });
                 }

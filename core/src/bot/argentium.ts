@@ -45,7 +45,11 @@ export default new Argentium()
         try {
             fn = require(`./interactions/${path}.js`).default;
         } catch {
-            await interaction.reply(template.error("This interaction is not yet implemented. This is our fault; please contact support."));
+            await interaction.reply(
+                template.error(
+                    `This interaction is not yet implemented. This is our fault; please contact support. (interaction ID: \`${interaction.customId}\`)`,
+                ),
+            );
             return;
         }
 

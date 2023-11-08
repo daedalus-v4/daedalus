@@ -40,3 +40,12 @@ export function swap<T>(array: T[], x: number, y: number) {
     if (x > y) return swap(array, y, x);
     return [...array.slice(0, x), array[y], ...array.slice(x + 1, y), array[x], ...array.slice(y + 1)];
 }
+
+export function lazy<T>(get: () => T): () => T {
+    let cached: T | undefined;
+    return () => (cached ??= get());
+}
+
+export function invariant<T>(transform: (t: T) => unknown, x: T, y: T) {
+    return transform(x) === transform(y);
+}

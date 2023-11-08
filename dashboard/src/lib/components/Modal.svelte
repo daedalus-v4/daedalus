@@ -1,5 +1,6 @@
 <script lang="ts">
     import { modalStackStore } from "$lib/stores";
+    import unfocus from "$lib/unfocus";
     import { createEventDispatcher } from "svelte";
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
@@ -10,13 +11,18 @@
     export let fullscreen: boolean = false;
     export let max: boolean = false;
 
+    const originalFullscreen = fullscreen;
+
     const dispatch = createEventDispatcher();
+
+    let dummy: HTMLInputElement;
 
     async function close() {
         if (!open) return;
 
         open = false;
-        fullscreen = false;
+        fullscreen = originalFullscreen;
+        unfocus();
         dispatch("close");
 
         modalStackStore.update((x) => x.filter((k) => k !== close));
