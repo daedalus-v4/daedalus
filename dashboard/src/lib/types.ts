@@ -102,5 +102,6 @@ export type FEReactionRolesSettings = {
         buttonData: { emoji: string | null; role: string | null; color: "gray" | "blue" | "green" | "red"; label: string }[][];
         reactionData: { emoji: string | null; role: string | null }[];
         promptMessage: FEMessageData;
+        error: string | null;
     }[];
 };

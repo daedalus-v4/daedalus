@@ -1,5 +1,6 @@
 <script lang="ts">
     import { browser } from "$app/environment";
+    import { invalidateAll } from "$app/navigation";
     import { page } from "$app/stores";
     import Button from "$lib/components/Button.svelte";
     import Icon from "$lib/components/Icon.svelte";
@@ -8,6 +9,7 @@
     import MessageEditor from "$lib/components/MessageEditor.svelte";
     import Modal from "$lib/components/Modal.svelte";
     import ModuleSaver from "$lib/components/ModuleSaver.svelte";
+    import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
     import SingleChannelSelector from "$lib/components/SingleChannelSelector.svelte";
     import SingleEmojiSelector from "$lib/components/SingleEmojiSelector.svelte";
@@ -26,9 +28,24 @@
     $: entry = data.entries[openIndex];
 
     let limited: boolean;
+
+    async function reload() {
+        await invalidateAll();
+
+        base = $page.data.data;
+        data = structuredClone(base);
+
+        if (data.entries.some((x) => x.error))
+            alert(
+                "Posting/editing one or more of your prompts failed; please check each prompt's error message for more information. All of your data was saved.",
+            );
+    }
+
+    let save: () => Promise<void>;
+    let saving: boolean;
 </script>
 
-<ModuleSaver partial bind:base bind:data />
+<ModuleSaver bind:base bind:data postsave={reload} bind:save bind:saving />
 
 <Panel>
     <h3 class="h3">Reaction Roles</h3>
@@ -39,7 +56,9 @@
             <span class="flex items-center gap-1">
                 <Button
                     on:click={() => ((openIndex = index), (open = true))}
-                    class={entry.id < 0 || JSON.stringify(nometa(base.entries.find((x) => x.id === entry.id))) !== JSON.stringify(nometa(entry))
+                    class={entry.error
+                        ? "outline outline-error-500 dark:outline-error-400"
+                        : entry.id < 0 || JSON.stringify(nometa(base.entries.find((x) => x.id === entry.id))) !== JSON.stringify(nometa(entry))
                         ? "outline outline-primary-500 dark:outline-primary-400"
                         : ""}
                 >
@@ -59,6 +78,11 @@
                     </Button>
                 {/if}
                 <Button on:click={() => (data.entries = without(data.entries, index))} variant="error-text-only"><Icon icon="trash" /></Button>
+                {#if entry.error}
+                    <span class="text-error-500 dark:text-error-400 hidden md:block">
+                        Posting/editing this prompt resulted in an error. Open the editor to view the error message.
+                    </span>
+                {/if}
             </span>
         </div>
     {/each}
@@ -82,6 +106,7 @@
                         buttonData: [],
                         reactionData: [],
                         promptMessage: defaultFEMessage(),
+                        error: null,
                     },
                 ])}
         >
@@ -90,9 +115,27 @@
     </Limit>
 </Panel>
 
+{#if data.entries.some((x) => x.error)}
+    <Panel>
+        <P>
+            An error occurred the last time reaction roles for this server were saved in one or more prompts. If these were permission errors and you have fixed
+            them, click the button below to try again.
+        </P>
+
+        <Button variant="primary-text" disabled={saving} on:click={save}><Icon icon="save" /> Save</Button>
+    </Panel>
+{/if}
+
 <Modal max bind:open>
     {#if entry}
         {@const creating = entry.id < 0}
+
+        {#if entry.error}
+            <Panel>
+                <h3 class="h3 text-error-500 dark:text-error-400">Error on last attempt to post/edit</h3>
+                <P>{entry.error}</P>
+            </Panel>
+        {/if}
 
         <Panel>
             <h3 class="h3">{creating ? "Creating New Prompt" : `Editing Prompt #${entry.id}`}</h3>

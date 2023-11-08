@@ -9,7 +9,7 @@
 
     export let save: () => any = () => {};
 
-    let saving = false;
+    export let saving = false;
 
     function reset() {
         data = structuredClone(base);

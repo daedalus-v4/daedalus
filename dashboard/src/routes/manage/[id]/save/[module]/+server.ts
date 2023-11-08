@@ -22,9 +22,6 @@ export const POST: RequestHandler = async ({ fetch, locals, params: { id, module
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let data: any;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        let errors: string[] = [];
-
         try {
             data = schemas[module as keyof typeof schemas].parse(await request.json());
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -32,11 +29,10 @@ export const POST: RequestHandler = async ({ fetch, locals, params: { id, module
             throw error.errors.map(({ message }: { message: string }) => message).join(" ");
         }
 
-        if (module in post) [data, errors] = await post[module as keyof typeof post](data, id);
+        if (module in post) data = await post[module as keyof typeof post](data, id);
 
         await collections()[module as keyof ReturnType<typeof collections>].updateOne({ guild: id }, { $set: data }, { upsert: true });
 
-        if (errors.length > 0) return new Response(JSON.stringify(errors), { status: 444 });
         return new Response();
     } catch (error) {
         return new Response(`${error}`, { status: 400 });

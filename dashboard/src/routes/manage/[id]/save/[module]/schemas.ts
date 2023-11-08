@@ -195,6 +195,7 @@ export default {
                     )
                     .max(20),
                 promptMessage: message,
+                error: z.nullable(z.string()),
             }),
         ),
     }) satisfies z.ZodType<DbReactionRolesSettings>,

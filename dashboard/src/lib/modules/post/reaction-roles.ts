@@ -10,7 +10,7 @@ const buttonStyles = {
     red: ButtonStyle.Danger,
 } as const;
 
-export default async function (settings: DbReactionRolesSettings, currentGuild: string): Promise<[DbReactionRolesSettings, string[]]> {
+export default async function (settings: DbReactionRolesSettings, currentGuild: string): Promise<DbReactionRolesSettings> {
     const bot = await getClient(currentGuild);
     const guild = await bot.guilds.fetch(currentGuild);
 
@@ -32,8 +32,6 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
             } finally {
                 delete entryMap[entry.id];
             }
-
-    const errors: string[] = [];
 
     for (let index = 0; index < settings.entries.length; index++) {
         const entry = settings.entries[index];
@@ -143,14 +141,16 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
                     })().catch(() => {
                         throw "Adding reactions failed. Ensure all emoji still exist and the bot has permission to use them.";
                     });
-            }
 
+                entry.error = null;
+            }
+        } catch (error) {
+            entry.error = `${error}`;
+        } finally {
             if (entry.id in entryMap) entryMap[entry.id] = entry;
             else entryMap[(entry.id = await autoIncrement(`reaction-role-ids/${currentGuild}`))] = entry;
-        } catch (error) {
-            errors.push(`Reaction Role Prompt ${index + 1}: ${error}`);
         }
     }
 
-    return [{ entries: Object.values(entryMap).sort((x, y) => x.id - y.id) }, errors];
+    return { entries: Object.values(entryMap).sort((x, y) => x.id - y.id) };
 }
