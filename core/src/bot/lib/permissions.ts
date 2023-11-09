@@ -3,6 +3,11 @@ import { commandMap, modules, permissions } from "shared";
 import { db } from "shared/db.js";
 import { log } from "../../lib/log.js";
 
+export async function enforcePermissions(user: User, name: string, channel: Channel, bypass?: boolean) {
+    const reason = await check(user, name, channel, bypass);
+    if (reason) throw reason;
+}
+
 export async function check(user: User, name: string, channel: Channel, bypass?: boolean): Promise<string | false> {
     if (channel.isDMBased()) return false;
 

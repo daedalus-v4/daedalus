@@ -1,14 +1,16 @@
 import Argentium from "argentium";
-import { ButtonStyle, ChatInputCommandInteraction, ComponentType, GuildMember } from "discord.js";
-import { DbUserHistory } from "shared";
-import { autoIncrement, db, getColor, isCommandEnabled, isModuleEnabled } from "shared/db.js";
+import { SlashUtil } from "argentium/src/slash-util.js";
+import { ButtonStyle, ChannelType, ChatInputCommandInteraction, ComponentType, GuildMember, Message, TextInputStyle } from "discord.js";
+import { DbUserHistory, limits } from "shared";
+import { autoIncrement, db, getColor, getLimitFor, isCommandEnabled, isModuleEnabled } from "shared/db.js";
 import { isStopped, stopButton } from "../../interactions/stop.js";
 import confirm from "../../lib/confirm.js";
 import { DurationStyle, colors, formatDuration, formatIdList, mdash, template, timeinfo } from "../../lib/format.js";
 import { getMuteRoleWithAsserts } from "../../lib/get-mute-role.js";
 import { defer } from "../../lib/hooks.js";
-import { parseDuration } from "../../lib/parsing.js";
-import { check, checkPunishment } from "../../lib/permissions.js";
+import pagify from "../../lib/pagify.js";
+import { parseDuration, parseMessageURL } from "../../lib/parsing.js";
+import { check, checkPunishment, enforcePermissions } from "../../lib/permissions.js";
 import sendDm, { dmStatuses } from "../../lib/send-dm.js";
 
 export default (app: Argentium) =>
@@ -83,6 +85,7 @@ export default (app: Argentium) =>
                         if (!response) return;
 
                         await response.deferUpdate();
+                        await enforcePermissions(_.user, "ban", _.channel!);
                         await checkPunishment(response, user, "ban");
                         const { banFooter } = (await db.guildSettings.findOne({ guild: _.guild.id })) ?? {};
 
@@ -186,6 +189,7 @@ export default (app: Argentium) =>
                         if (!response) return;
 
                         await response.deferUpdate();
+                        await enforcePermissions(_.user, "kick", _.channel!);
                         await checkPunishment(response, user, "kick");
 
                         const status = await sendDm(_, user, silent, {
@@ -279,6 +283,7 @@ export default (app: Argentium) =>
                         if (!response) return;
 
                         await response.deferUpdate();
+                        await enforcePermissions(_.user, "mute", _.channel!);
                         await checkPunishment(response, user, "mute");
                         const role = await getMuteRoleWithAsserts(_.guild);
 
@@ -392,6 +397,7 @@ export default (app: Argentium) =>
                         if (!response) return;
 
                         await response.deferUpdate();
+                        await enforcePermissions(_.user, "timeout", _.channel!);
                         await checkPunishment(response, user, "timeout");
 
                         if (duration) {
@@ -509,6 +515,7 @@ export default (app: Argentium) =>
                         if (!response) return;
 
                         await response.deferUpdate();
+                        await enforcePermissions(_.user, "warn", _.channel!);
                         if (member) await checkPunishment(response, member, "warn");
 
                         const status = await sendDm(_, user, silent, {
@@ -581,6 +588,7 @@ export default (app: Argentium) =>
                         if (!response) return;
 
                         await response.deferUpdate();
+                        await enforcePermissions(_.user, "unban", _.channel!);
 
                         try {
                             await _.guild.bans.remove(user, reason ?? undefined);
@@ -643,6 +651,7 @@ export default (app: Argentium) =>
                         if (!response) return;
 
                         await response.deferUpdate();
+                        await enforcePermissions(_.user, "unmute", _.channel!);
                         const role = await getMuteRoleWithAsserts(_.guild);
 
                         if (member) await member.roles.remove(role, reason ?? undefined);
@@ -757,7 +766,7 @@ export default (app: Argentium) =>
                                                       value: `**${historyVerbs[entry.type]} by <@${entry.mod}> at ${timeinfo(entry.time)}${
                                                           ["warn", "informal_warn", "kick"].includes(entry.type) || entry.duration === undefined
                                                               ? ""
-                                                              : ` ${formatDuration(entry.duration)}${entry.origin ? ` [here](${entry.origin})}` : ""}`
+                                                              : ` ${formatDuration(entry.duration)}${entry.origin ? ` [here](${entry.origin})` : ""}`
                                                       }**${entry.reason ? `\n\n**Reason:** ${entry.reason}` : " (no reason provided)"}`,
                                                   })),
                                               ),
@@ -766,6 +775,241 @@ export default (app: Argentium) =>
                                 components,
                             });
                         }
+
+                        await pagify(_, messages);
+                    }),
+            )
+            .slash((x) =>
+                x
+                    .key("delete-history")
+                    .description("delete a user history entry by ID")
+                    .numberOption("id", "the ID of the entry to delete", { minimum: 1, required: true })
+                    .fn(async ({ _, id }) => {
+                        if (!_.guild) throw "This command can only be run in a guild.";
+
+                        const entry = await db.userHistory.findOne({ guild: _.guild.id, id });
+                        if (!entry) throw `There is no history entry with ID #${id}.`;
+
+                        const context = `${historyActionStrings[entry.type].toLowerCase()} #${id} against <@${entry.user}> by <@${entry.mod}> on ${timeinfo(
+                            entry.time,
+                        )}${entry.origin ? ` [here](${entry.origin})` : ""}${entry.reason ? `\n\n**Reason:** ${entry.reason}` : ""}`;
+
+                        const response = await confirm(
+                            _,
+                            {
+                                embeds: [
+                                    {
+                                        title: `Confirm deleting history entry #${id}`,
+                                        description: `Confirm deleting ${context}`,
+                                        color: colors.prompts.confirm,
+                                    },
+                                ],
+                            },
+                            300000,
+                        );
+
+                        if (!response) return;
+                        await enforcePermissions(_.user, "delete-history", _.channel!);
+
+                        await db.userHistory.deleteOne({ _id: entry._id });
+                        await response.update(template.success(`Deleted ${context}.`));
+                    }),
+            )
+            .slash((x) =>
+                x
+                    .key("clear-history")
+                    .description("clear a user's history")
+                    .userOption("user", "the user to clear", { required: true })
+                    .fn(async ({ _, user }) => {
+                        if (!_.guild) throw "This command can only be run in a guild.";
+
+                        const count = await db.userHistory.countDocuments({ guild: _.guild.id, user: user.id });
+                        if (count === 0) throw "This user's history is clean.";
+
+                        const response = await confirm(
+                            _,
+                            {
+                                embeds: [
+                                    {
+                                        title: `Confirm clearing ${user.tag}'s history`,
+                                        description: `${count} ${count === 1 ? "entry" : "entries"} will be cleared from ${user}'s history.`,
+                                        color: colors.prompts.confirm,
+                                    },
+                                ],
+                            },
+                            300000,
+                        );
+
+                        if (!response) return;
+                        await enforcePermissions(_.user, "clear-history", _.channel!);
+
+                        const { deletedCount } = await db.userHistory.deleteMany({ guild: _.guild.id, user: user.id });
+                        await response.update(template.success(`Cleared ${deletedCount} ${deletedCount === 1 ? "entry" : "entries"} from ${user}'s history.`));
+                    }),
+            )
+            .slash((x) =>
+                x
+                    .key("slowmode")
+                    .description("set or remove a channel's slowmode")
+                    .channelOption("channel", "the channel to edit (default: this channel)", {
+                        channelTypes: [
+                            ChannelType.AnnouncementThread,
+                            ChannelType.GuildForum,
+                            ChannelType.GuildStageVoice,
+                            ChannelType.GuildText,
+                            ChannelType.GuildVoice,
+                            ChannelType.PrivateThread,
+                            ChannelType.PublicThread,
+                        ],
+                    })
+                    .stringOption("delay", "the delay (default: `clear` = remove)")
+                    .fn(async ({ _, channel: _channel, delay: _delay }) => {
+                        if (!_.guild || !_.channel || _.channel.isDMBased()) throw "This command can only be run in a guild.";
+                        if (!_channel && _.channel.type === ChannelType.GuildAnnouncement) throw "Slowmode does not exist in announcement channels.";
+
+                        const channel = _channel ?? _.channel;
+                        await enforcePermissions(_.user, "slowmode", channel, false);
+
+                        const delay = !_delay || _delay === "clear" ? 0 : parseDuration(_delay);
+                        if (delay > 21600000) throw "Slowmode delay cannot exceed 6 hours.";
+
+                        await channel.setRateLimitPerUser(Math.floor(delay / 1000));
+
+                        return template.success(
+                            delay ? `Set the slowmode in ${channel} to ${formatDuration(delay, DurationStyle.Blank)}.` : `Cleared the slowmode in ${channel}. `,
+                            false,
+                        );
+                    }),
+            )
+            .slash((x) =>
+                x
+                    .key("purge last")
+                    .description("purge messages that pass an (optional) filter of the last N messages")
+                    .numberOption("count", "the number of messages to search", { minimum: 1, maximum: limits.purgeAtOnce[1], required: true })
+                    .use(addPurgeFilters)
+                    .fn(defer(true))
+                    .fn(async ({ _, count, ...rest }) => {
+                        const limit = await getLimitFor(_.guild!, "purgeAtOnce");
+
+                        if (count > limit)
+                            throw `You can only scan ${limit} messages at once. Upgrade to [premium](${Bun.env.DOMAIN}/premium) to unlock up to ${limits.purgeAtOnce[1]}.`;
+
+                        const messages: Message[] = [];
+
+                        while (count > 0) {
+                            const block = await _.channel!.messages.fetch({ limit: Math.min(count, 100), before: messages[messages.length - 1]?.id });
+                            if (block.size === 0) break;
+
+                            messages.push(...block.toJSON());
+                            count -= 100;
+                        }
+
+                        return await purge(_, messages, rest);
+                    }),
+            )
+            .slash((x) =>
+                x
+                    .key("purge between")
+                    .description("purge messages that pass an (optional) filter between a start and end message")
+                    .stringOption("start", "the URL of the initial message", { required: true })
+                    .stringOption("end", "the URL of the end message (default: ends at the bottom of the channel)")
+                    .use(addPurgeFilters)
+                    .fn(defer(true))
+                    .fn(async ({ _, start: _start, end: _end, ...rest }) => {
+                        const limit = await getLimitFor(_.guild!, "purgeAtOnce");
+
+                        let end: string | undefined;
+
+                        const [start_gid, start_cid, start_mid] = parseMessageURL(_start);
+
+                        if (start_gid !== _.guild!.id) throw "The start message must be in this server.";
+                        if (start_cid !== _.channel!.id) throw "The start message must be in this channel.";
+
+                        const start = start_mid;
+
+                        if (_end) {
+                            const [end_gid, end_cid, end_mid] = parseMessageURL(_end);
+
+                            if (end_gid !== _.guild!.id) throw "The end message must be in this server.";
+                            if (end_cid !== _.channel!.id) throw "The end message must be in this channel.";
+
+                            end = end_mid;
+
+                            if (BigInt(start) > BigInt(end)) throw "The start message must be before the end message.";
+                        }
+
+                        const position = BigInt(start);
+                        const messages: Message[] = [];
+
+                        if (end)
+                            try {
+                                messages.push(await _.channel!.messages.fetch(end));
+                            } catch {}
+
+                        let go = true;
+
+                        while (go) {
+                            if (messages.length >= limit)
+                                throw `You can only scan ${limit} messages at once.${
+                                    limit === limits.purgeAtOnce[1]
+                                        ? ""
+                                        : ` Upgrade to [premium](${Bun.env.DOMAIN}/premium) to unlock up to ${limits.purgeAtOnce[1]}.`
+                                }`;
+
+                            const block = await _.channel!.messages.fetch({ limit: 100, before: messages[messages.length - 1]?.id ?? end });
+
+                            for (const message of block.toJSON()) {
+                                if (message.id === start) go = false;
+
+                                if (BigInt(message.id) < position) break;
+                                else messages.push(message);
+                            }
+                        }
+
+                        return await purge(_, messages, rest);
+                    }),
+            )
+            .slash((x) =>
+                x
+                    .key("notes view")
+                    .description("view a user's mod notes (visible to others in this channel)")
+                    .userOption("user", "the user to view", { required: true })
+                    .fn(async ({ _, user }) => {
+                        const { notes } = (await db.userNotes.findOne({ guild: _.guild!.id, user: user.id })) ?? {};
+                        if (!notes) throw `${user} does not have any mod notes.`;
+
+                        return {
+                            embeds: [{ title: `Mod notes for ${user.tag}`, description: notes, color: await getColor(_.guild!), footer: { text: user.id } }],
+                        };
+                    }),
+            )
+            .slash((x) =>
+                x
+                    .key("notes edit")
+                    .description("open a user's mod notes in a private modal in edit-mode")
+                    .userOption("user", "the user to open", { required: true })
+                    .fn(async ({ _, user }) => {
+                        const { notes } = (await db.userNotes.findOne({ guild: _.guild!.id, user: user.id })) ?? {};
+
+                        await _.showModal({
+                            title: `Editing Mod Notes for ${user.tag.length > 43 ? `${user.tag.slice(0, 40)}...` : user.tag}`,
+                            customId: `:notes/edit:${user.id}`,
+                            components: [
+                                {
+                                    type: ComponentType.ActionRow,
+                                    components: [
+                                        {
+                                            type: ComponentType.TextInput,
+                                            customId: "notes",
+                                            style: TextInputStyle.Paragraph,
+                                            label: "Notes",
+                                            value: notes ?? "",
+                                            required: false,
+                                        },
+                                    ],
+                                },
+                            ],
+                        });
                     }),
             ),
     );
@@ -774,6 +1018,12 @@ const addReasonAndPurge = <T>(x: SlashUtil<T>) =>
     x
         .stringOption("reason", "the reason for banning (logged, but not sent to the users)", { maxLength: 512 })
         .stringOption("purge", "the duration of chat history to purge from all banned users (default: 0, max: 7 days)");
+
+const addPurgeFilters = <T>(x: SlashUtil<T>) =>
+    x
+        .numberOption("types", "the types of messages to delete (default: all)", { choices: { 1: "Human Accounts", 2: "Bot Accounts", 3: "All" } })
+        .stringOption("match", "only delete messages containing the specified substring (default: matches all)")
+        .booleanOption("case-sensitive", "if true, the match must be case-sensitive (default: false) (no effect if `match` is not set)");
 
 async function massbanURL(_: ChatInputCommandInteraction, url: string, reason: string | null, _purge: string | null) {
     if (!_.guild) throw "This command can only be run in a guild.";
@@ -821,6 +1071,8 @@ async function massban(_: ChatInputCommandInteraction, idlist: string, reason: s
     );
 
     if (!response) return;
+
+    await enforcePermissions(_.user, "massban", _.channel!);
 
     await response.update({
         ...template.progress("Massbanning in progress. Please be patient."),
@@ -885,6 +1137,88 @@ async function massban(_: ChatInputCommandInteraction, idlist: string, reason: s
     } finally {
         if (historyEntries.length > 0) await db.userHistory.insertMany(historyEntries);
     }
+}
+
+async function purge(
+    _: ChatInputCommandInteraction,
+    messages: Message[],
+    { types, match, "case-sensitive": caseSensitive }: { types: 1 | 2 | 3 | null; match: string | null; "case-sensitive": boolean | null },
+) {
+    if (_.channel!.isDMBased()) throw "This command can only be called in a guild.";
+
+    if (types === 1) messages = messages.filter((x) => !x.author.bot);
+    if (types === 2) messages = messages.filter((x) => x.author.bot);
+
+    if (match)
+        if (caseSensitive) messages = messages.filter((x) => x.content.indexOf(match!) !== -1);
+        else {
+            match = match.toLowerCase();
+            messages = messages.filter((x) => x.content.toLowerCase().indexOf(match!) !== -1);
+        }
+
+    if (messages.length === 0) throw "Your query matched no messages, so no action was taken.";
+
+    const amount = messages.length;
+
+    const response = await confirm(
+        _,
+        {
+            embeds: [
+                {
+                    title: `Confirm purging ${amount} message${amount === 1 ? "" : "s"}`,
+                    color: colors.prompts.confirm,
+                },
+            ],
+        },
+        300000,
+    );
+
+    if (!response) return;
+
+    await response.update({
+        ...template.progress("Purging in progress. Please be patient."),
+        components: [{ type: ComponentType.ActionRow, components: [stopButton(response.user)] }],
+    });
+
+    let purged = 0;
+
+    while (messages.length > 0) {
+        const batch = [];
+        const now = Date.now();
+
+        for (let x = 0; x < 100; x++)
+            if (messages.length === 0) break;
+            else if (now - messages[0].createdTimestamp < 1209590000) batch.push(messages.shift()!);
+            else break;
+
+        if (batch.length === 0) {
+            for (const message of messages) {
+                if (isStopped(response.message.id)) {
+                    await response.editReply(template.info(`Purging was halted with ${purged} message${purged === 1 ? "" : "s"} already purged.`));
+                    return;
+                }
+
+                try {
+                    await message.delete();
+                    purged++;
+                } catch {}
+            }
+
+            break;
+        }
+
+        if (isStopped(response.message.id)) {
+            await response.editReply(template.info(`Purging was halted with ${purged} message${purged === 1 ? "" : "s"} already purged.`));
+            return;
+        }
+
+        try {
+            await _.channel!.bulkDelete(batch);
+            purged += batch.length;
+        } catch {}
+    }
+
+    await response.editReply(template.success(`Purged ${purged} message${purged === 1 ? "" : "s"}.`));
 }
 
 const historyActionStrings = {
