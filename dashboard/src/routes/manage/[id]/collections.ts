@@ -8,4 +8,5 @@ export default () => ({
     "supporter-announcements": db.supporterAnnouncementSettings,
     xp: db.xpSettings,
     "reaction-roles": db.reactionRolesSettings,
+    starboard: db.starboardSettings,
 });

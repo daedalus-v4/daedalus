@@ -213,7 +213,7 @@ export type DbReactionRolesSettings = {
 export type DbStarboardSettings = {
     detectEmoji: string | null;
     defaultChannel: string | null;
-    defaultThreshold: number;
+    defaultThreshold: number | null;
     channels: Record<
         string,
         {

@@ -192,6 +192,10 @@ class Database {
         return _db.collection<{ guild: string; user: string; notes: string }>("user_notes");
     }
 
+    public get starboardLinks() {
+        return _db.collection<{ message: string; target: string }>("starboard_links");
+    }
+
     public get stickyRoles() {
         return _db.collection<{ guild: string; user: string; roles: string[] }>("sticky_roles");
     }

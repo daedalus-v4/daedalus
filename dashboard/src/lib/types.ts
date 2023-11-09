@@ -105,3 +105,17 @@ export type FEReactionRolesSettings = {
         error: string | null;
     }[];
 };
+
+export type FEStarboardSettings = {
+    detectEmoji: string | null;
+    defaultChannel: string | null;
+    defaultThreshold: number | null;
+    channels: Record<
+        string,
+        {
+            disable: boolean;
+            overrideChannel: string | null;
+            overrideThreshold: number | null;
+        }
+    >;
+};

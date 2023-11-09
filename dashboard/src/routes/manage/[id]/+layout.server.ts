@@ -39,7 +39,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
         else (map[channel.parent].children ??= []).push(channel);
 
     function sortChannels(list: TFChannel[]) {
-        list.sort((x, y) => x.position - y.position);
+        list.sort((x, y) => (x.type === 2 || x.type === 13 ? 1 : 0) - (y.type === 2 || y.type === 13 ? 1 : 0) || x.position - y.position);
         for (const { children } of list) if (children) sortChannels(children);
     }
 

@@ -5,6 +5,7 @@ import type {
     DbModulesPermissionsSettings,
     DbReactionRolesSettings,
     DbSettings,
+    DbStarboardSettings,
     DbSupporterAnnouncementsSettings,
     DbWelcomeSettings,
     DbXpSettings,
@@ -199,4 +200,16 @@ export default {
             }),
         ),
     }) satisfies z.ZodType<DbReactionRolesSettings>,
+    starboard: z.object({
+        detectEmoji: z.nullable(z.string()),
+        defaultChannel: z.nullable(z.string()),
+        defaultThreshold: z.nullable(z.number().int().min(2)),
+        channels: z.record(
+            z.object({
+                disable: z.boolean(),
+                overrideChannel: z.nullable(z.string()),
+                overrideThreshold: z.nullable(z.number().int().min(2)),
+            }),
+        ),
+    }) satisfies z.ZodType<DbStarboardSettings>,
 };
