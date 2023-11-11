@@ -105,16 +105,16 @@ async function checkBulkDelete(messages: Collection<Snowflake, Message | Partial
     const settings = await db.starboardSettings.findOne({ guild: guild.id });
     if (!settings) return;
 
-    const starboard = await getStarboard(settings, messages.first()!.channel);
+    const starboard = await getStarboard(settings, channel);
     if (!starboard) return;
 
     const targets = (await db.starboardLinks.find({ message: { $in: [...messages.keys()] } }).toArray()).map((doc) => doc.target);
     if (targets.length === 0) return;
 
     try {
-        await channel.bulkDelete(targets);
+        await starboard.target.bulkDelete(targets);
     } catch {
-        for (const target of targets) await channel.messages.delete(target).catch(() => {});
+        for (const target of targets) await starboard.target.messages.delete(target).catch(() => {});
     }
 
     await db.starboardLinks.deleteMany({ target: { $in: targets } });
