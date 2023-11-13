@@ -9,6 +9,7 @@ export const limits = {
     purgeAtOnce: [100, 1000],
     automodCount: [2, 5],
     statsChannelsCount: [2, 5],
+    autoresponderCount: [2, 5],
 } satisfies Record<string, [number, number]>;
 
 export function getLimit(key: keyof typeof limits, premium: boolean | PremiumBenefits) {

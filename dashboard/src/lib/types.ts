@@ -191,3 +191,30 @@ export type FEStatsChannelsSettings = {
         format: string;
     }[];
 };
+
+export type FEAutoresponderSettings = {
+    onlyInAllowedChannels: boolean;
+    onlyToAllowedRoles: boolean;
+    allowedChannels: string[];
+    allowedRoles: string[];
+    blockedChannels: string[];
+    blockedRoles: string[];
+    triggers: {
+        enabled: boolean;
+        match: string;
+        wildcard: boolean;
+        caseInsensitive: boolean;
+        respondToBotsAndWebhooks: boolean;
+        replyMode: "normal" | "reply" | "ping-reply";
+        reaction: string | null;
+        message: FEMessageData;
+        bypassDefaultChannelSettings: boolean;
+        bypassDefaultRoleSettings: boolean;
+        onlyInAllowedChannels: boolean;
+        onlyToAllowedRoles: boolean;
+        allowedChannels: string[];
+        allowedRoles: string[];
+        blockedChannels: string[];
+        blockedRoles: string[];
+    }[];
+};

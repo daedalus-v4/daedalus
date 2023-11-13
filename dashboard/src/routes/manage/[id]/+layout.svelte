@@ -27,6 +27,7 @@
             "sticky-roles",
             "custom-roles",
             "stats-channels",
+            "autoresponder",
         ].map((mid) => ({
             link: `/manage/${id}/${mid}`,
             icon: modules[mid].icon ?? "gear",

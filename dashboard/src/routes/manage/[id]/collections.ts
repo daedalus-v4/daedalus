@@ -13,4 +13,5 @@ export default () => ({
     "sticky-roles": db.stickyRolesSettings,
     "custom-roles": db.customRolesSettings,
     "stats-channels": db.statsChannelsSettings,
+    autoresponder: db.autoresponderSettings,
 });

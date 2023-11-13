@@ -1,4 +1,5 @@
 import { b2fAutomodSettings, f2bAutomodSettings } from "$lib/modules/automod.js";
+import { b2fAutoresponderSettings, f2bAutoresponderSettings } from "$lib/modules/autoresponder.js";
 import { b2fCustomRolesSettings, f2bCustomRolesSettings } from "$lib/modules/custom-roles.js";
 import { b2fGuildSettings, f2bGuildSettings } from "$lib/modules/guild-settings.js";
 import { b2fLoggingSettings, f2bLoggingSettings } from "$lib/modules/logging.js";
@@ -24,6 +25,7 @@ export const b2f = {
     "sticky-roles": b2fStickyRolesSettings,
     "custom-roles": b2fCustomRolesSettings,
     "stats-channels": b2fStatsChannelsSettings,
+    autoresponder: b2fAutoresponderSettings,
 };
 
 export const f2b = {
@@ -39,4 +41,5 @@ export const f2b = {
     "sticky-roles": f2bStickyRolesSettings,
     "custom-roles": f2bCustomRolesSettings,
     "stats-channels": f2bStatsChannelsSettings,
+    autoresponder: f2bAutoresponderSettings,
 };

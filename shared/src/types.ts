@@ -305,7 +305,8 @@ export type DbAutoresponderSettings = {
     blockedChannels: string[];
     blockedRoles: string[];
     triggers: {
-        name: string;
+        enabled: boolean;
+        match: string;
         wildcard: boolean;
         caseInsensitive: boolean;
         respondToBotsAndWebhooks: boolean;
