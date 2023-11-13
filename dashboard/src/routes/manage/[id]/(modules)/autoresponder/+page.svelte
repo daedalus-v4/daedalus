@@ -58,7 +58,7 @@
                 <Button variant="error-text-only" on:click={() => (data.triggers = without(data.triggers, index))}><Icon icon="trash" /></Button>
                 <Button on:click={() => ((openIndex = index), (open = true))}><Icon icon="edit" /></Button>
                 <SlideToggle name="" size="sm" bind:checked={trigger.enabled} />
-                {trigger.match}
+                <span>{trigger.match}</span>
             {/each}
         </div>
     {/if}

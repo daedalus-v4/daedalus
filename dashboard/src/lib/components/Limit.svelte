@@ -9,8 +9,8 @@
     export let key: keyof typeof limits;
 
     const limit = getLimit(key, $page.data.premium.increasedLimits);
-    const raised = getLimit(key, true);
-    const showPromo = raised > limit;
+    const basic = getLimit(key, 1);
+    const ultimate = getLimit(key, 2);
 
     export let limited: boolean = amount >= limit;
     $: limited = amount >= limit;
@@ -20,8 +20,11 @@
     <P class="text-red">
         You've {amount > limit ? "exceeded" : "reached"} the limit ({limit}).
         {#if amount > limit}Please remove some entries before saving.{/if}
-        {#if showPromo}
-            Upgrade to <A to="/premium" external class="text-yellow-600 dark:text-yellow-400"><Icon icon="crown" /> premium</A> to increase the limit to {raised}!
+        {#if basic > limit || ultimate > limit}
+            Upgrade to
+            <A to="/premium" external class="text-yellow-600 dark:text-yellow-400"><Icon icon="crown" /> {basic > limit ? "premium" : "Daedalus Ultimate"}</A> to
+            increase the limit to {basic > limit ? "up to" : ""}
+            {ultimate}!
         {/if}
     </P>
 {:else}

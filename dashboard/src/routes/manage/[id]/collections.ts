@@ -14,4 +14,5 @@ export default () => ({
     "custom-roles": db.customRolesSettings,
     "stats-channels": db.statsChannelsSettings,
     autoresponder: db.autoresponderSettings,
+    modmail: db.modmailSettings,
 });

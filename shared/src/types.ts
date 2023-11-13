@@ -28,8 +28,9 @@ export type ModuleData = Record<
 export type PremiumBenefits = {
     name: string;
     vanityClient: boolean;
-    increasedLimits: boolean;
+    increasedLimits: 0 | 1 | 2;
     customizeXpBackgrounds: boolean;
+    multiModmail: boolean;
 };
 
 export type IField = { name: string; value: string; inline: boolean };
@@ -325,15 +326,24 @@ export type DbAutoresponderSettings = {
 };
 
 export type DbModmailSettings = {
-    logChannel: string | null;
-    category: string | null;
-    pingRoles: string[];
-    pingHere: boolean;
-    useThreads: boolean;
-    accessRoles: string[];
-    openMessage: string;
-    closeMessage: string;
-    snippets: { name: string; content: string }[];
+    multi: boolean;
+    snippets: { name: string; content: string; parsed: CustomMessageText }[];
+    targets: {
+        id: number;
+        name: string;
+        description: string;
+        emoji: string | null;
+        logChannel: string | null;
+        category: string | null;
+        pingRoles: string[];
+        pingHere: boolean;
+        useThreads: boolean;
+        accessRoles: string[];
+        openMessage: string;
+        closeMessage: string;
+        openMessageParsed: CustomMessageText;
+        closeMessageParsed: CustomMessageText;
+    }[];
 };
 
 export type DbTicketsSettings = {

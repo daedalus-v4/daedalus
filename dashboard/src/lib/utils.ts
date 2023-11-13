@@ -18,6 +18,7 @@ export function sortRoles(input: string[], roles: TFRole[]) {
     return input.sort((x, y) => indexes[x] - indexes[y]);
 }
 
+export const threadableTextlike = [0, 5];
 export const textlike = [0, 2, 5, 10, 11, 12, 13];
 export const textlikeAndParents = [...textlike, 4, 15, 16];
 

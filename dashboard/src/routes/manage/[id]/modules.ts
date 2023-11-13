@@ -3,6 +3,7 @@ import { b2fAutoresponderSettings, f2bAutoresponderSettings } from "$lib/modules
 import { b2fCustomRolesSettings, f2bCustomRolesSettings } from "$lib/modules/custom-roles.js";
 import { b2fGuildSettings, f2bGuildSettings } from "$lib/modules/guild-settings.js";
 import { b2fLoggingSettings, f2bLoggingSettings } from "$lib/modules/logging.js";
+import { b2fModmailSettings, f2bModmailSettings } from "$lib/modules/modmail.js";
 import { b2fModulesPermissionsSettings, f2bModulesPermissionsSettings } from "$lib/modules/modules-permissions-settings.js";
 import { b2fReactionRolesSettings, f2bReactionRolesSettings } from "$lib/modules/reaction-roles.js";
 import { b2fStarboardSettings, f2bStarboardSettings } from "$lib/modules/starboard.js";
@@ -26,6 +27,7 @@ export const b2f = {
     "custom-roles": b2fCustomRolesSettings,
     "stats-channels": b2fStatsChannelsSettings,
     autoresponder: b2fAutoresponderSettings,
+    modmail: b2fModmailSettings,
 };
 
 export const f2b = {
@@ -42,4 +44,5 @@ export const f2b = {
     "custom-roles": f2bCustomRolesSettings,
     "stats-channels": f2bStatsChannelsSettings,
     autoresponder: f2bAutoresponderSettings,
+    modmail: f2bModmailSettings,
 };

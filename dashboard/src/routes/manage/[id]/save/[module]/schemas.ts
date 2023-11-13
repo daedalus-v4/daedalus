@@ -5,6 +5,7 @@ import type {
     DbAutoresponderSettings,
     DbCustomRolesSettings,
     DbLoggingSettings,
+    DbModmailSettings,
     DbModulesPermissionsSettings,
     DbReactionRolesSettings,
     DbSettings,
@@ -324,4 +325,25 @@ export default {
             }),
         ),
     }) satisfies z.ZodType<DbAutoresponderSettings>,
+    modmail: z.object({
+        multi: z.boolean(),
+        snippets: z.array(z.object({ name: z.string(), content: z.string(), parsed: cmstring })),
+        targets: z.array(
+            z.object({
+                name: z.string().trim().min(1).max(100),
+                description: z.string().trim().max(100),
+                emoji: z.nullable(z.string()),
+                logChannel: z.nullable(snowflake),
+                category: z.nullable(snowflake),
+                pingRoles: snowflakes,
+                pingHere: z.boolean(),
+                useThreads: z.boolean(),
+                accessRoles: snowflakes,
+                openMessage: z.string(),
+                closeMessage: z.string(),
+                openMessageParsed: cmstring,
+                closeMessageParsed: cmstring,
+            }),
+        ),
+    }) satisfies z.ZodType<DbModmailSettings>,
 };

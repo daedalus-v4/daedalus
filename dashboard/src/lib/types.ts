@@ -218,3 +218,22 @@ export type FEAutoresponderSettings = {
         blockedRoles: string[];
     }[];
 };
+
+export type FEModmailSettings = {
+    multi: boolean;
+    snippets: { name: string; content: string }[];
+    targets: {
+        id: number;
+        name: string;
+        description: string;
+        emoji: string | null;
+        logChannel: string | null;
+        category: string | null;
+        pingRoles: string[];
+        pingHere: boolean;
+        useThreads: boolean;
+        accessRoles: string[];
+        openMessage: string;
+        closeMessage: string;
+    }[];
+};
