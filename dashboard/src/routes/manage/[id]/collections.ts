@@ -12,4 +12,5 @@ export default () => ({
     automod: db.automodSettings,
     "sticky-roles": db.stickyRolesSettings,
     "custom-roles": db.customRolesSettings,
+    "stats-channels": db.statsChannelsSettings,
 });

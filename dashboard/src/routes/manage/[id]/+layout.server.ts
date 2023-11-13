@@ -8,10 +8,7 @@ import { b2f } from "./modules.js";
 
 export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => {
     if (!params.id.match(/^[1-9][0-9]{16,19}$/)) throw redirect(303, "/manage");
-
-    if (!locals.user) {
-        throw redirect(303, `/auth/login?${new URLSearchParams({ redirect: url.pathname })}`);
-    }
+    if (!locals.user) throw redirect(303, `/auth/login?${new URLSearchParams({ redirect: url.pathname })}`);
 
     const request = await fetch(`${API}/check-guild`, {
         method: "POST",
@@ -20,10 +17,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
     });
 
     const response: { owner: boolean; valid: boolean; roles: TFRole[]; channels: TFChannel[]; emojis: TFEmoji[] } = await request.json();
-
-    if (!response.valid) {
-        throw redirect(303, "/manage?reload");
-    }
+    if (!response.valid) throw redirect(303, "/manage?reload");
 
     locals.authorized = true;
 

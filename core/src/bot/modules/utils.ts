@@ -49,7 +49,7 @@ export async function sendCustomMessage(
             invokeLog("botError", channel, () =>
                 template.logerror(
                     `Bot Error ${mdash} Custom Message ${mdash} ${moduleTitle} Module`,
-                    `${errorMessage} Check the bot's permissions in ${channel} and ensure your custom message is valid. Here's some details about the error:\n\`\`\`\n${error}\n\`\`\``,
+                    `${errorMessage} Check the bot's permissions in ${channel} and ensure your custom message is valid. Here are some details about the error:\n\`\`\`\n${error}\n\`\`\``,
                 ),
             );
     }
@@ -63,7 +63,7 @@ export async function sendMessage(channel: TextBasedChannel, data: MessageCreate
             invokeLog("botError", channel, () =>
                 template.logerror(
                     `Bot Error ${mdash} Sending Message ${mdash} ${moduleTitle} Module`,
-                    `${errorMessage} Check the bot's permissions in ${channel} and ensure your custom message is valid. Here's some details about the error:\n\`\`\`\n${error}\n\`\`\``,
+                    `${errorMessage} Check the bot's permissions in ${channel} and ensure your custom message is valid. Here are some details about the error:\n\`\`\`\n${error}\n\`\`\``,
                 ),
             );
     }

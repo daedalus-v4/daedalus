@@ -293,6 +293,7 @@ export type DbStatsChannelsSettings = {
     channels: {
         channel: string | null;
         format: string;
+        parsed: CustomMessageText;
     }[];
 };
 

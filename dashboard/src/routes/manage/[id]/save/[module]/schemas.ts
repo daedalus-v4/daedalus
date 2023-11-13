@@ -8,6 +8,7 @@ import type {
     DbReactionRolesSettings,
     DbSettings,
     DbStarboardSettings,
+    DbStatsChannelsSettings,
     DbStickyRolesSettings,
     DbSupporterAnnouncementsSettings,
     DbWelcomeSettings,
@@ -285,4 +286,13 @@ export default {
         allowedRoles: snowflakes,
         anchor: z.nullable(snowflake),
     }) satisfies z.ZodType<DbCustomRolesSettings>,
+    "stats-channels": z.object({
+        channels: z.array(
+            z.object({
+                channel: z.nullable(snowflake),
+                format: z.string(),
+                parsed: cmstring,
+            }),
+        ),
+    }) satisfies z.ZodType<DbStatsChannelsSettings>,
 };

@@ -184,3 +184,10 @@ export type FECustomRolesSettings = {
     allowedRoles: string[];
     anchor: string | null;
 };
+
+export type FEStatsChannelsSettings = {
+    channels: {
+        channel: string | null;
+        format: string;
+    }[];
+};

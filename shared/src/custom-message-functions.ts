@@ -2,7 +2,7 @@ import type { Guild, GuildMember, Role, User } from "discord.js";
 
 export type CustomMessageContext = { member?: GuildMember | null; user?: User | null; role?: Role | null; guild?: Guild | null };
 export type Value = string | number | Value[];
-export type FN = { arity: number | [number, number]; apply: (ctx: CustomMessageContext, ...args: Value[]) => Value };
+export type FN = { arity: number | [number, number]; apply: (ctx: CustomMessageContext, ...args: Value[]) => Value; fetch?: string[] };
 
 function raise(error: string): Value {
     throw error;
@@ -38,9 +38,9 @@ const functions: Record<"member" | "user" | "role" | "guild" | "global", Record<
         "server-icon": { arity: 0, apply: (ctx) => ctx.guild!.iconURL() ?? "" },
         "server-banner": { arity: 0, apply: (ctx) => ctx.guild!.bannerURL() ?? "" },
         "server-splash": { arity: 0, apply: (ctx) => ctx.guild!.splashURL() ?? "" },
-        bots: { arity: 0, apply: (ctx) => ctx.guild!.members.cache.filter((x) => x.user.bot).size },
-        humans: { arity: 0, apply: (ctx) => ctx.guild!.members.cache.filter((x) => !x.user.bot).size },
-        boosters: { arity: 0, apply: (ctx) => ctx.guild!.members.cache.filter((x) => x.premiumSince).size },
+        bots: { arity: 0, apply: (ctx) => ctx.guild!.members.cache.filter((x) => x.user.bot).size, fetch: ["members"] },
+        humans: { arity: 0, apply: (ctx) => ctx.guild!.members.cache.filter((x) => !x.user.bot).size, fetch: ["members"] },
+        boosters: { arity: 0, apply: (ctx) => ctx.guild!.members.cache.filter((x) => x.premiumSince).size, fetch: ["members"] },
     },
     global: {
         "?": { arity: [2, 3], apply: (_, x, y, z) => (x ? y : z ?? "") },
