@@ -7,6 +7,7 @@ import type {
     DbReactionRolesSettings,
     DbSettings,
     DbStarboardSettings,
+    DbStickyRolesSettings,
     DbSupporterAnnouncementsSettings,
     DbWelcomeSettings,
     DbXpSettings,
@@ -275,4 +276,7 @@ export default {
             }),
         ),
     }) satisfies z.ZodType<DbAutomodSettings>,
+    "sticky-roles": z.object({
+        exclude: snowflakes,
+    }) satisfies z.ZodType<DbStickyRolesSettings>,
 };

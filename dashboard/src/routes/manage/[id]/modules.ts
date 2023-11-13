@@ -4,6 +4,7 @@ import { b2fLoggingSettings, f2bLoggingSettings } from "$lib/modules/logging.js"
 import { b2fModulesPermissionsSettings, f2bModulesPermissionsSettings } from "$lib/modules/modules-permissions-settings.js";
 import { b2fReactionRolesSettings, f2bReactionRolesSettings } from "$lib/modules/reaction-roles.js";
 import { b2fStarboardSettings, f2bStarboardSettings } from "$lib/modules/starboard.js";
+import { b2fStickyRolesSettings, f2bStickyRolesSettings } from "$lib/modules/sticky-roles.js";
 import { b2fSupporterAnnouncementsSettings, f2bSupporterAnnouncementsSettings } from "$lib/modules/supporter-announcements.js";
 import { b2fWelcomeSettings, f2bWelcomeSettings } from "$lib/modules/welcome.js";
 import { b2fXpSettings, f2bXpSettings } from "$lib/modules/xp.js";
@@ -18,6 +19,7 @@ export const b2f = {
     "reaction-roles": b2fReactionRolesSettings,
     starboard: b2fStarboardSettings,
     automod: b2fAutomodSettings,
+    "sticky-roles": b2fStickyRolesSettings,
 };
 
 export const f2b = {
@@ -30,4 +32,5 @@ export const f2b = {
     "reaction-roles": f2bReactionRolesSettings,
     starboard: f2bStarboardSettings,
     automod: f2bAutomodSettings,
+    "sticky-roles": f2bStickyRolesSettings,
 };

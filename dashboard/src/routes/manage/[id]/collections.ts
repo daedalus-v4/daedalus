@@ -10,4 +10,5 @@ export default () => ({
     "reaction-roles": db.reactionRolesSettings,
     starboard: db.starboardSettings,
     automod: db.automodSettings,
+    "sticky-roles": db.stickyRolesSettings,
 });

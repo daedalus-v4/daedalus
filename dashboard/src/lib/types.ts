@@ -174,3 +174,7 @@ export type FEAutomodSettings = {
         watchedRoles: string[];
     }[];
 };
+
+export type FEStickyRolesSettings = {
+    exclude: string[];
+};
