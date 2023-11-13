@@ -4,8 +4,6 @@ import { db } from "shared/db.js";
 import { getPortalSessions, stripe } from "./stripe.js";
 
 export default async function recalculate(user?: string) {
-    console.log(`recalculating premium ${user ? `for ${user}` : "globally"}`);
-
     const enable: string[] = [];
     const disable: string[] = [];
 
@@ -72,8 +70,6 @@ export default async function recalculate(user?: string) {
             }
         }
     }
-
-    console.log(enable, disable);
 
     if (enable.length > 0) await db.premiumKeyBindings.updateMany({ key: { $in: enable } }, { $unset: { disabled: 1 } });
     if (disable.length > 0) await db.premiumKeyBindings.updateMany({ key: { $in: disable } }, { $set: { disabled: true } });

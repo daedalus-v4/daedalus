@@ -230,6 +230,7 @@ export type DbAutomodSettings = {
     defaultChannel: string | null;
     interactWithWebhooks: boolean;
     rules: {
+        id: number;
         enable: boolean;
         name: string;
         type:
@@ -239,7 +240,7 @@ export type DbAutomodSettings = {
             | "newline-spam"
             | "repeated-characters"
             | "length-limit"
-            | "emoji-span"
+            | "emoji-spam"
             | "ratelimit"
             | "attachment-spam"
             | "sticker-spam"
@@ -465,10 +466,10 @@ export type DbUserHistory = {
     guild: string;
     user: string;
     id: number;
-    type: "ban" | "kick" | "timeout" | "mute" | "informal_warn" | "warn";
+    type: "ban" | "kick" | "timeout" | "mute" | "informal_warn" | "warn" | "bulk";
     mod: string;
     time: number;
     duration?: number;
-    origin: string;
+    origin?: string;
     reason: string | null;
 };

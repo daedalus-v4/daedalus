@@ -31,7 +31,7 @@ cycle(
     async () => {
         const ids: ObjectId[] = [];
 
-        for await (const task of db.tasks.find()) {
+        for await (const task of db.tasks.find({ time: { $lt: Date.now() } })) {
             let client: Client | undefined;
             let keep = false;
 

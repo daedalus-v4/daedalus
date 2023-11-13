@@ -12,10 +12,10 @@ import {
     PermissionsBitField,
     escapeMarkdown,
 } from "discord.js";
-import { permissions } from "shared";
+import { DurationStyle, formatDuration, permissions } from "shared";
 import { getAllClients } from "../../clients.js";
 import { SpoilerLevel, copyFiles, copyMedia } from "../../lib/copy-media.js";
-import { DurationStyle, code, colors, embed, englishList, expand, formatDuration, mdash, timeinfo } from "../../lib/format.js";
+import { code, colors, embed, englishList, expand, mdash, timeinfo } from "../../lib/format.js";
 import getMuteRole from "../../lib/get-mute-role.js";
 import { invokeLog } from "../../lib/logging.js";
 import stickerCache from "../../lib/sticker-cache.js";
@@ -818,7 +818,7 @@ export default (app: Argentium) =>
                             (e) =>
                                 (e.title?.length ?? 0) +
                                 (e.description?.length ?? 0) +
-                                (e.fields ?? []).map((f) => f.name.length + f.value.length).reduce((x, y) => x + y),
+                                (e.fields ?? []).map((f) => f.name.length + f.value.length).reduce((x, y) => x + y, 0),
                         )
                         .reduce((x, y) => x + y);
 

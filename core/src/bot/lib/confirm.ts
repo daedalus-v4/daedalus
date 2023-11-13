@@ -26,8 +26,8 @@ export default async function (
     const reply = interaction.replied
         ? await interaction.followUp(send)
         : interaction.deferred
-        ? await interaction.editReply(send)
-        : await interaction.reply(send);
+          ? await interaction.editReply(send)
+          : await interaction.reply(send);
 
     const timer =
         timeout > 0

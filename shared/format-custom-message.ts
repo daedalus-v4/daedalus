@@ -48,12 +48,12 @@ export async function formatMessage(input: MessageData["parsed"], ctx: CustomMes
                     (e.colorMode === "fixed"
                         ? e.color
                         : e.colorMode === "member"
-                        ? ctx.member?.displayColor
-                        : e.colorMode === "user"
-                        ? ctx.user?.accentColor
-                        : e.colorMode === "guild"
-                        ? ctx.guild && (await getColor(ctx.guild, true))
-                        : undefined) ?? e.color,
+                          ? ctx.member?.displayColor
+                          : e.colorMode === "user"
+                            ? ctx.user?.accentColor
+                            : e.colorMode === "guild"
+                              ? ctx.guild && (await getColor(ctx.guild, true))
+                              : undefined) ?? e.color,
                 author: { name: u(e.author.name), iconURL: u(e.author.iconURL), url: u(e.author.url) },
                 title: u(e.title),
                 description: u(e.description),

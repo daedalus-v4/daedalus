@@ -9,4 +9,5 @@ export default () => ({
     xp: db.xpSettings,
     "reaction-roles": db.reactionRolesSettings,
     starboard: db.starboardSettings,
+    automod: db.automodSettings,
 });
