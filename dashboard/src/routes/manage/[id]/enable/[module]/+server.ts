@@ -11,7 +11,6 @@ export const PUT: RequestHandler = async ({ fetch, locals, params: { id, module 
     });
 
     const res: { valid: boolean } = await req.json();
-    console.log(res);
 
     if (!res.valid) throw redirect(303, "/manage?reload");
 

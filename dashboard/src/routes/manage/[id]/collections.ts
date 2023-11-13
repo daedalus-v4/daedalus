@@ -11,4 +11,5 @@ export default () => ({
     starboard: db.starboardSettings,
     automod: db.automodSettings,
     "sticky-roles": db.stickyRolesSettings,
+    "custom-roles": db.customRolesSettings,
 });

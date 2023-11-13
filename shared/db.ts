@@ -199,6 +199,10 @@ class Database {
     public get stickyRoles() {
         return _db.collection<{ guild: string; user: string; roles: string[] }>("sticky_roles");
     }
+
+    public get customRoles() {
+        return _db.collection<{ guild: string; user: string; role: string }>("custom_roles");
+    }
 }
 
 export const db = new Database();

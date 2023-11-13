@@ -2,6 +2,7 @@ import type {
     CustomMessageComponent,
     CustomMessageText,
     DbAutomodSettings,
+    DbCustomRolesSettings,
     DbLoggingSettings,
     DbModulesPermissionsSettings,
     DbReactionRolesSettings,
@@ -279,4 +280,9 @@ export default {
     "sticky-roles": z.object({
         exclude: snowflakes,
     }) satisfies z.ZodType<DbStickyRolesSettings>,
+    "custom-roles": z.object({
+        allowBoosters: z.boolean(),
+        allowedRoles: snowflakes,
+        anchor: z.nullable(snowflake),
+    }) satisfies z.ZodType<DbCustomRolesSettings>,
 };

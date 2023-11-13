@@ -178,3 +178,9 @@ export type FEAutomodSettings = {
 export type FEStickyRolesSettings = {
     exclude: string[];
 };
+
+export type FECustomRolesSettings = {
+    allowBoosters: boolean;
+    allowedRoles: string[];
+    anchor: string | null;
+};
