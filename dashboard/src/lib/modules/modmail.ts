@@ -31,6 +31,7 @@ export async function b2fModmailSettings(fe: FEData, data: Partial<DbModmailSett
 
 export async function f2bModmailSettings(data: FEModmailSettings): Promise<DbModmailSettings> {
     if (data.targets.some((x) => x.name.trim().length === 0)) throw "All targets must be named.";
+    if (data.snippets.length > new Set(data.snippets.map((x) => x.name.trim())).size) throw "Snippet names must be unique.";
 
     return {
         multi: data.multi,

@@ -330,6 +330,7 @@ export default {
         snippets: z.array(z.object({ name: z.string(), content: z.string(), parsed: cmstring })),
         targets: z.array(
             z.object({
+                id: z.number(),
                 name: z.string().trim().min(1).max(100),
                 description: z.string().trim().max(100),
                 emoji: z.nullable(z.string()),

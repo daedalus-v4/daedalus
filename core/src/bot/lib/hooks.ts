@@ -11,3 +11,8 @@ async function _deferFalse({ _ }: { _: RepliableInteraction }) {
 export function defer(ephemeral: boolean) {
     return ephemeral ? _deferTrue : _deferFalse;
 }
+
+export async function fetchCaller<T extends { _: RepliableInteraction }>(data: T) {
+    const { _ } = data;
+    return { ...data, caller: await _.guild!.members.fetch(_.user) };
+}

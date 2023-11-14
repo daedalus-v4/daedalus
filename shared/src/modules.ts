@@ -204,6 +204,7 @@ export const modules: ModuleData = {
                 name: "Modmail",
                 icon: "envelope",
                 description: "Modmail operation commands.",
+                permissions: ["ManageMessages"],
             },
         },
         selfPermissions: ["CreatePublicThreads", "ManageThreads", "ManageChannels"],

@@ -1,5 +1,5 @@
 import Argentium from "argentium";
-import { Events } from "discord.js";
+import { ApplicationCommandOptionType, Events } from "discord.js";
 import { existsSync, readdirSync } from "fs";
 import path from "path";
 import { autoIncrement } from "shared/db.js";
@@ -16,21 +16,38 @@ export default new Argentium()
             .reduce((x, y) => x.use(require(`./modules/${y}`).default), x),
     )
     .beforeAllCommands(async ({ _ }, escape) => {
-        if (_.guild && !(_.isChatInputCommand() && _.commandName === "admin") && _.client.token !== (await getClient(_.guild)).token)
-            escape(template.error("Incorrect client in use; please use this guild's bot."));
+        const toError = (message: string) =>
+            _.isAutocomplete()
+                ? [
+                      {
+                          name: message,
+                          value: _.options.getFocused(true).type === ApplicationCommandOptionType.String ? "." : 0,
+                      },
+                  ]
+                : template.error(message);
 
-        if (!_.isChatInputCommand || _.commandName !== "admin") {
+        if (_.guild && _.commandName !== "admin" && _.client.token !== (await getClient(_.guild)).token)
+            return void escape(toError("Incorrect client in use; please use this guild's bot."));
+
+        let denied = false;
+
+        if ((_.isChatInputCommand() || _.isAutocomplete()) && _.commandName !== "admin") {
             const denyReason = await check(_.user, _.commandName, _.channel!);
-            if (denyReason) escape(template.error(denyReason));
+
+            if (denyReason) {
+                escape(toError(denyReason));
+                denied = true;
+            }
         }
 
-        log.info(
-            `${
-                _.isChatInputCommand()
-                    ? `/${[_.commandName, _.options.getSubcommandGroup(false), _.options.getSubcommand(false)].filter((x) => x).join(" ")}`
-                    : _.commandName
-            } (${_.user.tag} (${_.user.id}) in ${_.guild ? `${_.guild.name} (${_.guild.id})` : "DMs"})`,
-        );
+        if (!_.isAutocomplete())
+            log.info(
+                `${
+                    _.isChatInputCommand()
+                        ? `/${[_.commandName, _.options.getSubcommandGroup(false), _.options.getSubcommand(false)].filter((x) => x).join(" ")}`
+                        : _.commandName
+                } (${_.user.tag} (${_.user.id}) in ${_.guild ? `${_.guild.name} (${_.guild.id})` : "DMs"})${denied ? " **(permission denied)**" : ""}`,
+            );
     })
     .on(Events.InteractionCreate, async (interaction) => {
         if (!interaction.isMessageComponent() && !interaction.isModalSubmit()) return;

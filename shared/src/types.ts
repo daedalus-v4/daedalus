@@ -109,7 +109,11 @@ export type DbGlobals = {
 export type DbTask = {
     guild: string;
     time: number;
-} & ({ action: "unban"; user: string } | { action: "unmute"; user: string });
+} & (
+    | { action: "unban"; user: string }
+    | { action: "unmute"; user: string }
+    | { action: "modmail/close"; guild: string; channel: string; author: string; message: string }
+);
 
 export type DbSettings = {
     dashboardPermissions: "owner" | "admin" | "manager";
@@ -484,4 +488,32 @@ export type DbUserHistory = {
     duration?: number;
     origin?: string;
     reason: string | null;
+};
+
+export type DBModmailMessage = { time: number } & (
+    | { type: "open"; author: string; targetName: string | null }
+    | { type: "incoming"; content: string; attachments: { name: string; url: string }[] }
+    | { type: "internal"; author: string; content: string; attachments: { name: string; url: string }[] }
+    | {
+          type: "outgoing";
+          id: number;
+          message: string;
+          author: string;
+          anon: boolean;
+          content: string;
+          edits?: string[];
+          attachments: { name: string; url: string }[];
+          deleted: boolean;
+      }
+    | { type: "close"; author: string; content: string; sent: boolean }
+);
+
+export type DbModmailThread = {
+    guild: string;
+    user: string;
+    id: number;
+    uuid: string;
+    channel: string;
+    closed: boolean;
+    messages: DBModmailMessage[];
 };

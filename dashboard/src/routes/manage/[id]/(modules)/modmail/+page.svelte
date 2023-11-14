@@ -23,6 +23,24 @@
     let open = false;
 
     $: target = data.targets[openIndex];
+    $: !data.multi &&
+        data.targets.length === 0 &&
+        (data.targets = [
+            {
+                id: Math.random(),
+                name: "Default Target",
+                description: "Replace/remove this description.",
+                emoji: null,
+                logChannel: null,
+                category: null,
+                pingRoles: [],
+                pingHere: false,
+                useThreads: true,
+                accessRoles: [],
+                openMessage: "",
+                closeMessage: "",
+            },
+        ]);
 </script>
 
 <ModuleSaver bind:base bind:data />

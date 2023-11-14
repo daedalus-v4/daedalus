@@ -32,6 +32,9 @@ async function formatCustomMessageComponent([fname, ...args]: CustomMessageCompo
 }
 
 export async function formatCustomMessageString(input: CustomMessageText, ctx: CustomMessageContext): Promise<string> {
+    ctx.user ??= ctx.member?.user;
+    ctx.guild ??= ctx.member?.guild ?? ctx.role?.guild;
+
     return (await Promise.all(input.map(async (x) => (typeof x === "string" ? x : `${await formatCustomMessageComponent(x, ctx)}`)))).join("");
 }
 
@@ -59,7 +62,7 @@ export async function formatMessage(input: MessageData["parsed"], ctx: CustomMes
                           : e.colorMode === "user"
                             ? ctx.user?.accentColor
                             : e.colorMode === "guild"
-                              ? ctx.guild && (await getColor(ctx.guild, true))
+                              ? ctx.guild && (await getColor(ctx.guild))
                               : undefined) ?? e.color,
                 author: { name: await u(e.author.name), iconURL: await u(e.author.iconURL), url: await u(e.author.url) },
                 title: await u(e.title),

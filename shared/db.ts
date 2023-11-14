@@ -10,6 +10,7 @@ import {
     DbGlobals,
     DbLoggingSettings,
     DbModmailSettings,
+    DbModmailThread,
     DbModulesPermissionsSettings,
     DbNukeguardSettings,
     DbPollsSettings,
@@ -203,6 +204,18 @@ class Database {
     public get customRoles() {
         return _db.collection<{ guild: string; user: string; role: string }>("custom_roles");
     }
+
+    public get modmailThreads() {
+        return _db.collection<DbModmailThread>("modmail_threads");
+    }
+
+    public get modmailTargets() {
+        return _db.collection<{ guild: string; user: string }>("modmail_targets");
+    }
+
+    public get modmailNotifications() {
+        return _db.collection<{ channel: string; user: string; once: boolean }>("modmail_notifications");
+    }
 }
 
 export const db = new Database();
@@ -222,10 +235,7 @@ export async function isCommandEnabled(guild: string, command: string) {
     return doc?.commands[command]?.enabled ?? commandMap[command]?.default ?? true;
 }
 
-export async function getColor<T extends boolean>(
-    ctx?: string | APIGuild | Guild | { guild: APIGuild | Guild },
-    blank: T = false as T,
-): Promise<T extends false ? number | undefined : number> {
+export async function getColor(ctx?: string | APIGuild | Guild | { guild: APIGuild | Guild }, defaultColor: number = 0x009688): Promise<number> {
     if (ctx) {
         const id = typeof ctx === "string" ? ctx : "guild" in ctx ? ctx.guild.id : ctx.id;
 
@@ -233,7 +243,7 @@ export async function getColor<T extends boolean>(
         if (embedColor !== undefined) return embedColor;
     }
 
-    return blank ? (undefined as any) : 0x009688;
+    return defaultColor;
 }
 
 export async function getLimitFor(guild: Guild | APIGuild, key: keyof typeof limits) {
