@@ -24,6 +24,7 @@ import { WithId } from "mongodb";
 import { DbModmailSettings, DbModmailThread } from "shared";
 import { autoIncrement, db, getColor, getLimitFor, getPremiumBenefitsFor } from "shared/db.js";
 import { formatCustomMessageString } from "shared/format-custom-message.js";
+import { dataEncodeAttachments } from "../../../lib/attachments.js";
 import { colors, embed, expand, mdash, template } from "../../lib/format.js";
 import { invokeLog } from "../../lib/logging.js";
 import { skip } from "../utils.js";
@@ -550,17 +551,6 @@ export async function resolve(message: Message, guild: Guild, reply: Message, fi
     });
 
     await message.react("✅");
-}
-
-export async function dataEncodeAttachments(message: Message) {
-    return await Promise.all(
-        message.attachments.map(async (x) => {
-            const req = await fetch(x.url).catch(() => {});
-            const res = await req?.arrayBuffer();
-
-            return { name: x.name, url: `data:${x.contentType ?? "application/octet-stream"};base64,${res ? Buffer.from(res).toString("base64") : ""}` };
-        }),
-    );
 }
 
 export function getModmailContactInfo<P extends boolean>(permitAbsent: P) {

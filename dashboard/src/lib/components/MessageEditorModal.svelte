@@ -8,6 +8,6 @@
 
 <Modal max z={100} open={!!$messageEditorModalStore} on:close={() => ($messageEditorModalStore = null)}>
     {#if $messageEditorModalStore}
-        <MessageEditorCore bind:message={$messageEditorModalStore.message} />
+        <MessageEditorCore isStatic={$messageEditorModalStore.isStatic} bind:message={$messageEditorModalStore.message} />
     {/if}
 </Modal>

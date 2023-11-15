@@ -3,6 +3,8 @@ import { PremiumTier } from "shared";
 import { db } from "shared/db.js";
 import { getPortalSessions, stripe } from "./stripe.js";
 
+// TODO: automatically downgrade reaction role prompts, ticket prompts, etc.
+// TODO: alert users when their premium status changes
 export default async function recalculate(user?: string) {
     const enable: string[] = [];
     const disable: string[] = [];

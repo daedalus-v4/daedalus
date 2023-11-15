@@ -8,6 +8,7 @@
     import Panel from "./Panel.svelte";
 
     export let message: FEMessageData;
+    export let isStatic: boolean;
 </script>
 
 <div class="flex flex-col gap-4">
@@ -57,8 +58,10 @@
                     <span>
                         <select class="select" bind:value={embed.colorMode}>
                             <option value="guild">Use Guild Default</option>
-                            <option value="member">Use Member Highlight Color</option>
-                            <option value="user">Use User Highlight Color</option>
+                            {#if !isStatic}
+                                <option value="member">Use Member Highlight Color</option>
+                                <option value="user">Use User Highlight Color</option>
+                            {/if}
                             <option value="fixed">Use Fixed Color</option>
                         </select>
                     </span>

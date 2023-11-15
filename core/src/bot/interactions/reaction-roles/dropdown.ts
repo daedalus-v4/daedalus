@@ -1,8 +1,12 @@
 import { StringSelectMenuInteraction } from "discord.js";
-import { db, getLimitFor } from "shared/db.js";
+import { db, getLimitFor, isModuleEnabled } from "shared/db.js";
+import { isAssignedClient } from "../../../lib/premium.js";
 import { englishList, template } from "../../lib/format.js";
 
 export default async function (cmd: StringSelectMenuInteraction) {
+    if (!(await isAssignedClient(cmd.guild!))) return template.error("This server is not using this client. This prompt needs to be set up again.");
+    if (!(await isModuleEnabled(cmd.guild!.id, "reaction-roles"))) return template.error("The reaction role module is disabled.");
+
     const doc = await db.reactionRolesSettings.findOne({ guild: cmd.guild!.id });
     if (!doc) return;
 

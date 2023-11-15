@@ -15,4 +15,5 @@ export default () => ({
     "stats-channels": db.statsChannelsSettings,
     autoresponder: db.autoresponderSettings,
     modmail: db.modmailSettings,
+    tickets: db.ticketsSettings,
 });

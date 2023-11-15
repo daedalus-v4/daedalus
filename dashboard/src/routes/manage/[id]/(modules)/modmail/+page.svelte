@@ -55,6 +55,7 @@
         <P>If you enable this setting but only set up one modmail target, it will act the same as if the setting were off.</P>
         <div class="flex items-center gap-4">
             <SlideToggle name="" size="sm" bind:checked={data.multi} />
+            <b>Use Multi-Modmail</b>
         </div>
     </Panel>
 {/if}
@@ -68,6 +69,7 @@
                 {target.name}
             </div>
         {/each}
+
         <Limit amount={data.targets.length} key="modmailTargetCount">
             <Button
                 variant="primary-text"

@@ -15,18 +15,24 @@
 
         const key = $page.url.pathname.split("/")[3] ?? "-";
 
+        const converted = await f2b[key as keyof typeof f2b](data, $page.params.id).catch(alert);
+
+        if (!converted) {
+            saving = false;
+            return;
+        }
+
         const request = await fetch(`/manage/${$page.params.id}/save/${key}`, {
             method: "POST",
-            body: JSON.stringify(await f2b[key as keyof typeof f2b](data, $page.params.id)),
+            body: JSON.stringify(converted),
             headers: { "Content-Type": "application/json" },
         });
 
         if (!request.ok) {
             saving = false;
-            throw await request.text();
-        }
+            alert(await request.text());
+        } else await postsave?.();
 
-        await postsave?.();
         saving = false;
     }
 </script>

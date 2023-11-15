@@ -13,6 +13,7 @@ import type {
     DbStatsChannelsSettings,
     DbStickyRolesSettings,
     DbSupporterAnnouncementsSettings,
+    DbTicketsSettings,
     DbWelcomeSettings,
     DbXpSettings,
     MessageData,
@@ -347,4 +348,34 @@ export default {
             }),
         ),
     }) satisfies z.ZodType<DbModmailSettings>,
+    tickets: z.object({
+        prompts: z.array(
+            z.object({
+                id: z.number().int(),
+                name: z.string(),
+                channel: z.nullable(snowflake),
+                message: z.nullable(snowflake),
+                prompt: message,
+                multi: z.boolean(),
+                targets: z.array(
+                    z.object({
+                        id: z.number(),
+                        name: z.string().max(100),
+                        description: z.string().max(100),
+                        logChannel: z.nullable(snowflake),
+                        category: z.nullable(snowflake),
+                        accessRoles: snowflakes,
+                        buttonColor: z.enum(["gray", "blue", "green", "red"]),
+                        emoji: z.nullable(z.string()),
+                        label: z.string().max(80),
+                        pingRoles: snowflakes,
+                        pingHere: z.boolean(),
+                        postCustomOpenMessage: z.boolean(),
+                        customOpenMessage: message,
+                    }),
+                ),
+                error: z.nullable(z.string()),
+            }),
+        ),
+    }) satisfies z.ZodType<DbTicketsSettings>,
 };

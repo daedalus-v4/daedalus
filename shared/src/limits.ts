@@ -11,6 +11,8 @@ export const limits = {
     statsChannelsCount: [2, 5, 5],
     autoresponderCount: [2, 5, 5],
     modmailTargetCount: [1, 3, 10],
+    ticketPromptCount: [3, 5, 10],
+    ticketTargetCount: [1, 3, 10],
 } satisfies Record<string, [number, number, number]>;
 
 export function getLimit(key: keyof typeof limits, premium: PremiumBenefits | 0 | 1 | 2) {

@@ -1,6 +1,7 @@
 import type { APIGuild, Guild } from "discord.js";
 import { Db, MongoClient } from "mongodb";
 import {
+    DBTicket,
     DbAutomodSettings,
     DbAutoresponderSettings,
     DbCoOpSettings,
@@ -216,6 +217,10 @@ class Database {
     public get modmailNotifications() {
         return _db.collection<{ channel: string; user: string; once: boolean }>("modmail_notifications");
     }
+
+    public get tickets() {
+        return _db.collection<DBTicket>("tickets");
+    }
 }
 
 export const db = new Database();
@@ -247,7 +252,7 @@ export async function getColor(ctx?: string | APIGuild | Guild | { guild: APIGui
 }
 
 export async function getLimitFor(guild: Guild | APIGuild, key: keyof typeof limits) {
-    return getLimit(key, premiumBenefits[(await db.guilds.findOne({ guild: guild.id }))?.tier ?? PremiumTier.FREE]);
+    return getLimit(key, (await getPremiumBenefitsFor(guild.id)).increasedLimits);
 }
 
 export async function getPremiumBenefitsFor(guild: string) {

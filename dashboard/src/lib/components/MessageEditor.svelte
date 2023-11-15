@@ -17,17 +17,17 @@
 
 <div class="flex flex-col gap-2">
     {#if !isStatic}
-        <P class="pl-1">See <A to="/docs/guides/custom-messages">the docs</A> for how to format custom messages.</P>
+        <P class="pl-1">See <A to="/docs/guides/custom-messages" external>the docs</A> for how to format custom messages.</P>
     {/if}
     <div class="flex flex-wrap gap-2">
         {#if !flat}
-            <Button on:click={() => ($messageEditorModalStore = { message, set: (data) => (message = data) })}><Icon icon="edit" /> {label}</Button>
+            <Button on:click={() => ($messageEditorModalStore = { isStatic, message, set: (data) => (message = data) })}><Icon icon="edit" /> {label}</Button>
         {/if}
     </div>
 </div>
 
 {#if flat}
     <div class="w-full">
-        <MessageEditorCore bind:message />
+        <MessageEditorCore {isStatic} bind:message />
     </div>
 {/if}

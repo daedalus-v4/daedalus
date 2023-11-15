@@ -10,6 +10,7 @@ import { b2fStarboardSettings, f2bStarboardSettings } from "$lib/modules/starboa
 import { b2fStatsChannelsSettings, f2bStatsChannelsSettings } from "$lib/modules/stats-channels.js";
 import { b2fStickyRolesSettings, f2bStickyRolesSettings } from "$lib/modules/sticky-roles.js";
 import { b2fSupporterAnnouncementsSettings, f2bSupporterAnnouncementsSettings } from "$lib/modules/supporter-announcements.js";
+import { b2fTicketsSettings, f2bTicketsSettings } from "$lib/modules/tickets.js";
 import { b2fWelcomeSettings, f2bWelcomeSettings } from "$lib/modules/welcome.js";
 import { b2fXpSettings, f2bXpSettings } from "$lib/modules/xp.js";
 
@@ -28,6 +29,7 @@ export const b2f = {
     "stats-channels": b2fStatsChannelsSettings,
     autoresponder: b2fAutoresponderSettings,
     modmail: b2fModmailSettings,
+    tickets: b2fTicketsSettings,
 };
 
 export const f2b = {
@@ -45,4 +47,5 @@ export const f2b = {
     "stats-channels": f2bStatsChannelsSettings,
     autoresponder: f2bAutoresponderSettings,
     modmail: f2bModmailSettings,
+    tickets: f2bTicketsSettings,
 };

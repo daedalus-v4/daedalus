@@ -29,6 +29,7 @@
             "stats-channels",
             "autoresponder",
             "modmail",
+            "tickets",
         ].map((mid) => ({
             link: `/manage/${id}/${mid}`,
             icon: modules[mid].icon ?? "gear",

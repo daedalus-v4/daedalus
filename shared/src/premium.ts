@@ -13,6 +13,8 @@ export const premiumBenefits: Record<PremiumTier, PremiumBenefits> = {
         increasedLimits: 0,
         customizeXpBackgrounds: false,
         multiModmail: false,
+        multiTickets: false,
+        customizeTicketOpenMessage: false,
     },
     [PremiumTier.BASIC]: {
         name: "Daedalus Premium (Basic)",
@@ -20,6 +22,8 @@ export const premiumBenefits: Record<PremiumTier, PremiumBenefits> = {
         increasedLimits: 1,
         customizeXpBackgrounds: true,
         multiModmail: true,
+        multiTickets: true,
+        customizeTicketOpenMessage: true,
     },
     [PremiumTier.ULTIMATE]: {
         name: "Daedalus Premium (Ultimate)",
@@ -27,5 +31,7 @@ export const premiumBenefits: Record<PremiumTier, PremiumBenefits> = {
         increasedLimits: 2,
         customizeXpBackgrounds: true,
         multiModmail: true,
+        multiTickets: true,
+        customizeTicketOpenMessage: true,
     },
 };

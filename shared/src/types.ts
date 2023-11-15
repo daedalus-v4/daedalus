@@ -31,6 +31,8 @@ export type PremiumBenefits = {
     increasedLimits: 0 | 1 | 2;
     customizeXpBackgrounds: boolean;
     multiModmail: boolean;
+    multiTickets: boolean;
+    customizeTicketOpenMessage: boolean;
 };
 
 export type IField = { name: string; value: string; inline: boolean };
@@ -352,19 +354,28 @@ export type DbModmailSettings = {
 
 export type DbTicketsSettings = {
     prompts: {
+        id: number;
         name: string;
         channel: string | null;
-        logChannel: string | null;
-        category: string | null;
-        accessRoles: string[];
-        buttonColor: "gray" | "blue" | "green" | "red";
-        emoji: string | null;
-        label: string;
-        message: MessageData;
-        pingRoles: string[];
-        pingHere: boolean;
-        postCustomOpenMessage: boolean;
-        customOpenMessage: MessageData;
+        message: string | null;
+        prompt: MessageData;
+        multi: boolean;
+        targets: {
+            id: number;
+            name: string;
+            description: string;
+            logChannel: string | null;
+            category: string | null;
+            accessRoles: string[];
+            buttonColor: "gray" | "blue" | "green" | "red";
+            emoji: string | null;
+            label: string;
+            pingRoles: string[];
+            pingHere: boolean;
+            postCustomOpenMessage: boolean;
+            customOpenMessage: MessageData;
+        }[];
+        error: string | null;
     }[];
 };
 
@@ -516,4 +527,22 @@ export type DbModmailThread = {
     channel: string;
     closed: boolean;
     messages: DBModmailMessage[];
+};
+
+export type DbTicketMessage = { time: number } & (
+    | { type: "open" }
+    | { type: "message"; id: string; author: string; content: string; edits?: string[]; attachments: { name: string; url: string }[]; deleted?: boolean }
+    | { type: "close"; author: string }
+);
+
+export type DBTicket = {
+    guild: string;
+    user: string;
+    prompt: number;
+    target: number;
+    uuid: string;
+    closed: boolean;
+    channel: string;
+    created: number;
+    messages: DbTicketMessage[];
 };

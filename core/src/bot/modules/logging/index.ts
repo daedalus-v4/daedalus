@@ -159,7 +159,7 @@ export default (app: Argentium) =>
                             title: "Emoji Created",
                             description: `${expand(user, "System")} created ${emoji} (:${emoji.name}: ${code(emoji.id)})`,
                             color: colors.actions.create,
-                            thumbnail: { url: emoji.url },
+                            thumbnail: { url: emoji.imageURL() },
                         },
                     ],
                 };
@@ -175,7 +175,7 @@ export default (app: Argentium) =>
                             title: "Emoji Deleted",
                             description: `${expand(user, "System")} deleted :${emoji.name}: ${code(emoji.id)}`,
                             color: colors.actions.delete,
-                            thumbnail: { url: emoji.url },
+                            thumbnail: { url: emoji.imageURL() },
                         },
                     ],
                 };

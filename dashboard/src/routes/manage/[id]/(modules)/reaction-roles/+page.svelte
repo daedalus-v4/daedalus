@@ -50,8 +50,8 @@
 <Panel>
     <h3 class="h3">Reaction Roles</h3>
 
-    {#each data.entries as entry, index}
-        <div class="grid grid-cols-[auto_1fr] items-center gap-4">
+    <div class="grid grid-cols-[auto_1fr] items-center gap-4">
+        {#each data.entries as entry, index}
             <b>{entry.name}</b>
             <span class="flex items-center gap-1">
                 <Button
@@ -84,8 +84,8 @@
                     </span>
                 {/if}
             </span>
-        </div>
-    {/each}
+        {/each}
+    </div>
 
     <Limit amount={data.entries.length} key="reactionRolesCount" bind:limited>
         <Button
@@ -115,16 +115,18 @@
     </Limit>
 </Panel>
 
-{#if data.entries.some((x) => x.error)}
-    <Panel>
+<Panel>
+    {#if data.entries.some((x) => x.error)}
         <P>
             An error occurred the last time reaction roles for this server were saved in one or more prompts. If these were permission errors and you have fixed
             them, click the button below to try again.
         </P>
+    {/if}
 
-        <Button variant="primary-text" disabled={saving} on:click={save}><Icon icon="save" /> Save</Button>
-    </Panel>
-{/if}
+    <P>If a reaction role prompt is out of date for any reason, click the button below to save again.</P>
+
+    <Button variant="primary-text" disabled={saving} on:click={save}><Icon icon="save" /> Save</Button>
+</Panel>
 
 <Modal max bind:open>
     {#if entry}

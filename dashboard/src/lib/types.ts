@@ -237,3 +237,30 @@ export type FEModmailSettings = {
         closeMessage: string;
     }[];
 };
+
+export type FETicketsSettings = {
+    prompts: {
+        id: number;
+        name: string;
+        channel: string | null;
+        message: string | null;
+        prompt: FEMessageData;
+        multi: boolean;
+        targets: {
+            id: number;
+            name: string;
+            description: string;
+            logChannel: string | null;
+            category: string | null;
+            accessRoles: string[];
+            buttonColor: "gray" | "blue" | "green" | "red";
+            emoji: string | null;
+            label: string;
+            pingRoles: string[];
+            pingHere: boolean;
+            postCustomOpenMessage: boolean;
+            customOpenMessage: FEMessageData;
+        }[];
+        error: string | null;
+    }[];
+};

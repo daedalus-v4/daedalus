@@ -79,7 +79,7 @@ export default (app: App) =>
                     const output: TFEmoji = {
                         id: emoji.id,
                         name: emoji.name ?? "[Unnamed Emoji]",
-                        url: emoji.url,
+                        url: emoji.imageURL({ size: 64 }),
                     };
 
                     return output;

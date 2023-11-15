@@ -6,7 +6,7 @@ export const modalStackStore = writable<(() => unknown)[]>([]);
 
 export const permissionModalStore = writable<string | null>(null);
 
-export const messageEditorModalStore = writable<{ message: FEMessageData; set: (data: FEMessageData) => unknown } | null>(null);
+export const messageEditorModalStore = writable<{ isStatic: boolean; message: FEMessageData; set: (data: FEMessageData) => unknown } | null>(null);
 
 export const roleSelectorModalStore = writable<{
     showManaged: boolean;

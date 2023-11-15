@@ -2,7 +2,7 @@ import getClient from "$lib/get-client.js";
 import { invariant, lazy } from "$lib/utils.js";
 import { ButtonStyle, ComponentType, type BaseMessageOptions, type Message } from "discord.js";
 import type { DbReactionRolesSettings } from "shared";
-import { autoIncrement, db } from "shared/db.js";
+import { autoIncrement, db, getLimitFor } from "shared/db.js";
 
 const buttonStyles = {
     gray: ButtonStyle.Secondary,
@@ -22,7 +22,7 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
     for (const entry of entryList)
         if (!ids.includes(entry.id))
             try {
-                const channel = await bot.channels.fetch(entry.channel!);
+                const channel = await guild.channels.fetch(entry.channel!);
                 if (!channel?.isTextBased()) throw 0;
                 const message = await channel.messages.fetch(entry.message!);
 
@@ -34,10 +34,15 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
                 delete entryMap[entry.id];
             }
 
+    const limit = await getLimitFor(guild, "reactionRolesCount");
+
     for (let index = 0; index < settings.entries.length; index++) {
         const entry = settings.entries[index];
 
         try {
+            if (index >= limit)
+                throw "This reaction role prompt is disabled due to exceeding the server's reaction role prompt limit. Please remove some entries or upgrade your plan. For your convenience, the message has not been deleted.";
+
             if (entry.addReactionsToExistingMessage) {
                 const match = entry.url.match(/(\d+)\/(\d+)\/(\d+)/)!;
                 if (!match) throw "Invalid message URL.";
@@ -61,7 +66,7 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
                 entry.message = message.id;
             } else {
                 const data: () => BaseMessageOptions = lazy(() => ({
-                    ...entry.promptMessage,
+                    ...(entry.id in entryMap && invariant(JSON.stringify, entry.promptMessage, entryMap[entry.id].promptMessage) ? {} : entry.promptMessage),
                     components:
                         entry.style === "dropdown"
                             ? [
@@ -135,9 +140,9 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
                         try {
                             const channel = await guild.channels.fetch(entryMap[entry.id].channel!);
                             if (!channel?.isTextBased()) throw 0;
-                            const message = await channel.messages.fetch(entryMap[entry.id].message!);
+                            const toDelete = await channel.messages.fetch(entryMap[entry.id].message!);
 
-                            await message.delete();
+                            await toDelete.delete();
                         } catch {
                             // ignore deletion errors
                         }
@@ -149,7 +154,7 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
                     if (!channel?.isTextBased()) throw "Could not fetch channel.";
 
                     message = await channel.send(data()).catch(() => {
-                        throw `Could not send message in #${channel.name}`;
+                        throw `Could not send message in #${channel.name}.`;
                     });
                 }
 

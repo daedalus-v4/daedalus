@@ -26,10 +26,10 @@ import { skip } from "../utils.js";
 import {
     close,
     confirmRepeatGuild,
+    getModmailContactInfo,
     handleReply,
     loadSnippet,
     maybeLogInternalMessage,
-    getModmailContactInfo,
     replies,
     resolve,
     resolveVanity,
@@ -187,7 +187,7 @@ export default (app: Argentium) =>
                         .fn(async ({ _, user }) => {
                             if (user.bot) throw "Bots are not able to DM other bots. You cannot use modmail to contact a bot.";
 
-                            const member = await _.guild!.members.fetch(user).catch(() => {
+                            await _.guild!.members.fetch(user).catch(() => {
                                 throw `${user} is not in this server.`;
                             });
 
@@ -195,7 +195,12 @@ export default (app: Argentium) =>
 
                             const unfiltered =
                                 settings?.targets
-                                    .slice(0, (await getPremiumBenefitsFor(_.guild!.id)).multiModmail ? await getLimitFor(_.guild!, "modmailTargetCount") : 1)
+                                    .slice(
+                                        0,
+                                        settings.multi && (await getPremiumBenefitsFor(_.guild!.id)).multiModmail
+                                            ? await getLimitFor(_.guild!, "modmailTargetCount")
+                                            : 1,
+                                    )
                                     .filter((x) => !!x.logChannel && (x.useThreads || !!x.category)) ?? [];
 
                             const targets: DbModmailSettings["targets"] = [];
