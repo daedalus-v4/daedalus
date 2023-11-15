@@ -1,7 +1,6 @@
 import Argentium from "argentium";
 import { ButtonStyle, ComponentType, Events, Message, PartialMessage } from "discord.js";
 import { db } from "shared/db.js";
-import { dataEncodeAttachments } from "../../../lib/attachments.js";
 import { isAssignedClient } from "../../../lib/premium.js";
 import { colors, template } from "../../lib/format.js";
 
@@ -14,14 +13,7 @@ export default (app: Argentium) =>
                 { channel: message.channel.id },
                 {
                     $push: {
-                        messages: {
-                            type: "message",
-                            id: message.id,
-                            author: message.author.id,
-                            content: message.content,
-                            attachments: await dataEncodeAttachments(message),
-                            time: message.createdTimestamp,
-                        },
+                        messages: { type: "message", id: message.id, author: message.author.id, content: message.content, time: message.createdTimestamp },
                     },
                 },
             );

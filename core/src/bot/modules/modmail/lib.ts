@@ -24,7 +24,6 @@ import { WithId } from "mongodb";
 import { DbModmailSettings, DbModmailThread } from "shared";
 import { autoIncrement, db, getColor, getLimitFor, getPremiumBenefitsFor } from "shared/db.js";
 import { formatCustomMessageString } from "shared/format-custom-message.js";
-import { dataEncodeAttachments } from "../../../lib/attachments.js";
 import { colors, embed, expand, mdash, template } from "../../lib/format.js";
 import { invokeLog } from "../../lib/logging.js";
 import { skip } from "../utils.js";
@@ -48,14 +47,13 @@ export const replies = {
 
 export async function maybeLogInternalMessage(message: Message) {
     await db.modmailThreads.updateOne(
-        { thread: message.channel.id },
+        { channel: message.channel.id },
         {
             $push: {
                 messages: {
                     type: "internal",
                     author: message.author.id,
                     content: message.content,
-                    attachments: await dataEncodeAttachments(message),
                     time: Date.now(),
                 },
             },
@@ -362,6 +360,7 @@ export async function resolve(message: Message, guild: Guild, reply: Message, fi
 
         try {
             const response = await reply.awaitMessageComponent({ componentType: ComponentType.StringSelect, time: 120000 });
+            await response.update({ components: [] });
 
             target = targets.find((x) => `${x.id}` === response.values[0])!;
 
@@ -450,20 +449,22 @@ export async function resolve(message: Message, guild: Guild, reply: Message, fi
         }
     }
 
-    let uuid: string;
+    if (creating) {
+        let uuid: string;
 
-    do {
-        uuid = crypto.randomUUID();
-    } while ((await db.modmailThreads.countDocuments({ uuid })) > 0);
+        do {
+            uuid = crypto.randomUUID();
+        } while ((await db.modmailThreads.countDocuments({ uuid })) > 0);
 
-    await db.modmailThreads.updateOne(
-        { guild: guild.id, user: message.author.id, id: target.id },
-        {
-            $setOnInsert: { uuid },
-            $push: { messages: { type: "open", author: message.author.id, time: Date.now(), targetName: target.id === -1 ? null : target.name } },
-        },
-        { upsert: true },
-    );
+        await db.modmailThreads.updateOne(
+            { guild: guild.id, user: message.author.id, id: target.id },
+            {
+                $setOnInsert: { uuid },
+                $push: { messages: { type: "open", author: message.author.id, time: Date.now(), targetName: target.id === -1 ? null : target.name } },
+            },
+            { upsert: true },
+        );
+    }
 
     const isNewThread = entry?.closed ?? true;
 
@@ -530,7 +531,6 @@ export async function resolve(message: Message, guild: Guild, reply: Message, fi
                 messages: {
                     type: "incoming",
                     content: message.content,
-                    attachments: await dataEncodeAttachments(sent),
                     time: Date.now(),
                 },
             },
@@ -616,7 +616,6 @@ export async function handleReply(
                     author: _.user.id,
                     anon: !!anon,
                     content: content || "",
-                    attachments: await dataEncodeAttachments(output),
                     time: Date.now(),
                     deleted: false,
                 },

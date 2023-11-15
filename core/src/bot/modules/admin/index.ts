@@ -6,7 +6,7 @@ import { template } from "../../lib/format.js";
 import { defer } from "../../lib/hooks.js";
 
 export default (app: Argentium) =>
-    app.commands((x) =>
+    app.allowInDms("admin").commands((x) =>
         x
             .beforeAll(async ({ _, ...data }, escape) => {
                 if (_.user.id === Bun.env.OWNER) return;

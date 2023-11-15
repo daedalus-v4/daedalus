@@ -20,11 +20,12 @@ export async function getTokens(ctx?: (string | GuildLike | { guild: GuildLike }
 }
 
 export async function getClient(ctx?: string | GuildLike | { guild: GuildLike }) {
-    try {
-        return await getClientFromToken(await getToken(ctx));
-    } catch {
-        return await getClientFromToken(Bun.env.TOKEN!);
-    }
+    if (ctx)
+        try {
+            return await getClientFromToken(await getToken(ctx));
+        } catch {}
+
+    return await getClientFromToken(Bun.env.TOKEN!);
 }
 
 export async function isAssignedClient(ctx: Guild | OAuth2Guild | { guild: Guild }) {
