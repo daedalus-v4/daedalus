@@ -4,9 +4,11 @@
 
 <script lang="ts">
     import { page } from "$app/stores";
+    import A from "$lib/components/A.svelte";
+    import Button from "$lib/components/Button.svelte";
     import Container from "$lib/components/Container.svelte";
-    import Debug from "$lib/components/Debug.svelte";
     import Header from "$lib/components/Header.svelte";
+    import Icon from "$lib/components/Icon.svelte";
     import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
     import { SlideToggle } from "@skeletonlabs/skeleton";
@@ -25,6 +27,8 @@
 
     let recentCutoff = thread.messages.length - 1;
     while (recentCutoff > 0 && thread.messages[recentCutoff].type !== "open") recentCutoff--;
+
+    const indexes: Record<number, number> = {};
 </script>
 
 <Header>
@@ -54,26 +58,63 @@
                     {types[message.type]}
                     {tags[user] ?? "Loading User..."}
                     <span class="text-surface-600 dark:text-surface-400">({user}) &mdash; {new Date(message.time).toLocaleString()}</span>
+                    {#if message.type === "outgoing" && message.deleted}
+                        <span class="text-error-400 dark:text-error-400">&mdash; deleted</span>
+                    {/if}
                 </h4>
-                {#if message.type === "open"}
-                    <!-- nothing else to display -->
-                {:else if message.type === "incoming" || message.type === "outgoing" || message.type === "internal"}
-                    {@const items = [...(message.type === "outgoing" ? message.edits ?? [] : []), message.content]}
-                    {#each items as content, index}
-                        {#each content
-                            .split(/\n+/)
-                            .map((x) => x.trim())
-                            .filter((x) => x) as block}
-                            <P>{block}</P>
-                        {/each}
+                {#if message.type === "incoming" || message.type === "outgoing" || message.type === "internal"}
+                    {@const items = [message.content, ...(message.type === "outgoing" ? message.edits ?? [] : [])]}
+                    {@const content = items[indexes[index] ?? items.length - 1]}
+
+                    {#each content
+                        .split(/\n+/)
+                        .map((x) => x.trim())
+                        .filter((x) => x) as block}
+                        <P>{block}</P>
                     {/each}
 
-                    {#if !message.content}
+                    {#if !content}
                         <b class="text-surface-400 dark:text-surface-400">(no content)</b>
                     {/if}
-                {/if}
 
-                <Debug data={message} />
+                    {#if items.length > 1}
+                        <div class="flex items-center gap-4">
+                            This message has been edited.
+                            <Button
+                                variant="primary-text"
+                                disabled={indexes[index] === 0}
+                                on:click={() => (indexes[index] = (indexes[index] ?? items.length - 1) - 1)}
+                            >
+                                <Icon icon="angle-left" />
+                            </Button>
+                            <span>{(indexes[index] ?? items.length - 1) + 1} / {items.length}</span>
+                            <Button
+                                variant="primary-text"
+                                disabled={indexes[index] === items.length - 1 || !(index in indexes)}
+                                on:click={() => indexes[index]++}
+                            >
+                                <Icon icon="angle-right" />
+                            </Button>
+                        </div>
+                    {/if}
+
+                    {#if message.attachments?.length > 0}
+                        <ul class="list-disc list-inside">
+                            {#each message.attachments as { name, url }}
+                                <li><A to={url} external>{name}</A></li>
+                            {/each}
+                        </ul>
+                    {/if}
+                {:else if message.type === "close"}
+                    <b class="text-surface-400 dark:text-surface-400">(the recipient was {message.sent ? "" : "not"} notified)</b>
+
+                    {#each message.content
+                        .split(/\n+/)
+                        .map((x) => x.trim())
+                        .filter((x) => x) as block}
+                        <P>{block}</P>
+                    {/each}
+                {/if}
             </Panel>
         </div>
     {/each}

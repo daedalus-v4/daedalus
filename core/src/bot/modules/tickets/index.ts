@@ -13,7 +13,14 @@ export default (app: Argentium) =>
                 { channel: message.channel.id },
                 {
                     $push: {
-                        messages: { type: "message", id: message.id, author: message.author.id, content: message.content, time: message.createdTimestamp },
+                        messages: {
+                            type: "message",
+                            id: message.id,
+                            author: message.author.id,
+                            content: message.content,
+                            attachments: message.attachments.map((x) => ({ name: x.name, url: x.url })),
+                            time: message.createdTimestamp,
+                        },
                     },
                 },
             );

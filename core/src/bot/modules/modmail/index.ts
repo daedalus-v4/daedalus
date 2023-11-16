@@ -141,7 +141,7 @@ export default (app: Argentium) =>
 
                                 await db.tasks.updateOne(
                                     { action: "modmail/close", guild: _.guild!.id, channel: _.channel!.id },
-                                    { $set: { author: _.user.id, message: content, time } },
+                                    { $set: { author: _.user.id, notify: !!notify, message: content, time } },
                                     { upsert: true },
                                 );
 

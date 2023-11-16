@@ -19,6 +19,7 @@ export default async function (modal: ModalSubmitInteraction, _id: string) {
 
     try {
         message = await (await member.createDM()).messages.fetch(data.message);
+        if (!message) throw 0;
     } catch {
         throw "Failed to fetch the corresponding outgoing message.";
     }
@@ -27,8 +28,6 @@ export default async function (modal: ModalSubmitInteraction, _id: string) {
 
     await message.edit({ embeds: [{ ...message.embeds[0].toJSON(), description }] });
     await db.modmailThreads.updateOne({ channel: modal.channel!.id }, { $push: { [`messages.${index}.edits`]: description } });
-
-    // TODO figure out why this happens even if the edit doesn't go through
 
     return { embeds: [{ title: "Outgoing Message Edited", description, color: colors.statuses.success }] };
 }

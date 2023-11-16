@@ -7,20 +7,27 @@ import type { PageServerLoad } from "./$types.js";
 export const load: PageServerLoad = async ({ fetch, locals: { user }, params: { uuid }, url }) => {
     if (!user) throw redirect(303, `/auth/login?${new URLSearchParams({ redirect: url.pathname })}`);
 
-    const thread = await db.modmailThreads.findOne({ uuid });
-    if (!thread) throw error(404, "Modmail Thread Not Found");
+    const ticket = await db.tickets.findOne({ uuid });
+    if (!ticket) throw error(404, "Ticket Not Found");
 
-    const settings = await db.modmailSettings.findOne({ guild: thread.guild });
-    const { owner, roles }: { owner: boolean; roles: string[] } = await (await fetch(`${API}/roles/${thread.guild}/${user.id}`)).json();
+    const settings = await db.ticketsSettings.findOne({ guild: ticket.guild });
+    const { owner, roles }: { owner: boolean; roles: string[] } = await (await fetch(`${API}/roles/${ticket.guild}/${user.id}`)).json();
 
-    if (!owner && !settings?.targets.find((x) => x.id === thread.id)?.accessRoles.some((x) => roles.includes(x))) throw error(403, "Access Forbidden");
+    if (
+        !owner &&
+        !settings?.prompts
+            .find((x) => x.id === ticket.prompt)
+            ?.targets.find((x) => x.id === ticket.target)
+            ?.accessRoles.some((x) => roles.includes(x))
+    )
+        throw error(403, "Access Forbidden");
 
     const ids = [
         ...new Set(
-            thread.messages
+            ticket.messages
                 .map((x) => ("author" in x ? x.author : null))
                 .filter((x) => x)
-                .concat(thread.user),
+                .concat(ticket.user),
         ),
     ] as string[];
 
@@ -28,8 +35,8 @@ export const load: PageServerLoad = async ({ fetch, locals: { user }, params: { 
     const needed = ids.filter((x) => !(x in tags));
 
     return {
-        thread: { ...thread, _id: undefined },
-        guildName: (await (await getClient(thread.guild).catch(() => null))?.fetchGuildPreview(thread.guild))?.name,
+        ticket: { ...ticket, _id: undefined },
+        guildName: (await (await getClient(ticket.guild).catch(() => null))?.fetchGuildPreview(ticket.guild))?.name,
         tags,
         streamed: { tags: (async () => (needed.length === 0 ? {} : await (await fetch(`${API}/tags/${needed.join(":")}`)).json()))() },
     };

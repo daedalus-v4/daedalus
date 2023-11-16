@@ -114,7 +114,7 @@ export type DbTask = {
 } & (
     | { action: "unban"; user: string }
     | { action: "unmute"; user: string }
-    | { action: "modmail/close"; guild: string; channel: string; author: string; message: string }
+    | { action: "modmail/close"; guild: string; channel: string; author: string; notify: boolean; message: string }
 );
 
 export type DbSettings = {
@@ -503,9 +503,19 @@ export type DbUserHistory = {
 
 export type DBModmailMessage = { time: number } & (
     | { type: "open"; author: string; targetName: string | null }
-    | { type: "incoming"; content: string }
-    | { type: "internal"; author: string; content: string }
-    | { type: "outgoing"; id: number; message: string; author: string; anon: boolean; content: string; edits?: string[]; deleted: boolean }
+    | { type: "incoming"; content: string; attachments: { name: string; url: string }[] }
+    | { type: "internal"; author: string; content: string; attachments: { name: string; url: string }[] }
+    | {
+          type: "outgoing";
+          id: number;
+          message: string;
+          author: string;
+          anon: boolean;
+          content: string;
+          attachments: { name: string; url: string }[];
+          edits?: string[];
+          deleted: boolean;
+      }
     | { type: "close"; author: string; content: string; sent: boolean }
 );
 
@@ -521,7 +531,7 @@ export type DbModmailThread = {
 
 export type DbTicketMessage = { time: number } & (
     | { type: "open" }
-    | { type: "message"; id: string; author: string; content: string; edits?: string[]; deleted?: boolean }
+    | { type: "message"; id: string; author: string; content: string; attachments: { name: string; url: string }[]; edits?: string[]; deleted?: boolean }
     | { type: "close"; author: string }
 );
 

@@ -54,6 +54,7 @@ export async function maybeLogInternalMessage(message: Message) {
                     type: "internal",
                     author: message.author.id,
                     content: message.content,
+                    attachments: message.attachments.map((x) => ({ name: x.name, url: x.url })),
                     time: Date.now(),
                 },
             },
@@ -531,6 +532,7 @@ export async function resolve(message: Message, guild: Guild, reply: Message, fi
                 messages: {
                     type: "incoming",
                     content: message.content,
+                    attachments: message.attachments.map((x) => ({ name: x.name, url: x.url })),
                     time: Date.now(),
                 },
             },
@@ -598,12 +600,12 @@ export async function handleReply(
     try {
         output = await member.send({ embeds: [{ title: `Incoming Staff Message from ${_.guild!.name}`, ...data }], files });
     } catch {
-        throw "The user could not be messaged. They may have DMs off or have blocked the bot.";
+        throw "The message could not be sent. They may have DMs off or have blocked the bot, or a different issue occurred.";
     }
 
     await db.tasks.deleteOne({ action: "modmail/close", channel: _.channel!.id });
 
-    const id = await autoIncrement(`modmail/${_.channel!.id}`);
+    const id = await autoIncrement(`modmail-messages`);
 
     await db.modmailThreads.updateOne(
         { channel: _.channel!.id },
@@ -616,6 +618,7 @@ export async function handleReply(
                     author: _.user.id,
                     anon: !!anon,
                     content: content || "",
+                    attachments: output.attachments.map((x) => ({ name: x.name, url: x.url })),
                     time: Date.now(),
                     deleted: false,
                 },

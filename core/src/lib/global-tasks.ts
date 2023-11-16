@@ -6,6 +6,7 @@ import { formatCustomMessageString } from "shared/format-custom-message.js";
 import { mdash, template } from "../bot/lib/format.js";
 import getMuteRole from "../bot/lib/get-mute-role.js";
 import { invokeLog } from "../bot/lib/logging.js";
+import { close } from "../bot/modules/modmail/lib.js";
 import { skip } from "../bot/modules/utils.js";
 import cycle from "./cycle.js";
 import { log } from "./log.js";
@@ -53,6 +54,9 @@ cycle(
                         else if (await isModuleEnabled(task.guild, "sticky-roles"))
                             await db.stickyRoles.updateOne({ guild: task.guild, user: task.user }, { $pull: { roles: role.id } });
                     }
+                } else if (task.action === "modmail/close") {
+                    const channel = await guild.channels.fetch(task.channel);
+                    if (channel?.isTextBased()) await close(channel, task.author, task.notify, task.message);
                 }
             } catch (error) {
                 if (client?.token !== (await getToken(task.guild))) {
