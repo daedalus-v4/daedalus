@@ -29,7 +29,7 @@ export const POST: RequestHandler = async ({ fetch, locals, params: { id, module
             throw error.errors.map(({ message }: { message: string }) => message).join(" ");
         }
 
-        if (module in post) data = await post[module as keyof typeof post](data, id);
+        if (module in post) data = await post[module as keyof typeof post](data, id, locals.user);
 
         await collections()[module as keyof ReturnType<typeof collections>].updateOne({ guild: id }, { $set: data }, { upsert: true });
 

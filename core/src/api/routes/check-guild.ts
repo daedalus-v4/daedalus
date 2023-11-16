@@ -1,11 +1,11 @@
 import { Guild, PermissionFlagsBits } from "discord.js";
 import { t } from "elysia";
-import { TFChannel, TFEmoji, TFRole } from "shared";
+import { TFChannel, TFEmoji, TFRole, TFSticker } from "shared";
 import { db } from "shared/db.js";
 import { getClient } from "../../lib/premium.js";
 import { App } from "../app.js";
 
-const invalid = { owner: false, valid: false, roles: [], channels: [], emojis: [] };
+const invalid = { owner: false, valid: false, roles: [], channels: [], emojis: [], stickers: [], sounds: [] };
 
 export default (app: App) =>
     app.post(
@@ -84,6 +84,16 @@ export default (app: App) =>
 
                     return output;
                 }),
+                stickers: guild.stickers.cache.map((sticker) => {
+                    const output: TFSticker = {
+                        id: sticker.id,
+                        name: sticker.name,
+                        url: sticker.url,
+                    };
+
+                    return output;
+                }),
+                sounds: [], // TODO: add soundboard when it is available in the API
             };
         },
         {
@@ -115,6 +125,20 @@ export default (app: App) =>
                     }),
                 ),
                 emojis: t.Array(
+                    t.Object({
+                        id: t.String(),
+                        name: t.String(),
+                        url: t.String(),
+                    }),
+                ),
+                stickers: t.Array(
+                    t.Object({
+                        id: t.String(),
+                        name: t.String(),
+                        url: t.String(),
+                    }),
+                ),
+                sounds: t.Array(
                     t.Object({
                         id: t.String(),
                         name: t.String(),

@@ -2,6 +2,7 @@
     import { page } from "$app/stores";
     import EmojiSelectorModal from "$lib/components/EmojiSelectorModal.svelte";
     import LeftNavLayout from "$lib/components/LeftNavLayout.svelte";
+    import StickerSelectorModal from "$lib/components/StickerSelectorModal.svelte";
     import { modules } from "shared";
 
     $: id = $page.params.id;
@@ -30,6 +31,7 @@
             "autoresponder",
             "modmail",
             "tickets",
+            "nukeguard",
         ].map((mid) => ({
             link: `/manage/${id}/${mid}`,
             icon: modules[mid].icon ?? "gear",
@@ -40,4 +42,6 @@
 </script>
 
 <EmojiSelectorModal />
+<StickerSelectorModal />
+
 <LeftNavLayout {links}><slot /></LeftNavLayout>

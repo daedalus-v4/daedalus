@@ -8,6 +8,7 @@
 
     $: _ = $emojiSelectorModalStore;
 
+    $: hideGlobal = _?.hideGlobal;
     $: select = _?.select;
     $: selected = _?.selected;
 
@@ -40,7 +41,7 @@
                 {#each category.emojis as name}
                     {@const char = global.emojis[name]?.skins[0].native}
                     {#if char}
-                        <div class={filtered.has(name) ? "" : "hidden"}>
+                        <div class={!hideGlobal && filtered.has(name) ? "" : "hidden"}>
                             <button class="btn p-1 text-3xl {selected?.includes(char) ? 'outline' : ''}" on:click={() => pick(char)}>{char}</button>
                         </div>
                     {/if}

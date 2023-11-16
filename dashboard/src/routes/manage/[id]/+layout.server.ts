@@ -1,6 +1,6 @@
 import { API } from "$env/static/private";
 import { redirect } from "@sveltejs/kit";
-import type { TFChannel, TFEmoji, TFRole } from "shared";
+import type { TFChannel, TFEmoji, TFRole, TFSound, TFSticker } from "shared";
 import { getPremiumBenefitsFor, isModuleEnabled } from "shared/db.js";
 import type { LayoutServerLoad } from "./$types.js";
 import collections from "./collections.js";
@@ -16,7 +16,8 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
         headers: { "Content-Type": "application/json" },
     });
 
-    const response: { owner: boolean; valid: boolean; roles: TFRole[]; channels: TFChannel[]; emojis: TFEmoji[] } = await request.json();
+    const response: { owner: boolean; valid: boolean; roles: TFRole[]; channels: TFChannel[]; emojis: TFEmoji[]; stickers: TFSticker[]; sounds: TFSound[] } =
+        await request.json();
     if (!response.valid) throw redirect(303, "/manage?reload");
 
     locals.authorized = true;
@@ -46,6 +47,8 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
             roles: response.roles,
             channels: response.channels,
             emojis: response.emojis,
+            stickers: response.stickers,
+            sounds: response.sounds,
             rootChannels: roots,
             enabled: await isModuleEnabled(params.id, key),
             premium: await getPremiumBenefitsFor(params.id),

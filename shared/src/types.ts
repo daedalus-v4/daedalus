@@ -104,6 +104,18 @@ export type TFEmoji = {
     url: string;
 };
 
+export type TFSticker = {
+    id: string;
+    name: string;
+    url: string;
+};
+
+export type TFSound = {
+    id: string;
+    name: string;
+    url: string;
+};
+
 export type DbGlobals = {
     lastXpPurge: number;
 };
@@ -390,19 +402,21 @@ export type DbNukeguardSettings = {
     watchRolesByDefault: boolean;
     ignoredRoles: string[];
     watchedRoles: string[];
-    watchExpressionsByDefault: boolean;
+    watchEmojiByDefault: boolean;
     ignoredEmoji: string[];
-    ignoredStickers: string[];
-    ignoredSounds: string[];
     watchedEmoji: string[];
+    watchStickersByDefault: boolean;
+    ignoredStickers: string[];
     watchedStickers: string[];
+    watchSoundsByDefault: boolean;
+    ignoredSounds: string[];
     watchedSounds: string[];
     preventWebhookCreation: boolean;
     watchWebhookDeletion: boolean;
     ratelimitEnabled: boolean;
     ratelimitKicks: boolean;
-    threshold: number;
-    timeInSeconds: number;
+    threshold: number | null;
+    timeInSeconds: number | null;
     restrictRolesLenientMode: boolean;
     restrictRolesBlockByDefault: boolean;
     restrictRolesAllowedRoles: string[];

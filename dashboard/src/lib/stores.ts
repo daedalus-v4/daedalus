@@ -23,6 +23,12 @@ export const channelSelectorModalStore = writable<{
 } | null>(null);
 
 export const emojiSelectorModalStore = writable<{
+    hideGlobal: boolean;
+    select: (id: string, set: (ids: string[]) => unknown) => unknown;
+    selected: string[];
+} | null>(null);
+
+export const stickerSelectorModalStore = writable<{
     select: (id: string, set: (ids: string[]) => unknown) => unknown;
     selected: string[];
 } | null>(null);

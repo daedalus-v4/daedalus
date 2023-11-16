@@ -16,4 +16,5 @@ export default () => ({
     autoresponder: db.autoresponderSettings,
     modmail: db.modmailSettings,
     tickets: db.ticketsSettings,
+    nukeguard: db.nukeguardSettings,
 });

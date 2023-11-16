@@ -5,6 +5,7 @@ import { b2fGuildSettings, f2bGuildSettings } from "$lib/modules/guild-settings.
 import { b2fLoggingSettings, f2bLoggingSettings } from "$lib/modules/logging.js";
 import { b2fModmailSettings, f2bModmailSettings } from "$lib/modules/modmail.js";
 import { b2fModulesPermissionsSettings, f2bModulesPermissionsSettings } from "$lib/modules/modules-permissions-settings.js";
+import { b2fNukeguardSettings, f2bNukeguardSettings } from "$lib/modules/nukeguard.js";
 import { b2fReactionRolesSettings, f2bReactionRolesSettings } from "$lib/modules/reaction-roles.js";
 import { b2fStarboardSettings, f2bStarboardSettings } from "$lib/modules/starboard.js";
 import { b2fStatsChannelsSettings, f2bStatsChannelsSettings } from "$lib/modules/stats-channels.js";
@@ -30,6 +31,7 @@ export const b2f = {
     autoresponder: b2fAutoresponderSettings,
     modmail: b2fModmailSettings,
     tickets: b2fTicketsSettings,
+    nukeguard: b2fNukeguardSettings,
 };
 
 export const f2b = {
@@ -48,4 +50,5 @@ export const f2b = {
     autoresponder: f2bAutoresponderSettings,
     modmail: f2bModmailSettings,
     tickets: f2bTicketsSettings,
+    nukeguard: f2bNukeguardSettings,
 };

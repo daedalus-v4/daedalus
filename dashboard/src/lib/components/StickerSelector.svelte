@@ -1,21 +1,17 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import getGlobalEmojis from "$lib/get-global-emojis";
-    import { emojiSelectorModalStore, globalEmojiHasBeenLoadedStore, globalEmojiStore } from "$lib/stores";
-    import type { TFEmoji } from "shared";
-    import { onMount } from "svelte";
+    import { globalEmojiStore, stickerSelectorModalStore } from "$lib/stores";
+    import type { TFSticker } from "shared";
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
 
-    export let hideGlobal: boolean = false;
     export let selected: string[];
-    const emojis: TFEmoji[] = $page.data.emojis;
-    const emojiMap = Object.fromEntries(emojis.map((e) => [e.id, e]));
-    const indexMap = Object.fromEntries(emojis.map((e, i) => [e.id, i]));
+    const stickers: TFSticker[] = $page.data.stickers;
+    const emojiMap = Object.fromEntries(stickers.map((e) => [e.id, e]));
+    const indexMap = Object.fromEntries(stickers.map((e, i) => [e.id, i]));
 
     function open() {
-        $emojiSelectorModalStore = {
-            hideGlobal,
+        $stickerSelectorModalStore = {
             selected,
             select(id, set) {
                 if (selected.includes(id)) set((selected = selected.filter((x) => x !== id)));
@@ -23,8 +19,6 @@
             },
         };
     }
-
-    onMount(() => globalEmojiHasBeenLoadedStore.update((x) => (!x && getGlobalEmojis().then((k) => globalEmojiStore.set(k)), (x = true))));
 </script>
 
 <div class="flex flex-wrap gap-3">

@@ -8,6 +8,7 @@ import {
     Events,
     Guild,
     Message,
+    MessageType,
     TextBasedChannel,
     ThreadAutoArchiveDuration,
     ThreadChannel,
@@ -41,6 +42,7 @@ export default (app: Argentium) =>
     app
         .on(Events.MessageCreate, async (message) => {
             if (message.author.id === message.client.user.id) return;
+            if (message.type !== MessageType.Default && message.type !== MessageType.Reply) return;
             if (message.guild) return void (await maybeLogInternalMessage(message));
 
             const tracker: [boolean] = [false];

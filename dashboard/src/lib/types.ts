@@ -264,3 +264,35 @@ export type FETicketsSettings = {
         error: string | null;
     }[];
 };
+
+export type FENukeguardSettings = {
+    alertChannel: string | null;
+    pingRoles: string[];
+    pingHere: boolean;
+    exemptedRoles: string[];
+    watchChannelsByDefault: boolean;
+    ignoredChannels: string[];
+    watchedChannels: string[];
+    watchRolesByDefault: boolean;
+    ignoredRoles: string[];
+    watchedRoles: string[];
+    watchEmojiByDefault: boolean;
+    ignoredEmoji: string[];
+    watchedEmoji: string[];
+    watchStickersByDefault: boolean;
+    ignoredStickers: string[];
+    watchedStickers: string[];
+    watchSoundsByDefault: boolean;
+    ignoredSounds: string[];
+    watchedSounds: string[];
+    preventWebhookCreation: boolean;
+    watchWebhookDeletion: boolean;
+    ratelimitEnabled: boolean;
+    ratelimitKicks: boolean;
+    threshold: number | null;
+    timeInSeconds: number | null;
+    restrictRolesLenientMode: boolean;
+    restrictRolesBlockByDefault: boolean;
+    restrictRolesAllowedRoles: string[];
+    restrictRolesBlockedRoles: string[];
+};

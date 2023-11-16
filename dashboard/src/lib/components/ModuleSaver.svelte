@@ -15,11 +15,12 @@
 
         const key = $page.url.pathname.split("/")[3] ?? "-";
 
-        const converted = await f2b[key as keyof typeof f2b](data, $page.params.id).catch(alert);
+        let error: any;
+        const converted = await f2b[key as keyof typeof f2b](data, $page.params.id).catch((e) => (error = e));
 
-        if (!converted) {
+        if (error) {
             saving = false;
-            return;
+            throw error;
         }
 
         const request = await fetch(`/manage/${$page.params.id}/save/${key}`, {
@@ -30,8 +31,12 @@
 
         if (!request.ok) {
             saving = false;
-            alert(await request.text());
-        } else await postsave?.();
+            throw await request.text();
+        }
+
+        try {
+            await postsave?.();
+        } catch {}
 
         saving = false;
     }
