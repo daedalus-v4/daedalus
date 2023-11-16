@@ -233,6 +233,7 @@ export const modules: ModuleData = {
         name: "Suggestions",
         icon: "comment",
         description: "Allow members to give feedback on the server.",
+        default: false,
         commands: {
             suggest: {
                 name: "Suggest",

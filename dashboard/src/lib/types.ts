@@ -296,3 +296,8 @@ export type FENukeguardSettings = {
     restrictRolesAllowedRoles: string[];
     restrictRolesBlockedRoles: string[];
 };
+
+export type FESuggestionsSettings = {
+    outputChannel: string | null;
+    anonymous: boolean;
+};

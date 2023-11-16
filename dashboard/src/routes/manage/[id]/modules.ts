@@ -10,6 +10,7 @@ import { b2fReactionRolesSettings, f2bReactionRolesSettings } from "$lib/modules
 import { b2fStarboardSettings, f2bStarboardSettings } from "$lib/modules/starboard.js";
 import { b2fStatsChannelsSettings, f2bStatsChannelsSettings } from "$lib/modules/stats-channels.js";
 import { b2fStickyRolesSettings, f2bStickyRolesSettings } from "$lib/modules/sticky-roles.js";
+import { b2fSuggestionsSettings, f2bSuggestionsSettings } from "$lib/modules/suggestions.js";
 import { b2fSupporterAnnouncementsSettings, f2bSupporterAnnouncementsSettings } from "$lib/modules/supporter-announcements.js";
 import { b2fTicketsSettings, f2bTicketsSettings } from "$lib/modules/tickets.js";
 import { b2fWelcomeSettings, f2bWelcomeSettings } from "$lib/modules/welcome.js";
@@ -32,6 +33,7 @@ export const b2f = {
     modmail: b2fModmailSettings,
     tickets: b2fTicketsSettings,
     nukeguard: b2fNukeguardSettings,
+    suggestions: b2fSuggestionsSettings,
 };
 
 export const f2b = {
@@ -51,4 +53,5 @@ export const f2b = {
     modmail: f2bModmailSettings,
     tickets: f2bTicketsSettings,
     nukeguard: f2bNukeguardSettings,
+    suggestions: f2bSuggestionsSettings,
 };

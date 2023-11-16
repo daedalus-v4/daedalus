@@ -13,6 +13,7 @@ import type {
     DbStarboardSettings,
     DbStatsChannelsSettings,
     DbStickyRolesSettings,
+    DbSuggestionsSettings,
     DbSupporterAnnouncementsSettings,
     DbTicketsSettings,
     DbWelcomeSettings,
@@ -410,4 +411,8 @@ export default {
         restrictRolesAllowedRoles: snowflakes,
         restrictRolesBlockedRoles: snowflakes,
     }) satisfies z.ZodType<DbNukeguardSettings>,
+    suggestions: z.object({
+        outputChannel: z.nullable(snowflake),
+        anonymous: z.boolean(),
+    }) satisfies z.ZodType<DbSuggestionsSettings>,
 };
