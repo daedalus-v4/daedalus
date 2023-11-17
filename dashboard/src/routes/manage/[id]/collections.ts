@@ -18,4 +18,5 @@ export default () => ({
     tickets: db.ticketsSettings,
     nukeguard: db.nukeguardSettings,
     suggestions: db.suggestionsSettings,
+    "co-op": db.coOpSettings,
 });

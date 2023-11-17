@@ -253,6 +253,15 @@ export const modules: ModuleData = {
         name: "Co-op (Genshin Impact)",
         icon: "handshake",
         description: "Co-op group finding system for Genshin Impact.",
+        default: false,
+        commands: {
+            "co-op": {
+                name: "Request Co-op Help",
+                icon: "handshake",
+                description: "Request Genshin Impact co-op help.",
+                ghost: true,
+            },
+        },
     },
     feeds: {
         name: "Feeds",

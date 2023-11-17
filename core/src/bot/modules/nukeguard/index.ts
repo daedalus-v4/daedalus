@@ -158,7 +158,7 @@ const bans = new Map<string, number[]>();
 const watchlist = new Map<string, number>();
 
 async function track(guild: Guild, user: User, settings: DbNukeguardSettings) {
-    if (!settings.ratelimitEnabled) return;
+    if (user.bot || !settings.ratelimitEnabled) return;
 
     if (!bans.has(user.id)) bans.set(user.id, []);
 

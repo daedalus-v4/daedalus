@@ -301,3 +301,9 @@ export type FESuggestionsSettings = {
     outputChannel: string | null;
     anonymous: boolean;
 };
+
+export type FECoOpSettings = {
+    worldLevelRoles: (string | null)[];
+    regionRoles: (string | null)[];
+    helperRoles: (string | null)[];
+};

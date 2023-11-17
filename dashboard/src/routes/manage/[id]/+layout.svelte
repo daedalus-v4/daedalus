@@ -33,6 +33,7 @@
             "tickets",
             "nukeguard",
             "suggestions",
+            "co-op",
         ].map((mid) => ({
             link: `/manage/${id}/${mid}`,
             icon: modules[mid].icon ?? "gear",

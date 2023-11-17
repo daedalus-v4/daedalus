@@ -3,6 +3,7 @@ import type {
     CustomMessageText,
     DbAutomodSettings,
     DbAutoresponderSettings,
+    DbCoOpSettings,
     DbCustomRolesSettings,
     DbLoggingSettings,
     DbModmailSettings,
@@ -415,4 +416,9 @@ export default {
         outputChannel: z.nullable(snowflake),
         anonymous: z.boolean(),
     }) satisfies z.ZodType<DbSuggestionsSettings>,
+    "co-op": z.object({
+        worldLevelRoles: z.array(z.nullable(snowflake)).length(9),
+        regionRoles: z.array(z.nullable(snowflake)).length(4),
+        helperRoles: z.array(z.nullable(snowflake)).length(4),
+    }) satisfies z.ZodType<DbCoOpSettings>,
 };
