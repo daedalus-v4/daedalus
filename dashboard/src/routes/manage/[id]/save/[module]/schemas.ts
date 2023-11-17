@@ -6,6 +6,7 @@ import type {
     DbCoOpSettings,
     DbCountSettings,
     DbCustomRolesSettings,
+    DbGiveawaysSettings,
     DbLoggingSettings,
     DbModmailSettings,
     DbModulesPermissionsSettings,
@@ -39,7 +40,6 @@ for (let x = 0; x < 10; x++) _cmc = recurse(_cmc);
 
 const cmcomponent = _cmc;
 const cmstring: z.ZodType<CustomMessageText> = z.array(z.union([z.string(), cmcomponent]));
-
 const message: z.ZodType<MessageData> = z.object({
     content: z.string(),
     embeds: z
@@ -79,6 +79,21 @@ const message: z.ZodType<MessageData> = z.object({
             )
             .max(10),
     }),
+});
+
+const giveaway: z.ZodType<DbGiveawaysSettings["template"]> = z.object({
+    channel: nsnowflake,
+    message,
+    requiredRoles: snowflakes,
+    requiredRolesAll: z.boolean(),
+    blockedRoles: snowflakes,
+    blockedRolesAll: z.boolean(),
+    bypassRoles: snowflakes,
+    bypassRolesAll: z.boolean(),
+    stackWeights: z.boolean(),
+    weights: z.array(z.object({ role: nsnowflake, weight: z.number().int().min(1) })),
+    winners: z.number().int().min(1),
+    allowRepeatWinners: z.boolean(),
 });
 
 export default {
@@ -435,6 +450,7 @@ export default {
     count: z.object({
         channels: z.array(
             z.object({
+                id: z.number(),
                 channel: nsnowflake,
                 interval: z.number().int(),
                 next: z.number().int(),
@@ -442,4 +458,19 @@ export default {
             }),
         ),
     }) satisfies z.ZodType<DbCountSettings>,
+    giveaways: z.object({
+        template: giveaway,
+        giveaways: z.array(
+            giveaway.and(
+                z.object({
+                    id: z.number().int(),
+                    name: z.string().trim().min(1).max(256),
+                    deadline: z.number(),
+                    messageId: nsnowflake,
+                    error: z.nullable(z.string()),
+                    closed: z.boolean(),
+                }),
+            ),
+        ),
+    }) satisfies z.ZodType<DbGiveawaysSettings>,
 };

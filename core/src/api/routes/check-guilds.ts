@@ -5,7 +5,6 @@ import { db } from "shared/db.js";
 import { getAllClients } from "../../bot/clients.js";
 import { getClients } from "../../lib/premium.js";
 import { App } from "../app.js";
-import { guildSchema } from "../schemas.js";
 
 export default (app: App) =>
     app.post(
@@ -53,7 +52,21 @@ export default (app: App) =>
 
             return output;
         },
-        { body: t.Object({ user: t.String(), guilds: t.Array(guildSchema) }) },
+        {
+            body: t.Object({
+                user: t.String(),
+                guilds: t.Array(
+                    t.Object({
+                        id: t.String(),
+                        name: t.String(),
+                        icon: t.Nullable(t.String()),
+                        owner: t.Boolean(),
+                        permissions: t.String(),
+                        features: t.Array(t.String()),
+                    }),
+                ),
+            }),
+        },
     );
 
 async function canAccess(settings: Record<string, DbSettings>, guild: DDLGuild, owner: boolean) {

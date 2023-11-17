@@ -471,8 +471,12 @@ type Giveaway = {
 export type DbGiveawaysSettings = {
     template: Giveaway;
     giveaways: (Giveaway & {
+        id: number;
         name: string;
         deadline: number;
+        messageId: string | null;
+        error: string | null;
+        closed: boolean;
     })[];
 };
 

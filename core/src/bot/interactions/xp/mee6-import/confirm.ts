@@ -26,7 +26,7 @@ export default async function (cmd: ButtonInteraction, mode: string) {
                 ],
             }));
 
-        const list = (await request.json()).players as { id: string; detailed_xp: number[] }[];
+        const list = ((await request.json()) as any).players as { id: string; detailed_xp: number[] }[];
         for (const user of list) data.push({ id: user.id, xp: user.detailed_xp[2] });
 
         if (list.length < 1000) break;

@@ -62,6 +62,7 @@ export const colors = {
         confirm: 0xaa4477,
         canceled: Colors.Red,
         inProgress: Colors.Blue,
+        info: Colors.Blue,
     },
     statuses: {
         success: Colors.Green,

@@ -3,6 +3,7 @@ import { b2fAutoresponderSettings, f2bAutoresponderSettings } from "$lib/modules
 import { b2fCoOpSettings, f2bCoOpSettings } from "$lib/modules/co-op.js";
 import { b2fCountSettings, f2bCountSettings } from "$lib/modules/count.js";
 import { b2fCustomRolesSettings, f2bCustomRolesSettings } from "$lib/modules/custom-roles.js";
+import { b2fGiveawaysSettings, f2bGiveawaysSettings } from "$lib/modules/giveaways.js";
 import { b2fGuildSettings, f2bGuildSettings } from "$lib/modules/guild-settings.js";
 import { b2fLoggingSettings, f2bLoggingSettings } from "$lib/modules/logging.js";
 import { b2fModmailSettings, f2bModmailSettings } from "$lib/modules/modmail.js";
@@ -40,6 +41,7 @@ export const b2f = {
     "co-op": b2fCoOpSettings,
     "reddit-feeds": b2fRedditFeedsSettings,
     count: b2fCountSettings,
+    giveaways: b2fGiveawaysSettings,
 };
 
 export const f2b = {
@@ -63,4 +65,5 @@ export const f2b = {
     "co-op": f2bCoOpSettings,
     "reddit-feeds": f2bRedditFeedsSettings,
     count: f2bCountSettings,
+    giveaways: f2bGiveawaysSettings,
 };

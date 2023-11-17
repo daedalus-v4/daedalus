@@ -324,3 +324,30 @@ export type FECountSettings = {
         allowDoubleCounting: boolean;
     }[];
 };
+
+type Giveaway = {
+    channel: string | null;
+    message: FEMessageData;
+    requiredRoles: string[];
+    requiredRolesAll: boolean;
+    blockedRoles: string[];
+    blockedRolesAll: boolean;
+    bypassRoles: string[];
+    bypassRolesAll: boolean;
+    stackWeights: boolean;
+    weights: { role: string | null; weight: number }[];
+    winners: number;
+    allowRepeatWinners: boolean;
+};
+
+export type FEGiveawaysSettings = {
+    template: Giveaway;
+    giveaways: (Giveaway & {
+        id: number;
+        name: string;
+        deadline: number;
+        messageId: string | null;
+        error: string | null;
+        closed: boolean;
+    })[];
+};

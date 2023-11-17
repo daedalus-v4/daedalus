@@ -168,23 +168,23 @@ class Database {
     }
 
     public get countSettings() {
-        return _db.collection<DbCountSettings>("count_settings");
+        return _db.collection<WithGuild<DbCountSettings>>("count_settings");
     }
 
     public get giveawaysSettings() {
-        return _db.collection<DbGiveawaysSettings>("giveaways_settings");
+        return _db.collection<WithGuild<DbGiveawaysSettings>>("giveaways_settings");
     }
 
     public get reportsSettings() {
-        return _db.collection<DbReportsSettings>("reports_settings");
+        return _db.collection<WithGuild<DbReportsSettings>>("reports_settings");
     }
 
     public get pollsSettings() {
-        return _db.collection<DbPollsSettings>("polls_settings");
+        return _db.collection<WithGuild<DbPollsSettings>>("polls_settings");
     }
 
     public get utilitySettings() {
-        return _db.collection<DbUtilitySettings>("utility_settings");
+        return _db.collection<WithGuild<DbUtilitySettings>>("utility_settings");
     }
 
     public get xpAmounts() {
@@ -233,6 +233,10 @@ class Database {
 
     public get countScoreboards() {
         return _db.collection<{ guild: string; id: number; last: string; scores: Record<string, number> }>("count_scoreboards");
+    }
+
+    public get giveawayEntries() {
+        return _db.collection<{ guild: string; id: number; user: string }>("giveaway_entries");
     }
 }
 

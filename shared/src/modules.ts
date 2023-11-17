@@ -284,7 +284,7 @@ export const modules: ModuleData = {
         selfPermissions: ["ManageMessages"],
     },
     giveaways: {
-        name: "Giveaway",
+        name: "Giveaways",
         icon: "gift",
         description: "Set up giveaways for server members.",
         commands: {

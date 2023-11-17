@@ -36,6 +36,7 @@
             "co-op",
             "reddit-feeds",
             "count",
+            "giveaways",
         ].map((mid) => ({
             link: `/manage/${id}/${mid}`,
             icon: modules[mid].icon ?? "gear",

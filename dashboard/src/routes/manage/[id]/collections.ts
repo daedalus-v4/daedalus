@@ -21,4 +21,5 @@ export default () => ({
     "co-op": db.coOpSettings,
     "reddit-feeds": db.redditFeedsSettings,
     count: db.countSettings,
+    giveaways: db.giveawaysSettings,
 });
