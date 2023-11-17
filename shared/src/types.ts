@@ -445,6 +445,7 @@ export type DbRedditFeedsSettings = {
 
 export type DbCountSettings = {
     channels: {
+        id: number;
         channel: string | null;
         interval: number;
         next: number;

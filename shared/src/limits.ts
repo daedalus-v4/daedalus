@@ -13,7 +13,8 @@ export const limits = {
     modmailTargetCount: [1, 3, 10],
     ticketPromptCount: [3, 5, 10],
     ticketTargetCount: [1, 3, 10],
-    redditFeedsCount: [2, 5, 10],
+    redditFeedsCount: [2, 5, 5],
+    countCount: [2, 5, 5],
 } satisfies Record<string, [number, number, number]>;
 
 export function getLimit(key: keyof typeof limits, premium: PremiumBenefits | 0 | 1 | 2) {

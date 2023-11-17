@@ -2,11 +2,8 @@ import { ButtonStyle, ChatInputCommandInteraction, ComponentType, MessageCompone
 
 export default async function (cmd: ChatInputCommandInteraction, messages: any[], ephemeral?: boolean, initial?: number) {
     const reply = async (x: any) => {
-        try {
-            return await cmd.reply(x);
-        } catch {
-            return await cmd.editReply(x);
-        }
+        if (cmd.deferred || cmd.replied) return await cmd.editReply(x);
+        else return await cmd.reply(x);
     };
 
     if (messages.length === 0) throw "Attempted to return pages, but there was nothing found.";

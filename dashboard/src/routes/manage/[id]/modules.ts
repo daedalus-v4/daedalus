@@ -1,6 +1,7 @@
 import { b2fAutomodSettings, f2bAutomodSettings } from "$lib/modules/automod.js";
 import { b2fAutoresponderSettings, f2bAutoresponderSettings } from "$lib/modules/autoresponder.js";
 import { b2fCoOpSettings, f2bCoOpSettings } from "$lib/modules/co-op.js";
+import { b2fCountSettings, f2bCountSettings } from "$lib/modules/count.js";
 import { b2fCustomRolesSettings, f2bCustomRolesSettings } from "$lib/modules/custom-roles.js";
 import { b2fGuildSettings, f2bGuildSettings } from "$lib/modules/guild-settings.js";
 import { b2fLoggingSettings, f2bLoggingSettings } from "$lib/modules/logging.js";
@@ -38,6 +39,7 @@ export const b2f = {
     suggestions: b2fSuggestionsSettings,
     "co-op": b2fCoOpSettings,
     "reddit-feeds": b2fRedditFeedsSettings,
+    count: b2fCountSettings,
 };
 
 export const f2b = {
@@ -60,4 +62,5 @@ export const f2b = {
     suggestions: f2bSuggestionsSettings,
     "co-op": f2bCoOpSettings,
     "reddit-feeds": f2bRedditFeedsSettings,
+    count: f2bCountSettings,
 };

@@ -20,4 +20,5 @@ export default () => ({
     suggestions: db.suggestionsSettings,
     "co-op": db.coOpSettings,
     "reddit-feeds": db.redditFeedsSettings,
+    count: db.countSettings,
 });

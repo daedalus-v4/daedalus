@@ -4,6 +4,7 @@ import type {
     DbAutomodSettings,
     DbAutoresponderSettings,
     DbCoOpSettings,
+    DbCountSettings,
     DbCustomRolesSettings,
     DbLoggingSettings,
     DbModmailSettings,
@@ -431,4 +432,14 @@ export default {
             }),
         ),
     }) satisfies z.ZodType<DbRedditFeedsSettings>,
+    count: z.object({
+        channels: z.array(
+            z.object({
+                channel: nsnowflake,
+                interval: z.number().int(),
+                next: z.number().int(),
+                allowDoubleCounting: z.boolean(),
+            }),
+        ),
+    }) satisfies z.ZodType<DbCountSettings>,
 };

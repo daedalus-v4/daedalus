@@ -230,6 +230,10 @@ class Database {
     public get suggestionPosts() {
         return _db.collection<{ guild: string; id: number; channel: string; message: string; user: string; yes: string[]; no: string[] }>("suggestion_posts");
     }
+
+    public get countScoreboards() {
+        return _db.collection<{ guild: string; id: number; last: string; scores: Record<string, number> }>("count_scoreboards");
+    }
 }
 
 export const db = new Database();

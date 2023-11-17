@@ -314,3 +314,13 @@ export type FERedditFeedsSettings = {
         channel: string | null;
     }[];
 };
+
+export type FECountSettings = {
+    channels: {
+        id: number;
+        channel: string | null;
+        interval: number;
+        next: number;
+        allowDoubleCounting: boolean;
+    }[];
+};
