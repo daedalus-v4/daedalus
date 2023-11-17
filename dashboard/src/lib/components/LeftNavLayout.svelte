@@ -6,7 +6,7 @@
 
     let open = false;
 
-    export let links: { link: string; icon: string; label: string; selected: boolean }[];
+    export let links: { link: string; icon: string; brand?: boolean; label: string; selected: boolean }[];
 </script>
 
 <div class="h-full w-screen grid grid-cols-[min-content_1fr]">
@@ -16,12 +16,12 @@
             : 'w-12'} lg:w-[min-content] fixed lg:relative flex flex-col bg-surface-300 dark:bg-surface-800 overflow-x-hidden overflow-y-auto"
         style="transition: width 200ms"
     >
-        {#each links as { link, icon, label, selected }}
+        {#each links as { link, icon, brand, label, selected }}
             <a
                 href={link}
                 class="px-4 py-2 flex flex-row gap-4 whitespace-nowrap {selected ? 'bg-black/10 dark:bg-white/5' : ''} hover:bg-black/20 dark:hover:bg-white/10"
             >
-                <div class="w-4 h-4"><Icon {icon} class="w-4 h-4" /></div>
+                <div class="w-4 h-4"><Icon brand={!!brand} {icon} class="w-4 h-4" /></div>
                 <div>{label}</div>
             </a>
         {/each}

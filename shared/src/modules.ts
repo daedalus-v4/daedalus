@@ -263,18 +263,11 @@ export const modules: ModuleData = {
             },
         },
     },
-    feeds: {
-        name: "Feeds",
-        icon: "rss",
-        description: "Subscribe to live updates from various other websites.",
-        commands: {
-            feed: {
-                name: "Feed",
-                icon: "rss",
-                description: "Set up or manage feeds.",
-                permissions: ["ManageGuild"],
-            },
-        },
+    "reddit-feeds": {
+        name: "Reddit Feeds",
+        icon: "reddit",
+        brand: true,
+        description: "Subscribe to a subreddit and receive automatic alerts for new posts.",
     },
     count: {
         name: "Counting Channels",

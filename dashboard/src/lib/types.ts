@@ -307,3 +307,10 @@ export type FECoOpSettings = {
     regionRoles: (string | null)[];
     helperRoles: (string | null)[];
 };
+
+export type FERedditFeedsSettings = {
+    feeds: {
+        subreddit: string;
+        channel: string | null;
+    }[];
+};

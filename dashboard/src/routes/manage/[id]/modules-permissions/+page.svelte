@@ -40,7 +40,7 @@
                 <div class="{closed[mid] ? '-rotate-90' : ''} transition-rotate duration-100"><Icon icon="angle-down" /></div>
             </button>
             <SlideToggle name="" size="sm" bind:checked={data.modules[mid].enabled} />
-            {#if module.icon}<Icon icon={module.icon} />{/if}
+            {#if module.icon}<Icon brand={!!module.brand} icon={module.icon} />{/if}
             {module.name}
         </h3>
         <div class="w-full {closed[mid] ? 'hidden' : ''}">

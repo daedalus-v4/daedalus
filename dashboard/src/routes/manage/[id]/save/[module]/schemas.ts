@@ -10,6 +10,7 @@ import type {
     DbModulesPermissionsSettings,
     DbNukeguardSettings,
     DbReactionRolesSettings,
+    DbRedditFeedsSettings,
     DbSettings,
     DbStarboardSettings,
     DbStatsChannelsSettings,
@@ -26,6 +27,7 @@ import { z } from "zod";
 const color = z.number().int().min(0).max(0xffffff);
 const snowflake = z.string().regex(/^[1-9][0-9]{16,19}$/, "Expected a Discord ID (17-20 digit number).");
 const snowflakes = z.array(snowflake);
+const nsnowflake = z.nullable(snowflake);
 
 function recurse<T>(item: z.ZodType<T>): z.ZodType<[string, ...(string | number | T)[]]> {
     return z.tuple([z.string()]).rest(z.union([z.string(), z.number(), item]));
@@ -82,7 +84,7 @@ export default {
     "-": z.object({
         dashboardPermissions: z.enum(["owner", "admin", "manager"]),
         embedColor: color,
-        muteRole: z.nullable(snowflake),
+        muteRole: nsnowflake,
         banFooter: z.string().max(1024),
         modOnly: z.boolean(),
         allowedRoles: snowflakes,
@@ -107,7 +109,7 @@ export default {
     }) satisfies z.ZodType<DbModulesPermissionsSettings>,
     logging: z.object({
         useWebhook: z.boolean(),
-        defaultChannel: z.nullable(snowflake),
+        defaultChannel: nsnowflake,
         defaultWebhook: z.string(),
         ignoredChannels: snowflakes,
         filesOnly: z.boolean(),
@@ -115,13 +117,13 @@ export default {
             z.object({
                 enabled: z.boolean(),
                 useWebhook: z.boolean(),
-                outputChannel: z.nullable(snowflake),
+                outputChannel: nsnowflake,
                 outputWebhook: z.string(),
                 events: z.record(
                     z.object({
                         enabled: z.boolean(),
                         useWebhook: z.boolean(),
-                        outputChannel: z.nullable(snowflake),
+                        outputChannel: nsnowflake,
                         outputWebhook: z.string(),
                     }),
                 ),
@@ -129,15 +131,15 @@ export default {
         ),
     }) satisfies z.ZodType<DbLoggingSettings>,
     welcome: z.object({
-        channel: z.nullable(snowflake),
+        channel: nsnowflake,
         message,
     }) satisfies z.ZodType<DbWelcomeSettings>,
     "supporter-announcements": z.object({
         entries: z.array(
             z.object({
-                channel: z.nullable(snowflake),
+                channel: nsnowflake,
                 boosts: z.boolean(),
-                role: z.nullable(snowflake),
+                role: nsnowflake,
                 message,
             }),
         ),
@@ -145,18 +147,18 @@ export default {
     xp: z.object({
         blockedChannels: snowflakes,
         blockedRoles: snowflakes,
-        bonusChannels: z.array(z.object({ channel: z.nullable(snowflake), multiplier: z.nullable(z.number().min(0).max(10)) })),
-        bonusRoles: z.array(z.object({ role: z.nullable(snowflake), multiplier: z.nullable(z.number().min(0).max(10)) })),
+        bonusChannels: z.array(z.object({ channel: nsnowflake, multiplier: z.nullable(z.number().min(0).max(10)) })),
+        bonusRoles: z.array(z.object({ role: nsnowflake, multiplier: z.nullable(z.number().min(0).max(10)) })),
         rankCardBackground: z.string().trim(),
         announceLevelUp: z.boolean(),
         announceInChannel: z.boolean(),
-        announceChannel: z.nullable(snowflake),
+        announceChannel: nsnowflake,
         announcementBackground: z.string().trim(),
         rewards: z.array(
             z.object({
                 text: z.nullable(z.number().int().min(1)),
                 voice: z.nullable(z.number().int().min(1)),
-                role: z.nullable(snowflake),
+                role: nsnowflake,
                 removeOnHigher: z.boolean(),
                 dmOnReward: z.boolean(),
             }),
@@ -168,8 +170,8 @@ export default {
                 id: z.number().int(),
                 name: z.string().trim(),
                 addReactionsToExistingMessage: z.boolean(),
-                channel: z.nullable(snowflake),
-                message: z.nullable(snowflake),
+                channel: nsnowflake,
+                message: nsnowflake,
                 url: z.string().trim(),
                 style: z.enum(["dropdown", "buttons", "reactions"]),
                 type: z.enum(["normal", "unique", "verify", "lock"]),
@@ -225,7 +227,7 @@ export default {
     automod: z.object({
         ignoredChannels: snowflakes,
         ignoredRoles: snowflakes,
-        defaultChannel: z.nullable(snowflake),
+        defaultChannel: nsnowflake,
         interactWithWebhooks: z.boolean(),
         rules: z.array(
             z.object({
@@ -270,7 +272,7 @@ export default {
                 reportToChannel: z.boolean(),
                 deleteMessage: z.boolean(),
                 notifyAuthor: z.boolean(),
-                reportChannel: z.nullable(snowflake),
+                reportChannel: nsnowflake,
                 additionalAction: z.enum(["nothing", "warn", "mute", "timeout", "kick", "ban"]),
                 actionDuration: z.number().int().min(0),
                 disregardDefaultIgnoredChannels: z.boolean(),
@@ -290,12 +292,12 @@ export default {
     "custom-roles": z.object({
         allowBoosters: z.boolean(),
         allowedRoles: snowflakes,
-        anchor: z.nullable(snowflake),
+        anchor: nsnowflake,
     }) satisfies z.ZodType<DbCustomRolesSettings>,
     "stats-channels": z.object({
         channels: z.array(
             z.object({
-                channel: z.nullable(snowflake),
+                channel: nsnowflake,
                 format: z.string(),
                 parsed: cmstring,
             }),
@@ -338,8 +340,8 @@ export default {
                 name: z.string().trim().min(1).max(100),
                 description: z.string().trim().max(100),
                 emoji: z.nullable(z.string()),
-                logChannel: z.nullable(snowflake),
-                category: z.nullable(snowflake),
+                logChannel: nsnowflake,
+                category: nsnowflake,
                 pingRoles: snowflakes,
                 pingHere: z.boolean(),
                 useThreads: z.boolean(),
@@ -356,8 +358,8 @@ export default {
             z.object({
                 id: z.number().int(),
                 name: z.string(),
-                channel: z.nullable(snowflake),
-                message: z.nullable(snowflake),
+                channel: nsnowflake,
+                message: nsnowflake,
                 prompt: message,
                 multi: z.boolean(),
                 targets: z.array(
@@ -365,8 +367,8 @@ export default {
                         id: z.number(),
                         name: z.string().max(100),
                         description: z.string().max(100),
-                        logChannel: z.nullable(snowflake),
-                        category: z.nullable(snowflake),
+                        logChannel: nsnowflake,
+                        category: nsnowflake,
                         accessRoles: snowflakes,
                         buttonColor: z.enum(["gray", "blue", "green", "red"]),
                         emoji: z.nullable(z.string()),
@@ -382,7 +384,7 @@ export default {
         ),
     }) satisfies z.ZodType<DbTicketsSettings>,
     nukeguard: z.object({
-        alertChannel: z.nullable(snowflake),
+        alertChannel: nsnowflake,
         pingRoles: snowflakes,
         pingHere: z.boolean(),
         exemptedRoles: snowflakes,
@@ -413,12 +415,20 @@ export default {
         restrictRolesBlockedRoles: snowflakes,
     }) satisfies z.ZodType<DbNukeguardSettings>,
     suggestions: z.object({
-        outputChannel: z.nullable(snowflake),
+        outputChannel: nsnowflake,
         anonymous: z.boolean(),
     }) satisfies z.ZodType<DbSuggestionsSettings>,
     "co-op": z.object({
-        worldLevelRoles: z.array(z.nullable(snowflake)).length(9),
-        regionRoles: z.array(z.nullable(snowflake)).length(4),
-        helperRoles: z.array(z.nullable(snowflake)).length(4),
+        worldLevelRoles: z.array(nsnowflake).length(9),
+        regionRoles: z.array(nsnowflake).length(4),
+        helperRoles: z.array(nsnowflake).length(4),
     }) satisfies z.ZodType<DbCoOpSettings>,
+    "reddit-feeds": z.object({
+        feeds: z.array(
+            z.object({
+                subreddit: z.string().trim().min(1),
+                channel: nsnowflake,
+            }),
+        ),
+    }) satisfies z.ZodType<DbRedditFeedsSettings>,
 };

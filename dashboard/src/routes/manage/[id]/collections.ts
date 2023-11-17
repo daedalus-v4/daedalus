@@ -19,4 +19,5 @@ export default () => ({
     nukeguard: db.nukeguardSettings,
     suggestions: db.suggestionsSettings,
     "co-op": db.coOpSettings,
+    "reddit-feeds": db.redditFeedsSettings,
 });

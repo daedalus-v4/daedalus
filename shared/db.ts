@@ -16,6 +16,7 @@ import {
     DbNukeguardSettings,
     DbPollsSettings,
     DbReactionRolesSettings,
+    DbRedditFeedsSettings,
     DbReportsSettings,
     DbSettings,
     DbStarboardSettings,
@@ -160,6 +161,10 @@ class Database {
 
     public get coOpSettings() {
         return _db.collection<WithGuild<DbCoOpSettings>>("co_op_settings");
+    }
+
+    public get redditFeedsSettings() {
+        return _db.collection<WithGuild<DbRedditFeedsSettings>>("reddit_feeds_settings");
     }
 
     public get countSettings() {

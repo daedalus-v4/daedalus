@@ -34,9 +34,11 @@
             "nukeguard",
             "suggestions",
             "co-op",
+            "reddit-feeds",
         ].map((mid) => ({
             link: `/manage/${id}/${mid}`,
             icon: modules[mid].icon ?? "gear",
+            brand: !!modules[mid].brand,
             label: modules[mid].name,
             selected: moduleParam === mid,
         })),

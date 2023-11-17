@@ -5,12 +5,14 @@ export type ModuleData = Record<
     {
         name: string;
         icon?: string;
+        brand?: boolean;
         description?: string;
         commands?: Record<
             string,
             {
                 name: string;
                 icon?: string;
+                brand?: boolean;
                 description?: string;
                 ghost?: boolean;
                 bypass?: boolean;
@@ -432,6 +434,13 @@ export type DbCoOpSettings = {
     worldLevelRoles: (string | null)[];
     regionRoles: (string | null)[];
     helperRoles: (string | null)[];
+};
+
+export type DbRedditFeedsSettings = {
+    feeds: {
+        subreddit: string;
+        channel: string | null;
+    }[];
 };
 
 export type DbCountSettings = {

@@ -8,6 +8,7 @@ import { b2fModmailSettings, f2bModmailSettings } from "$lib/modules/modmail.js"
 import { b2fModulesPermissionsSettings, f2bModulesPermissionsSettings } from "$lib/modules/modules-permissions-settings.js";
 import { b2fNukeguardSettings, f2bNukeguardSettings } from "$lib/modules/nukeguard.js";
 import { b2fReactionRolesSettings, f2bReactionRolesSettings } from "$lib/modules/reaction-roles.js";
+import { b2fRedditFeedsSettings, f2bRedditFeedsSettings } from "$lib/modules/reddit-feeds.js";
 import { b2fStarboardSettings, f2bStarboardSettings } from "$lib/modules/starboard.js";
 import { b2fStatsChannelsSettings, f2bStatsChannelsSettings } from "$lib/modules/stats-channels.js";
 import { b2fStickyRolesSettings, f2bStickyRolesSettings } from "$lib/modules/sticky-roles.js";
@@ -36,6 +37,7 @@ export const b2f = {
     nukeguard: b2fNukeguardSettings,
     suggestions: b2fSuggestionsSettings,
     "co-op": b2fCoOpSettings,
+    "reddit-feeds": b2fRedditFeedsSettings,
 };
 
 export const f2b = {
@@ -57,4 +59,5 @@ export const f2b = {
     nukeguard: f2bNukeguardSettings,
     suggestions: f2bSuggestionsSettings,
     "co-op": f2bCoOpSettings,
+    "reddit-feeds": f2bRedditFeedsSettings,
 };
