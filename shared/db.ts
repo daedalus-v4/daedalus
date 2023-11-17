@@ -221,6 +221,10 @@ class Database {
     public get tickets() {
         return _db.collection<DBTicket>("tickets");
     }
+
+    public get suggestionPosts() {
+        return _db.collection<{ guild: string; id: number; channel: string; message: string; user: string; yes: string[]; no: string[] }>("suggestion_posts");
+    }
 }
 
 export const db = new Database();
