@@ -30,6 +30,8 @@ export async function getClientFromToken(token: string) {
             presence: { activities: [{ type: ActivityType.Watching, name: "for /help" }] },
         }));
 
+        client.setMaxListeners(20);
+
         client.on(Events.ClientReady, async () => {
             await argentium.postApply(client);
             clientTasks(client);

@@ -123,12 +123,13 @@ export type DbGlobals = {
 };
 
 export type DbTask = {
-    guild: string;
+    guild: string | null;
     time: number;
 } & (
     | { action: "unban"; user: string }
     | { action: "unmute"; user: string }
     | { action: "modmail/close"; guild: string; channel: string; author: string; notify: boolean; message: string }
+    | { action: "remind"; id: number; user: string; query: string | null; origin: string }
 );
 
 export type DbSettings = {
