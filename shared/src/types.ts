@@ -488,10 +488,6 @@ export type DbReportsSettings = {
     viewRoles: string[];
 };
 
-export type DbPollsSettings = {
-    qotdRole: string | null;
-};
-
 export type DbUtilitySettings = {
     blockRolesByDefault: boolean;
     allowedRoles: string[];
@@ -576,3 +572,9 @@ export type DBTicket = {
     created: number;
     messages: DbTicketMessage[];
 };
+
+export type DBPoll = { question: string } & (
+    | { type: "yes-no"; allowNeutral: boolean; votes: Record<string, string> }
+    | { type: "binary"; leftOption: string; rightOption: string; allowNeutral: boolean; votes: Record<string, string> }
+    | { type: "multi"; options: string[]; allowMulti: boolean; votes: Record<string, string[]> }
+);

@@ -346,10 +346,10 @@ export const modules: ModuleData = {
         icon: "square-poll-vertical",
         description: "Yes/no and multiple-choice polls.",
         commands: {
-            polls: {
-                name: "Polls",
+            poll: {
+                name: "Poll",
                 icon: "square-poll-vertical",
-                description: "Create and manage polls.",
+                description: "Create a poll.",
                 permissions: ["ManageGuild"],
             },
         },

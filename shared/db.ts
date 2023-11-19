@@ -1,6 +1,7 @@
 import type { APIGuild, Guild } from "discord.js";
 import { Db, MongoClient } from "mongodb";
 import {
+    DBPoll,
     DBTicket,
     DbAutomodSettings,
     DbAutoresponderSettings,
@@ -14,7 +15,6 @@ import {
     DbModmailThread,
     DbModulesPermissionsSettings,
     DbNukeguardSettings,
-    DbPollsSettings,
     DbReactionRolesSettings,
     DbRedditFeedsSettings,
     DbReportsSettings,
@@ -179,10 +179,6 @@ class Database {
         return _db.collection<WithGuild<DbReportsSettings>>("reports_settings");
     }
 
-    public get pollsSettings() {
-        return _db.collection<WithGuild<DbPollsSettings>>("polls_settings");
-    }
-
     public get utilitySettings() {
         return _db.collection<WithGuild<DbUtilitySettings>>("utility_settings");
     }
@@ -241,6 +237,10 @@ class Database {
 
     public get reporters() {
         return _db.collection<{ message: string; user: string }>("reporters");
+    }
+
+    public get polls() {
+        return _db.collection<DBPoll & { message: string }>("polls");
     }
 }
 
