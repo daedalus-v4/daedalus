@@ -1,3 +1,6 @@
+import { ChannelType } from "discord.js";
+import * as natural from "natural";
+
 export function fuzzy(string: string, query: string) {
     if (!query) return true;
 
@@ -13,3 +16,18 @@ export function fuzzy(string: string, query: string) {
 
     return false;
 }
+
+export const textlike = [
+    ChannelType.AnnouncementThread,
+    ChannelType.GuildForum,
+    ChannelType.GuildStageVoice,
+    ChannelType.GuildText,
+    ChannelType.GuildVoice,
+    ChannelType.PrivateThread,
+    ChannelType.PublicThread,
+] as const;
+
+const tokenizer = new natural.WordTokenizer();
+
+export const tokenize = tokenizer.tokenize.bind(tokenizer);
+export const stem = natural.PorterStemmer.tokenizeAndStem;

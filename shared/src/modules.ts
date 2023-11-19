@@ -359,7 +359,7 @@ export const modules: ModuleData = {
         icon: "bell",
         description: "Receive DM notifications for messages matching your filters.",
         commands: {
-            highlights: {
+            highlight: {
                 name: "Highlight",
                 icon: "bell",
                 description: "Manage your highlights.",

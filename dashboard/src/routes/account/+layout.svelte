@@ -7,6 +7,7 @@
         { link: "/account", icon: "gear", label: "Account Settings" },
         { link: "/account/premium", icon: "crown", label: "Premium" },
         { link: "/account/appeal", icon: "message", label: "Appeal Server Bans" },
+        { link: "/account/highlights", icon: "bell", label: "Highlights" },
     ].map((x) => ({ ...x, selected: x.link === $page.url.pathname }));
 </script>
 

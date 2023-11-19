@@ -1,5 +1,5 @@
 {
-  "dependencies": {},
+  "dependencies": { "natural": "^6.8.0" },
   "devDependencies": {
     "@types/he": "^1.2.3"
   }

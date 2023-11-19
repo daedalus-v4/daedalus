@@ -3,6 +3,7 @@ import { SlashUtil } from "argentium/src/slash-util.js";
 import { ButtonStyle, ChannelType, ChatInputCommandInteraction, ComponentType, GuildMember, Message, TextInputStyle } from "discord.js";
 import { DbUserHistory, DurationStyle, formatDuration, limits, parseDuration } from "shared";
 import { autoIncrement, db, getColor, getLimitFor, isCommandEnabled, isModuleEnabled } from "shared/db.js";
+import { textlike } from "../../../lib/utils.js";
 import { isStopped, stopButton } from "../../interactions/stop.js";
 import confirm from "../../lib/confirm.js";
 import { colors, formatIdList, mdash, template, timeinfo } from "../../lib/format.js";
@@ -851,17 +852,7 @@ export default (app: Argentium) =>
                 x
                     .key("slowmode")
                     .description("set or remove a channel's slowmode")
-                    .channelOption("channel", "the channel to edit (default: this channel)", {
-                        channelTypes: [
-                            ChannelType.AnnouncementThread,
-                            ChannelType.GuildForum,
-                            ChannelType.GuildStageVoice,
-                            ChannelType.GuildText,
-                            ChannelType.GuildVoice,
-                            ChannelType.PrivateThread,
-                            ChannelType.PublicThread,
-                        ],
-                    })
+                    .channelOption("channel", "the channel to edit (default: this channel)", { channelTypes: textlike })
                     .stringOption("delay", "the delay (default: `clear` = remove)")
                     .fn(async ({ _, channel: _channel, delay: _delay }) => {
                         if (!_.guild || !_.channel || _.channel.isDMBased()) throw "This command can only be run in a guild.";

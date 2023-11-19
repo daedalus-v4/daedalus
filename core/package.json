@@ -3,7 +3,7 @@
         "dev": "bun src/index.ts | pino-pretty -i hostname,pid"
     },
     "dependencies": {
-        "argentium": "0.0.12",
+        "argentium": "0.0.13",
         "discord.js": "latest",
         "elysia": "latest",
         "he": "^1.2.0",

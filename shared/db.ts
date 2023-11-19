@@ -242,6 +242,19 @@ class Database {
     public get polls() {
         return _db.collection<DBPoll & { message: string }>("polls");
     }
+
+    public get highlights() {
+        return _db.collection<{
+            user: string;
+            guild: string;
+            phrases?: string[];
+            replies?: boolean;
+            cooldown?: number;
+            delay?: number;
+            blockedChannels?: string[];
+            blockedUsers?: string[];
+        }>("polls");
+    }
 }
 
 export const db = new Database();
