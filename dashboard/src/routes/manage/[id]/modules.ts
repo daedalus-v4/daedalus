@@ -11,6 +11,7 @@ import { b2fModulesPermissionsSettings, f2bModulesPermissionsSettings } from "$l
 import { b2fNukeguardSettings, f2bNukeguardSettings } from "$lib/modules/nukeguard.js";
 import { b2fReactionRolesSettings, f2bReactionRolesSettings } from "$lib/modules/reaction-roles.js";
 import { b2fRedditFeedsSettings, f2bRedditFeedsSettings } from "$lib/modules/reddit-feeds.js";
+import { b2fReportsSettings, f2bReportsSettings } from "$lib/modules/reports.js";
 import { b2fStarboardSettings, f2bStarboardSettings } from "$lib/modules/starboard.js";
 import { b2fStatsChannelsSettings, f2bStatsChannelsSettings } from "$lib/modules/stats-channels.js";
 import { b2fStickyRolesSettings, f2bStickyRolesSettings } from "$lib/modules/sticky-roles.js";
@@ -42,6 +43,7 @@ export const b2f = {
     "reddit-feeds": b2fRedditFeedsSettings,
     count: b2fCountSettings,
     giveaways: b2fGiveawaysSettings,
+    reports: b2fReportsSettings,
 };
 
 export const f2b = {
@@ -66,4 +68,5 @@ export const f2b = {
     "reddit-feeds": f2bRedditFeedsSettings,
     count: f2bCountSettings,
     giveaways: f2bGiveawaysSettings,
+    reports: f2bReportsSettings,
 };

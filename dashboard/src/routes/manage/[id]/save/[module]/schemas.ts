@@ -13,6 +13,7 @@ import type {
     DbNukeguardSettings,
     DbReactionRolesSettings,
     DbRedditFeedsSettings,
+    DbReportsSettings,
     DbSettings,
     DbStarboardSettings,
     DbStatsChannelsSettings,
@@ -473,4 +474,10 @@ export default {
             ),
         ),
     }) satisfies z.ZodType<DbGiveawaysSettings>,
+    reports: z.object({
+        outputChannel: nsnowflake,
+        anonymous: z.boolean(),
+        pingRoles: snowflakes,
+        viewRoles: snowflakes,
+    }) satisfies z.ZodType<DbReportsSettings>,
 };

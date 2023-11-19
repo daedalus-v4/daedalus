@@ -351,3 +351,10 @@ export type FEGiveawaysSettings = {
         closed: boolean;
     })[];
 };
+
+export type FEReportsSettings = {
+    outputChannel: string | null;
+    anonymous: boolean;
+    pingRoles: string[];
+    viewRoles: string[];
+};

@@ -484,6 +484,7 @@ export type DbGiveawaysSettings = {
 export type DbReportsSettings = {
     outputChannel: string | null;
     anonymous: boolean;
+    pingRoles: string[];
     viewRoles: string[];
 };
 

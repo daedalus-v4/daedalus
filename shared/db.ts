@@ -238,6 +238,10 @@ class Database {
     public get giveawayEntries() {
         return _db.collection<{ guild: string; id: number; user: string }>("giveaway_entries");
     }
+
+    public get reporters() {
+        return _db.collection<{ message: string; user: string }>("reporters");
+    }
 }
 
 export const db = new Database();
