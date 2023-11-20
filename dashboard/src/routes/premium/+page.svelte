@@ -50,9 +50,9 @@
                     <Icon icon="check" /> <span>Fully hide unused commands</span>
                     <Icon icon="check" /> <span>100 custom commands</span>
                 </div>
-                <a href={$page.data.user ? "/account/premium" : "/auth/login?redirect=/account/premium"}
-                    ><Button variant="secondary" class="mt-8">Subscribe Now!</Button></a
-                >
+                <a href={$page.data.user ? "/account/premium" : "/auth/login?redirect=/account/premium"}>
+                    <Button variant="secondary" class="mt-8">Subscribe Now!</Button>
+                </a>
             </div>
         </Panel>
     </div>
