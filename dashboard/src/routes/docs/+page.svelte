@@ -16,8 +16,6 @@
     <Breadcrumbs links={[["/docs", "Docs"]]} />
     <a href="/docs/introduction"><Button variant="primary-text"><Icon icon="circle-info" /> Introduction</Button></a>
     <P>View basic details about Daedalus and learn how to use this documentation.</P>
-    <a href="/docs/onboarding"><Button variant="primary-text"><Icon icon="door-open" /> Onboarding</Button></a>
-    <P>Get started with Daedalus with a step-by-step guide of everything we offer!</P>
     <a href="/docs/permissions"><Button variant="primary-text"><Icon icon="screwdriver-wrench" /> Permissions</Button></a>
     <P>View information on permissions Daedalus requests and which ones can be disabled depending on the modules you use.</P>
     <a href="/docs/modules-commands"><Button variant="primary-text"><Icon icon="list" /> Modules &amp; Commands</Button></a>
