@@ -7,7 +7,7 @@
     import Panel from "$lib/components/Panel.svelte";
 </script>
 
-<Container class="flex flex-col items-start gap-4">
+<Container class="flex flex-col items-center gap-4">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <Panel class="hidden lg:block">
             <div class="flex flex-col items-center py-4">
