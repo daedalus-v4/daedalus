@@ -47,7 +47,7 @@
                     <Icon icon="check" /> <span>Everything from the basic tier</span>
                     <Icon icon="check" /> <span>Exclusive modules</span>
                     <Icon icon="check" /> <span>Custom username &amp; avatar &amp; status</span>
-                    <Icon icon="check" /> <span>Full hide unused commands</span>
+                    <Icon icon="check" /> <span>Fully hide unused commands</span>
                     <Icon icon="check" /> <span>100 custom commands</span>
                 </div>
                 <a href={$page.data.user ? "/account/premium" : "/auth/login?redirect=/account/premium"}
