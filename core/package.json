@@ -9,6 +9,7 @@
         "he": "^1.2.0",
         "mongodb": "^6.2.0",
         "pino": "^8.16.1",
+        "wcag-contrast": "^3.0.0",
         "zx": "^7.2.3"
     },
     "devDependencies": {

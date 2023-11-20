@@ -1,6 +1,6 @@
 import { Client } from "discord.js";
 import { ObjectId } from "mongodb";
-import { db, getColor, isModuleEnabled } from "shared/db.js";
+import { databaseIsReady, db, getColor, isModuleEnabled } from "shared/db.js";
 import getMuteRole from "../../bot/lib/get-mute-role.js";
 import { close } from "../../bot/modules/modmail/lib.js";
 import cycle from "../cycle.js";
@@ -9,6 +9,8 @@ import { getClient, getToken } from "../premium.js";
 
 cycle(
     async () => {
+        if (!databaseIsReady) return;
+
         const ids: ObjectId[] = [];
 
         for await (const task of db.tasks.find({ time: { $lt: Date.now() } })) {

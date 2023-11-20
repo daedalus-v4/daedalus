@@ -18,6 +18,7 @@ import { b2fStickyRolesSettings, f2bStickyRolesSettings } from "$lib/modules/sti
 import { b2fSuggestionsSettings, f2bSuggestionsSettings } from "$lib/modules/suggestions.js";
 import { b2fSupporterAnnouncementsSettings, f2bSupporterAnnouncementsSettings } from "$lib/modules/supporter-announcements.js";
 import { b2fTicketsSettings, f2bTicketsSettings } from "$lib/modules/tickets.js";
+import { b2fUtilitySettings, f2bUtilitySettings } from "$lib/modules/utility.js";
 import { b2fWelcomeSettings, f2bWelcomeSettings } from "$lib/modules/welcome.js";
 import { b2fXpSettings, f2bXpSettings } from "$lib/modules/xp.js";
 
@@ -44,6 +45,7 @@ export const b2f = {
     count: b2fCountSettings,
     giveaways: b2fGiveawaysSettings,
     reports: b2fReportsSettings,
+    utility: b2fUtilitySettings,
 };
 
 export const f2b = {
@@ -69,4 +71,5 @@ export const f2b = {
     count: f2bCountSettings,
     giveaways: f2bGiveawaysSettings,
     reports: f2bReportsSettings,
+    utility: f2bUtilitySettings,
 };

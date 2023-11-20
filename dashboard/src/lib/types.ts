@@ -358,3 +358,10 @@ export type FEReportsSettings = {
     pingRoles: string[];
     viewRoles: string[];
 };
+
+export type FEUtilitySettings = {
+    blockRolesByDefault: boolean;
+    allowedRoles: string[];
+    blockedRoles: string[];
+    bypassRoles: string[];
+};

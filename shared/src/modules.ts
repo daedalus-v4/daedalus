@@ -372,13 +372,6 @@ export const modules: ModuleData = {
         icon: "toolbox",
         description: "Utility commands for server management and other purposes.",
         commands: {
-            "emoji-roles": {
-                name: "Emoji Roles",
-                icon: "filter-circle-dollar",
-                description: "Control which roles can use which server emoji.",
-                permissions: ["ManageGuildExpressions"],
-                selfPermissions: ["ManageGuildExpressions"],
-            },
             help: {
                 name: "Help",
                 icon: "circle-question",

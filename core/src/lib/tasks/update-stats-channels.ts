@@ -1,4 +1,4 @@
-import { db, getLimitFor } from "shared/db.js";
+import { databaseIsReady, db, getLimitFor } from "shared/db.js";
 import { formatCustomMessageString } from "shared/format-custom-message.js";
 import { mdash, template } from "../../bot/lib/format.js";
 import { invokeLog } from "../../bot/lib/logging.js";
@@ -9,6 +9,8 @@ import { getClient } from "../premium.js";
 
 cycle(
     async () => {
+        if (!databaseIsReady) return;
+
         for await (const entry of db.statsChannelsSettings.find()) {
             try {
                 const client = await getClient(entry.guild);

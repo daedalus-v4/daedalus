@@ -1,5 +1,5 @@
 import { ObjectId } from "mongodb";
-import { db, getColor } from "shared/db.js";
+import { databaseIsReady, db, getColor } from "shared/db.js";
 import { englishList, mdash, template } from "../../bot/lib/format.js";
 import { invokeLog } from "../../bot/lib/logging.js";
 import { draw } from "../../bot/modules/giveaways/lib.js";
@@ -8,6 +8,8 @@ import { getClient } from "../premium.js";
 
 cycle(
     async () => {
+        if (!databaseIsReady) return;
+
         const close: { _id: ObjectId; ids: number[] }[] = [];
 
         for await (const settings of db.giveawaysSettings.find({ giveaways: { $elemMatch: { closed: false, deadline: { $lte: Date.now() } } } })) {

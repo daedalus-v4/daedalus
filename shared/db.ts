@@ -42,10 +42,14 @@ import { PremiumTier, premiumBenefits } from "./src/premium.js";
 export let _db: Db;
 export let client: MongoClient;
 
+export let databaseIsReady = false;
+
 export async function connect(uri: string, name: string) {
     client = new MongoClient(uri);
     await client.connect();
     _db = client.db(name);
+
+    databaseIsReady = true;
 }
 
 type WithGuild<T> = T & { guild: string };

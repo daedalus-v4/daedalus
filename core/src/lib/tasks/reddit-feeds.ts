@@ -1,11 +1,13 @@
 import he from "he";
-import { db, getColor, isModuleEnabled } from "shared/db.js";
+import { databaseIsReady, db, getColor, isModuleEnabled } from "shared/db.js";
 import cycle from "../cycle.js";
 import { log } from "../log.js";
 import { getClient } from "../premium.js";
 
 cycle(
     async () => {
+        if (!databaseIsReady) return;
+
         for await (const settings of db.redditFeedsSettings.find()) {
             try {
                 const guild = await (await getClient(settings.guild)).guilds.fetch(settings.guild);

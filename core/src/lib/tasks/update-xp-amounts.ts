@@ -1,13 +1,15 @@
 import { DbXpAmounts } from "shared";
-import { db } from "shared/db.js";
+import { databaseIsReady, db } from "shared/db.js";
 import cycle from "../cycle.js";
 
 cycle(
     async () => {
+        if (!databaseIsReady) return;
+
         const now = new Date();
         const { lastXpPurge } = (await db.globals.findOneAndUpdate({}, { $set: { lastXpPurge: now.getTime() } }, { upsert: true })) ?? { lastXpPurge: 0 };
 
-        const last = new Date(lastXpPurge);
+        const last = new Date(lastXpPurge ?? 0);
 
         const $set: Partial<DbXpAmounts> = {};
 

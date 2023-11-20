@@ -38,6 +38,7 @@
             "count",
             "giveaways",
             "reports",
+            "utility",
         ].map((mid) => ({
             link: `/manage/${id}/${mid}`,
             icon: modules[mid].icon ?? "gear",

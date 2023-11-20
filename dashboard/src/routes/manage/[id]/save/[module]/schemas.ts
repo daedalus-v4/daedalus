@@ -21,6 +21,7 @@ import type {
     DbSuggestionsSettings,
     DbSupporterAnnouncementsSettings,
     DbTicketsSettings,
+    DbUtilitySettings,
     DbWelcomeSettings,
     DbXpSettings,
     MessageData,
@@ -480,4 +481,10 @@ export default {
         pingRoles: snowflakes,
         viewRoles: snowflakes,
     }) satisfies z.ZodType<DbReportsSettings>,
+    utility: z.object({
+        blockRolesByDefault: z.boolean(),
+        allowedRoles: snowflakes,
+        blockedRoles: snowflakes,
+        bypassRoles: snowflakes,
+    }) satisfies z.ZodType<DbUtilitySettings>,
 };

@@ -119,7 +119,8 @@ export type TFSound = {
 };
 
 export type DbGlobals = {
-    lastXpPurge: number;
+    lastXpPurge?: number;
+    currencies?: Record<string, number>;
 };
 
 export type DbTask = {

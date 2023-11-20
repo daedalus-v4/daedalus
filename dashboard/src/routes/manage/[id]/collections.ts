@@ -23,4 +23,5 @@ export default () => ({
     count: db.countSettings,
     giveaways: db.giveawaysSettings,
     reports: db.reportsSettings,
+    utility: db.utilitySettings,
 });
