@@ -38,7 +38,7 @@ export async function getClients(ctx?: (string | APIGuild | Guild | { guild: API
 }
 
 export async function assignClient(guild: string, token: string) {
-    if ((await db.guilds.countDocuments({ token })) > 0) return null;
+    if (token === Bun.env.TOKEN || (await db.guilds.countDocuments({ token })) > 0) return null;
 
     const client = await getClientFromToken(token).catch((e) => log.error(e, "4841cb33-b759-495f-b332-ceca6809d2da"));
     if (!client) return null;

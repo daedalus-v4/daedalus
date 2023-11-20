@@ -580,3 +580,8 @@ export type DBPoll = { question: string } & (
     | { type: "binary"; leftOption: string; rightOption: string; allowNeutral: boolean; votes: Record<string, string> }
     | { type: "multi"; options: string[]; allowMulti: boolean; votes: Record<string, string[]> }
 );
+
+export type DBAccountSettings = {
+    notifyWhenOwnedServerPremiumStatusChanges: boolean;
+    notifyWhenManagedServerPremiumStatusChanges: boolean;
+};

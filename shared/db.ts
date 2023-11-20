@@ -1,6 +1,7 @@
 import type { APIGuild, Guild } from "discord.js";
 import { Db, MongoClient } from "mongodb";
 import {
+    DBAccountSettings,
     DBPoll,
     DBTicket,
     DbAutomodSettings,
@@ -262,6 +263,10 @@ class Database {
 
     public get stickyMessages() {
         return _db.collection<{ guild: string; channel: string; message?: string; content: string; seconds: number }>("sticky_messages");
+    }
+
+    public get accountSettings() {
+        return _db.collection<DBAccountSettings & { user: string }>("account_settings");
     }
 }
 

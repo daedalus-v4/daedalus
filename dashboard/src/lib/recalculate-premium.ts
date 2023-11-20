@@ -3,7 +3,6 @@ import { PremiumTier } from "shared";
 import { db } from "shared/db.js";
 import { getPortalSessions, stripe } from "./stripe.js";
 
-// TODO: alert users when their premium status changes & inform them of need to change ticket prompts, etc.
 export default async function recalculate(user?: string) {
     const enable: string[] = [];
     const disable: string[] = [];
@@ -87,12 +86,32 @@ export default async function recalculate(user?: string) {
     for (const binding of bindings)
         tiers[binding.guild] = Math.max(tiers[binding.guild], binding.key.startsWith("upk_") ? PremiumTier.ULTIMATE : PremiumTier.BASIC);
 
-    await db.guilds.bulkWrite(Object.entries(tiers).map(([guild, tier]) => ({ updateOne: { filter: { guild }, update: { $set: { tier } }, upsert: true } })));
+    const old: Record<string, PremiumTier> = {};
+    for await (const guild of db.guilds.find({ guild: { $in: Object.keys(tiers) } })) old[guild.guild] = guild.tier;
 
-    for await (const entry of db.guilds.find({ token: { $ne: null }, tier: { $in: [PremiumTier.FREE, PremiumTier.BASIC] } }))
+    const changes = Object.entries(tiers).filter(([guild, tier]) => old[guild] !== tier);
+    if (changes.length === 0) return;
+
+    await db.guilds.bulkWrite(changes.map(([guild, tier]) => ({ updateOne: { filter: { guild }, update: { $set: { tier } }, upsert: true } })));
+
+    const entries = await db.guilds
+        .find({
+            guild: { $nin: (await db.premiumOverrides.find({ vanityClient: true }).toArray()).map((x) => x.guild) },
+            token: { $ne: null },
+            tier: { $ne: PremiumTier.ULTIMATE },
+        })
+        .toArray();
+
+    if (entries.length > 0)
         await fetch(`${API}/reset-client`, {
             method: "POST",
-            body: JSON.stringify({ guild: entry.guild }),
+            body: JSON.stringify({ guilds: entries.map((x) => x.guild) }),
             headers: { "Content-Type": "application/json" },
         }).catch(() => {});
+
+    await fetch(`${API}/premium-changes`, {
+        method: "POST",
+        body: JSON.stringify({ changes: changes.map(([x, y]) => [x, old[x], y]) }),
+        headers: { "Content-Type": "application/json" },
+    }).catch(() => {});
 }

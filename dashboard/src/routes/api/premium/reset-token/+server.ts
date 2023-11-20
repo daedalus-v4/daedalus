@@ -18,7 +18,11 @@ export const POST: RequestHandler = async ({ locals, url }) => {
     }
 
     {
-        const req = await fetch(`${API}/reset-client`, { method: "POST", body: JSON.stringify({ guild }), headers: { "Content-Type": "application/json" } });
+        const req = await fetch(`${API}/reset-client`, {
+            method: "POST",
+            body: JSON.stringify({ guilds: [guild] }),
+            headers: { "Content-Type": "application/json" },
+        });
         const res: boolean = await req.json();
 
         if (!res) return new Response("Resetting your guild's client failed. If this issue persists, please contact support.");
