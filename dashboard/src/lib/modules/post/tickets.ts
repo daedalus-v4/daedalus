@@ -83,8 +83,6 @@ export default async function (settings: DbTicketsSettings, currentGuild: string
             }));
 
             let message: Message | undefined;
-            const shouldPost = () =>
-                !invariant((x) => JSON.stringify([x.prompt, x.multi, targets.map((x) => [x.name, x.description, x.emoji])]), prompt, promptMap[prompt.id]);
 
             if (prompt.id in promptMap) {
                 if (prompt.channel === promptMap[prompt.id].channel) {
@@ -102,7 +100,7 @@ export default async function (settings: DbTicketsSettings, currentGuild: string
                         });
                     }
 
-                    if (edit && shouldPost()) await message.edit(data());
+                    if (edit) await message.edit(data());
                 } else {
                     try {
                         const channel = await guild.channels.fetch(promptMap[prompt.id].channel!);

@@ -24,10 +24,10 @@ export default async function (cmd: ButtonInteraction | StringSelectMenuInteract
 
     const { multiTickets, increasedLimits, customizeTicketOpenMessage } = await getPremiumBenefitsFor(cmd.guild!.id);
 
-    if (cmd.isStringSelectMenu() && !multiTickets)
-        throw "This is a premium-only feature, but this server no longer has Daedalus premium. This ticket prompt should auto-update itself to reflect this soon; if not, there may be an error in the permission configuration.";
-
-    if (cmd.isStringSelectMenu()) id = cmd.values[0];
+    if (cmd.isStringSelectMenu()) {
+        if (!multiTickets) throw "This is a premium-only feature, but this server no longer has Daedalus premium.";
+        id = cmd.values[0];
+    }
 
     const target = prompt.targets
         .filter((x) => !!x.logChannel && !!x.category)

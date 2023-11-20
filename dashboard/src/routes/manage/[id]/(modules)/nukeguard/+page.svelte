@@ -91,7 +91,7 @@
         <h4 class="h4">Emoji, Stickers, &amp; Sounds</h4>
         <P>
             You generally shouldn't give your mods <PermissionLink key="ManageGuildExpressions" />. It's not the most risky, but you can just approve and upload
-            server assets yourself. You can also give them access to <b>/add-asset</b>.
+            server assets yourself.
         </P>
         <Panel class="w-full">
             <div class="flex items-center gap-4">
@@ -129,8 +129,7 @@
     <h4 class="h4">Webhooks</h4>
     <P>
         Instead of giving your mods <PermissionLink key="ManageWebhooks" />, consider pinning a list of webhooks URLs somewhere. You can still delete a webhook
-        with only its url, even without permissions, so consider using Daedalus'
-        <A to="/manage/{$page.params.id}/webhooks" external>webhook proxy system</A>, which allows you to secure webhooks, audit webhook actions, etc.
+        with only its url, even without permissions, which is a fundamental flaw.
     </P>
     <P>If a webhook is deleted or edited using its URL through an API call to the webhook itself, it is impossible to detect who did it.</P>
     <div class="flex items-center gap-4">
