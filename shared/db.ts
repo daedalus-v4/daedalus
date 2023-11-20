@@ -259,6 +259,10 @@ class Database {
             blockedUsers?: string[];
         }>("polls");
     }
+
+    public get stickyMessages() {
+        return _db.collection<{ guild: string; channel: string; message?: string; content: string; seconds: number }>("sticky_messages");
+    }
 }
 
 export const db = new Database();

@@ -1,5 +1,6 @@
 import he from "he";
 import { databaseIsReady, db, getColor, isModuleEnabled } from "shared/db.js";
+import { truncate } from "../../bot/lib/format.js";
 import cycle from "../cycle.js";
 import { log } from "../log.js";
 import { getClient } from "../premium.js";
@@ -46,8 +47,8 @@ cycle(
                                 .send({
                                     embeds: [
                                         {
-                                            title: title.length > 256 ? `${title.slice(0, 253)}...` : title,
-                                            description: post.selftext.length > 4096 ? `${post.selftext.slice(0, 4093)}...` : post.selftext,
+                                            title: truncate(title, 256),
+                                            description: truncate(post.selftext, 4096),
                                             color,
                                             image: url ? { url } : undefined,
                                             url: `https://reddit.com${post.permalink}`,

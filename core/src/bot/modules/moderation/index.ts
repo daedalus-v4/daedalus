@@ -6,7 +6,7 @@ import { autoIncrement, db, getColor, getLimitFor, isCommandEnabled, isModuleEna
 import { textlike } from "../../../lib/utils.js";
 import { isStopped, stopButton } from "../../interactions/stop.js";
 import confirm from "../../lib/confirm.js";
-import { colors, formatIdList, mdash, template, timeinfo } from "../../lib/format.js";
+import { colors, formatIdList, mdash, template, timeinfo, truncate } from "../../lib/format.js";
 import { getMuteRoleWithAsserts } from "../../lib/get-mute-role.js";
 import { defer } from "../../lib/hooks.js";
 import pagify from "../../lib/pagify.js";
@@ -983,7 +983,7 @@ export default (app: Argentium) =>
                         const { notes } = (await db.userNotes.findOne({ guild: _.guild!.id, user: user.id })) ?? {};
 
                         await _.showModal({
-                            title: `Editing Mod Notes for ${user.tag.length > 43 ? `${user.tag.slice(0, 40)}...` : user.tag}`,
+                            title: `Editing Mod Notes for ${truncate(_.user.tag, 43)}`,
                             customId: `:notes/edit:${user.id}`,
                             components: [
                                 {

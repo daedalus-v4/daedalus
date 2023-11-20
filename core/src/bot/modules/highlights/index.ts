@@ -3,7 +3,7 @@ import { ChannelType, Events, GuildMember, GuildTextBasedChannel, MessageType, P
 import { formatDuration, parseDuration } from "shared";
 import { db, getColor } from "shared/db.js";
 import { stem, textlike } from "../../../lib/utils.js";
-import { colors, template, timestamp } from "../../lib/format.js";
+import { colors, template, timestamp, truncate } from "../../lib/format.js";
 import { skip } from "../utils.js";
 
 export default (app: Argentium) =>
@@ -102,12 +102,7 @@ export default (app: Argentium) =>
             for (let x = -5; x < 0; x++) {
                 const m = message.channel.messages.cache.at(x);
 
-                if (m)
-                    messages.push(
-                        `[${timestamp(m.createdTimestamp)}] ${m.author.tag ?? "Unknown User"}: ${
-                            m.content.length > 1000 ? `${m.content.slice(0, 997)}...` : m.content
-                        }`,
-                    );
+                if (m) messages.push(`[${timestamp(m.createdTimestamp)}] ${m.author.tag ?? "Unknown User"}: ${truncate(m.content, 1000)}`);
             }
 
             const context = messages.join("\n");

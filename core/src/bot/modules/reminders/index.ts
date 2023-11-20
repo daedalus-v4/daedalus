@@ -1,7 +1,7 @@
 import Argentium from "argentium";
 import { DbTask, parseDuration } from "shared";
 import { autoIncrement, db } from "shared/db.js";
-import { colors, template, timeinfo } from "../../lib/format.js";
+import { colors, template, timeinfo, truncate } from "../../lib/format.js";
 
 export default (app: Argentium) =>
     app.allowInDms("reminder").commands((x) =>
@@ -27,9 +27,7 @@ export default (app: Argentium) =>
                             embeds: [
                                 {
                                     title: `Reminder Set (#${id})`,
-                                    description: `You will be reminded on ${timeinfo(time)}${
-                                        query ? ` about ${query.length > 256 ? `${query.slice(0, 253)}...` : query}` : ""
-                                    }`,
+                                    description: `You will be reminded on ${timeinfo(time)}${query ? ` about ${truncate(query, 256)}` : ""}`,
                                     color: colors.statuses.success,
                                 },
                             ],
@@ -58,12 +56,7 @@ export default (app: Argentium) =>
                                 {
                                     title: "Reminders",
                                     description: reminders
-                                        .map(
-                                            (x) =>
-                                                `- \`${x.id}\`: [here](${x.origin}) at ${timeinfo(x.time)}${
-                                                    x.query ? `: ${x.query.length > 100 ? `${x.query.slice(0, 97)}...}` : x.query}` : ""
-                                                }`,
-                                        )
+                                        .map((x) => `- \`${x.id}\`: [here](${x.origin}) at ${timeinfo(x.time)}${x.query ? `: ${truncate(x.query, 100)}` : ""}`)
                                         .join("\n"),
                                     color: colors.prompts.info,
                                 },
