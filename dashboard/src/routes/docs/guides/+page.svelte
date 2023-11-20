@@ -9,7 +9,7 @@
 
 <Header>
     <p class="text-3xl"><b>Daedalus</b> Documentation</p>
-    <p class="text-xl text-primary-700 dark:text-primary-300">Introduction</p>
+    <p class="text-xl text-primary-700 dark:text-primary-300">Guides</p>
 </Header>
 
 <Container main>

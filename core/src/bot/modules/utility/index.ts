@@ -101,6 +101,7 @@ export default (app: Argentium) =>
                                 color: _.guild ? await getColor(_.guild) : 0x009688,
                             },
                         ],
+                        ephemeral: !!_.guild,
                     })),
             )
             .slash((x) =>

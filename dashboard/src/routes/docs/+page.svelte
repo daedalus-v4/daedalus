@@ -13,12 +13,7 @@
 </Header>
 
 <Container main>
-    <Breadcrumbs
-        links={[
-            ["/docs", "Docs"],
-            ["/docs", "Index"],
-        ]}
-    />
+    <Breadcrumbs links={[["/docs", "Docs"]]} />
     <a href="/docs/introduction"><Button variant="primary-text"><Icon icon="circle-info" /> Introduction</Button></a>
     <P>View basic details about Daedalus and learn how to use this documentation.</P>
     <a href="/docs/onboarding"><Button variant="primary-text"><Icon icon="door-open" /> Onboarding</Button></a>

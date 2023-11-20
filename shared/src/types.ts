@@ -20,6 +20,7 @@ export type ModuleData = Record<
                 permissions?: string[];
                 selfPermissions?: string[];
                 default?: boolean;
+                syntaxes: [string, string][];
             }
         >;
         selfPermissions?: string[];
