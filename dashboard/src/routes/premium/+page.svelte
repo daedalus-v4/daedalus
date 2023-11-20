@@ -46,7 +46,7 @@
                 <div class="grid grid-cols-[auto_1fr] items-center gap-2 mt-8">
                     <Icon icon="check" /> <span>Everything from the basic tier</span>
                     <Icon icon="check" /> <span>Exclusive modules</span>
-                    <Icon icon="check" /> <span>Custom username &amp; avatar &amp; status</span>
+                    <Icon icon="check" /> <span>Custom username &amp; avatar &amp; profile</span>
                     <Icon icon="check" /> <span>Fully hide unused commands</span>
                     <Icon icon="check" /> <span>100 custom commands</span>
                 </div>

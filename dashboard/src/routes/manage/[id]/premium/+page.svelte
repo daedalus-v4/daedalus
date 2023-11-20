@@ -209,4 +209,11 @@
         Finally, go back to the bot settings, click "Reset Token", and then copy-paste the token into the input field. For security reasons, we never show you
         your token here after you submit it. <b>Make sure you keep this token secret.</b> Anyone who has your token gains full control of your bot.
     </P>
+    <br />
+    <P size="sm">
+        Disclaimer: NSFW client profiles and misuse of custom clients in any way including impersonation, scamming, violations of terms of service, etc. may
+        result in custom client privilieges being temporarily or permanently revoked or your server being temporarily or permanently banned from use of Daedalus
+        altogether. There is no strict policy for this as generally it should be obvious what is allowed or not, but we will reach out to you first if we
+        believe your use constitutes abuse before applying any sanctions.
+    </P>
 </Modal>

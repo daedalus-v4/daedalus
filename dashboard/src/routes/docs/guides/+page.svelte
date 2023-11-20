@@ -26,4 +26,6 @@
     >
     <a href="/docs/guides/custom-messages"><Button variant="primary-text"><Icon icon="message" /> Custom Messages</Button></a>
     <P>Learn how to write fully custom messages with Daedalus to give your members an immersive environment.</P>
+    <a href="/docs/guides/custom-clients"><Button variant="primary-text"><Icon icon="crown" /> Custom Clients</Button></a>
+    <P>Learn how to set up and operate custom clients using Daedalus Ultimate Premium, as long as the caveats of the feature and some necessary adjustments.</P>
 </Container>

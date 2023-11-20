@@ -50,8 +50,4 @@
         To get started, <A to={invite()} external>add the bot</A>. If you'd like to restrict any permissions, check out the
         <A to="/docs/permissions">permissions documentation page</A> to see what features require which permissions and which ones you can safely remove.
     </P>
-    <P>
-        After you add the bot, visit our <A to="/docs/onboarding">onboarding page</A>. If you already have the bot, feel free to check it out anyway so you're
-        always up-to-date on our latest features, tips, and tricks!
-    </P>
 </Container>
