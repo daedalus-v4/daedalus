@@ -2,6 +2,7 @@ import type { APIGuild, Guild } from "discord.js";
 import { Db, MongoClient } from "mongodb";
 import {
     DBAccountSettings,
+    DbAutorolesSettings,
     DBPoll,
     DBTicket,
     DbAutomodSettings,
@@ -134,6 +135,10 @@ class Database {
 
     public get stickyRolesSettings() {
         return _db.collection<WithGuild<DbStickyRolesSettings>>("sticky_roles_settings");
+    }
+
+    public get autorolesSettings() {
+        return _db.collection<WithGuild<DbAutorolesSettings>>("autoroles_settings");
     }
 
     public get customRolesSettings() {

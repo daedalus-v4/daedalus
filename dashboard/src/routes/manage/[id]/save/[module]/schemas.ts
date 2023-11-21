@@ -3,6 +3,7 @@ import type {
     CustomMessageText,
     DbAutomodSettings,
     DbAutoresponderSettings,
+    DbAutorolesSettings,
     DbCoOpSettings,
     DbCountSettings,
     DbCustomRolesSettings,
@@ -307,6 +308,9 @@ export default {
     "sticky-roles": z.object({
         exclude: snowflakes,
     }) satisfies z.ZodType<DbStickyRolesSettings>,
+    autoroles: z.object({
+        roles: snowflakes,
+    }) satisfies z.ZodType<DbAutorolesSettings>,
     "custom-roles": z.object({
         allowBoosters: z.boolean(),
         allowedRoles: snowflakes,

@@ -1,5 +1,6 @@
 import { b2fAutomodSettings, f2bAutomodSettings } from "$lib/modules/automod.js";
 import { b2fAutoresponderSettings, f2bAutoresponderSettings } from "$lib/modules/autoresponder.js";
+import { b2fAutorolesSettings, f2bAutorolesSettings } from "$lib/modules/autoroles.js";
 import { b2fCoOpSettings, f2bCoOpSettings } from "$lib/modules/co-op.js";
 import { b2fCountSettings, f2bCountSettings } from "$lib/modules/count.js";
 import { b2fCustomRolesSettings, f2bCustomRolesSettings } from "$lib/modules/custom-roles.js";
@@ -46,6 +47,7 @@ export const b2f = {
     giveaways: b2fGiveawaysSettings,
     reports: b2fReportsSettings,
     utility: b2fUtilitySettings,
+    autoroles: b2fAutorolesSettings,
 };
 
 export const f2b = {
@@ -72,4 +74,5 @@ export const f2b = {
     giveaways: f2bGiveawaysSettings,
     reports: f2bReportsSettings,
     utility: f2bUtilitySettings,
+    autoroles: f2bAutorolesSettings,
 };

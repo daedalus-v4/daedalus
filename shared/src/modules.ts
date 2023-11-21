@@ -286,6 +286,12 @@ export const modules: ModuleData = {
         selfPermissions: ["ManageRoles"],
         default: false,
     },
+    autoroles: {
+        name: "Autoroles",
+        icon: "bolt",
+        description: "Automatically add specified roles to users upon joining the server.",
+        selfPermissions: ["ManageRoles"],
+    },
     "custom-roles": {
         name: "Custom Roles",
         icon: "eye-dropper",
@@ -314,7 +320,7 @@ export const modules: ModuleData = {
     },
     autoresponder: {
         name: "Autoresponder",
-        icon: "bolt",
+        icon: "reply",
         description: "Automatically respond to certain messages",
     },
     modmail: {

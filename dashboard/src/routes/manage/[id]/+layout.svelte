@@ -26,6 +26,7 @@
             "starboard",
             "automod",
             "sticky-roles",
+            "autoroles",
             "custom-roles",
             "stats-channels",
             "autoresponder",

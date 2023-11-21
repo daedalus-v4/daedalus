@@ -11,6 +11,7 @@ export default () => ({
     starboard: db.starboardSettings,
     automod: db.automodSettings,
     "sticky-roles": db.stickyRolesSettings,
+    autoroles: db.autorolesSettings,
     "custom-roles": db.customRolesSettings,
     "stats-channels": db.statsChannelsSettings,
     autoresponder: db.autoresponderSettings,

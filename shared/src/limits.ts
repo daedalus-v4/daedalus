@@ -8,6 +8,7 @@ export const limits = {
     reactionRolesCount: [2, 5, 5],
     purgeAtOnce: [100, 1000, 1000],
     automodCount: [2, 5, 5],
+    autorolesCount: [2, 5, 5],
     statsChannelsCount: [2, 5, 5],
     autoresponderCount: [2, 5, 5],
     modmailTargetCount: [1, 3, 10],

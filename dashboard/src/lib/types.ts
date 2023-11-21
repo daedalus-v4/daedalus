@@ -179,6 +179,10 @@ export type FEStickyRolesSettings = {
     exclude: string[];
 };
 
+export type FEAutorolesSettings = {
+    roles: string[];
+};
+
 export type FECustomRolesSettings = {
     allowBoosters: boolean;
     allowedRoles: string[];

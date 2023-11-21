@@ -307,6 +307,10 @@ export type DbStickyRolesSettings = {
     exclude: string[];
 };
 
+export type DbAutorolesSettings = {
+    roles: string[];
+};
+
 export type DbCustomRolesSettings = {
     allowBoosters: boolean;
     allowedRoles: string[];
