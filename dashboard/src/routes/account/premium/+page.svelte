@@ -16,7 +16,7 @@
     $: [basicTotal, ultimateTotal] = ["basic", "ultimate"].map((key, index) =>
         ($page.data.sessions as { subscriptions: { level: string; quantity: number }[] }[])
             .flatMap((session) => session.subscriptions.filter((sub) => sub.level === key).map((sub) => sub.quantity))
-            .reduce((x, y) => x + y),
+            .reduce((x, y) => x + y, 0),
     );
 
     $: basicQuantity = basicTotal - basicKeys.length;
