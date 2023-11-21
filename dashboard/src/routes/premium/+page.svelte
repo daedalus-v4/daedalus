@@ -18,7 +18,6 @@
                     <Icon icon="check" /> <span>Modmail</span>
                     <Icon icon="check" /> <span>Automoderation</span>
                     <Icon icon="check" /> <span>Advanced customization</span>
-                    <Icon icon="check" /> <span>5 custom commands</span>
                 </div>
                 <Button class="mt-8" disabled>This tier is available by default!</Button>
             </div>
@@ -32,7 +31,6 @@
                     <Icon icon="check" /> <span>Cosmetic modules</span>
                     <Icon icon="check" /> <span>Raised module limits</span>
                     <Icon icon="check" /> <span>Full customization</span>
-                    <Icon icon="check" /> <span>25 custom commands</span>
                 </div>
                 <a href={$page.data.user ? "/account/premium" : "/auth/login?redirect=/account/premium"}
                     ><Button variant="primary" class="mt-8">Subscribe Now!</Button></a
@@ -46,9 +44,8 @@
                 <div class="grid grid-cols-[auto_1fr] items-center gap-2 mt-8">
                     <Icon icon="check" /> <span>Everything from the basic tier</span>
                     <Icon icon="check" /> <span>Exclusive modules</span>
-                    <Icon icon="check" /> <span>Custom username &amp; avatar &amp; profile</span>
-                    <Icon icon="check" /> <span>Fully hide unused commands</span>
-                    <Icon icon="check" /> <span>100 custom commands</span>
+                    <Icon icon="check" /> <span>Custom bot profile</span>
+                    <Icon icon="check" /> <span>Early access to new features</span>
                 </div>
                 <a href={$page.data.user ? "/account/premium" : "/auth/login?redirect=/account/premium"}>
                     <Button variant="secondary" class="mt-8">Subscribe Now!</Button>

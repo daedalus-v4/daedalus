@@ -6,6 +6,7 @@ declare namespace App {
         user: {
             id: string;
             username: string;
+            global_name: string;
             discriminator: string;
             admin: boolean;
             avatar: string;
@@ -17,6 +18,7 @@ declare namespace App {
         user: {
             id: string;
             username: string;
+            global_name: string;
             discriminator: string;
             admin: boolean;
             avatar: string;

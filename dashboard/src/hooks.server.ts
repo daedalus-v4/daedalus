@@ -50,9 +50,7 @@ export const handle: Handle = async ({ event, resolve }) => {
         const request = await fetch(`${DISCORD_API}/users/@me`, { headers: { Authorization: `Bearer ${token}` } });
         const response = await request.json();
 
-        if (response.id) {
-            event.locals.user = response;
-        }
+        if (response.id) event.locals.user = response;
     }
 
     if (event.locals.user) event.locals.user.admin = event.locals.user.id === OWNER || (await db.admins.countDocuments({ id: event.locals.user.id })) > 0;
