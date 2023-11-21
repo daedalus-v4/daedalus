@@ -1,4 +1,5 @@
-import type {
+import { z } from "zod";
+import {
     CustomMessageComponent,
     CustomMessageText,
     DbAutomodSettings,
@@ -26,8 +27,7 @@ import type {
     DbWelcomeSettings,
     DbXpSettings,
     MessageData,
-} from "shared";
-import { z } from "zod";
+} from "./types.js";
 
 const color = z.number().int().min(0).max(0xffffff);
 const snowflake = z.string().regex(/^[1-9][0-9]{16,19}$/, "Expected a Discord ID (17-20 digit number).");
@@ -99,7 +99,7 @@ const giveaway: z.ZodType<DbGiveawaysSettings["template"]> = z.object({
     allowRepeatWinners: z.boolean(),
 });
 
-export default {
+export const schemas = {
     "-": z.object({
         dashboardPermissions: z.enum(["owner", "admin", "manager"]),
         embedColor: color,

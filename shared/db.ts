@@ -2,11 +2,11 @@ import type { APIGuild, Guild } from "discord.js";
 import { Db, MongoClient } from "mongodb";
 import {
     DBAccountSettings,
-    DbAutorolesSettings,
     DBPoll,
     DBTicket,
     DbAutomodSettings,
     DbAutoresponderSettings,
+    DbAutorolesSettings,
     DbCoOpSettings,
     DbCountSettings,
     DbCustomRolesSettings,
@@ -56,7 +56,7 @@ export async function connect(uri: string, name: string) {
 
 type WithGuild<T> = T & { guild: string };
 
-class Database {
+export class Database {
     public get globals() {
         return _db.collection<DbGlobals>("globals");
     }
@@ -263,7 +263,7 @@ class Database {
             delay?: number;
             blockedChannels?: string[];
             blockedUsers?: string[];
-        }>("polls");
+        }>("highlights");
     }
 
     public get stickyMessages() {

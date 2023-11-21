@@ -12,6 +12,7 @@ import {
     GuildMember,
     GuildTextBasedChannel,
     InteractionReplyOptions,
+    InteractionResponse,
     Message,
     ModalSubmitInteraction,
     TextBasedChannel,
@@ -22,7 +23,7 @@ import {
 } from "discord.js";
 import { WithId } from "mongodb";
 import { DbModmailSettings, DbModmailThread } from "shared";
-import { autoIncrement, db, getColor, getLimitFor, getPremiumBenefitsFor } from "shared/db.js";
+import { db, getColor, getLimitFor, getPremiumBenefitsFor } from "shared/db.js";
 import { formatCustomMessageString } from "shared/format-custom-message.js";
 import { colors, embed, expand, mdash, template } from "../../lib/format.js";
 import { invokeLog } from "../../lib/logging.js";
@@ -115,9 +116,9 @@ export async function selectGuild(message: Message, reply: Message): Promise<[Gu
     const openContacts = new Set((await db.modmailThreads.find({ user: message.author.id, closed: false }).toArray()).map((entry) => entry.guild));
 
     const unfiltered = await Promise.all(
-        (await db.modulesPermissionsSettings.find({ "modules.modmail.enabled": true }).toArray()).map(
-            async (x) => await message.client.guilds.fetch(x.guild).catch(() => {}),
-        ),
+        (
+            await db.modulesPermissionsSettings.find({ "modules.modmail.enabled": true }).toArray()
+        ).map(async (x) => await message.client.guilds.fetch(x.guild).catch(() => {})),
     );
 
     const filtered: Guild[] = [];
@@ -580,6 +581,7 @@ export async function handleReply(
     anon: boolean,
     content: string | undefined,
     filemap: Record<string, Attachment | null>,
+    reply: InteractionResponse,
 ): Promise<InteractionReplyOptions> {
     const files = Object.values(filemap)
         .filter((x) => x)
@@ -605,15 +607,13 @@ export async function handleReply(
 
     await db.tasks.deleteOne({ action: "modmail/close", channel: _.channel!.id });
 
-    const id = await autoIncrement(`modmail-messages`);
-
     await db.modmailThreads.updateOne(
         { channel: _.channel!.id },
         {
             $push: {
                 messages: {
                     type: "outgoing",
-                    id,
+                    source: reply.id,
                     message: output.id,
                     author: _.user.id,
                     anon: !!anon,
@@ -636,14 +636,14 @@ export async function handleReply(
                     {
                         type: ComponentType.Button,
                         style: ButtonStyle.Secondary,
-                        customId: `:${_.user.id}:modmail/edit:${id}`,
+                        customId: `:${_.user.id}:modmail/edit`,
                         emoji: "✏️",
                         label: "Edit",
                     },
                     {
                         type: ComponentType.Button,
                         style: ButtonStyle.Danger,
-                        customId: `:${_.user.id}:modmail/delete:${id}`,
+                        customId: `:${_.user.id}:modmail/delete`,
                         emoji: "🗑️",
                         label: "Delete",
                     },
@@ -687,10 +687,10 @@ export async function startModal(
     if (!modal) return;
 
     content = modal.fields.getTextInputValue("content");
-    await modal.deferReply({ ephemeral: false });
+    const reply = await modal.deferReply();
 
     try {
-        await modal.editReply(await handleReply(_, caller, member, anon, content, filemap));
+        await modal.editReply(await handleReply(_, caller, member, anon, content, filemap, reply));
     } catch (error) {
         await modal.editReply(template.error(`${error}`));
     }

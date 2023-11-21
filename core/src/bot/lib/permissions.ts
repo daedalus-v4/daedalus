@@ -8,7 +8,8 @@ export async function enforcePermissions(user: User, name: string, channel: Chan
     if (reason) throw reason;
 }
 
-export async function check(user: User, name: string, channel: Channel, bypass?: boolean): Promise<string | false> {
+export async function check(user: User | GuildMember, name: string, channel: Channel, bypass?: boolean): Promise<string | false> {
+    let member = user instanceof GuildMember ? user : null;
     if (channel.isDMBased()) return false;
 
     const command = commandMap[name];
@@ -25,7 +26,7 @@ export async function check(user: User, name: string, channel: Channel, bypass?:
         const required = (Array.isArray(req) ? req : [req]).filter((x) => x).map((key) => PermissionFlagsBits[key as keyof typeof PermissionFlagsBits]);
 
         try {
-            const member = await channel.guild.members.fetch(user);
+            member ??= await channel.guild.members.fetch(user);
             const roles = [...member.roles.cache.keys()];
 
             const guildSettings = await db.guildSettings.findOne({ guild: channel.guild.id });

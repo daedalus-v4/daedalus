@@ -7,5 +7,6 @@ export * from "./src/modules.js";
 export * from "./src/parsing.js";
 export * from "./src/permissions.js";
 export * from "./src/premium.js";
+export * from "./src/schemas.js";
 export * from "./src/types.js";
 export * from "./src/utils.js";

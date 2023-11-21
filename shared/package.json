@@ -1,13 +1,14 @@
 {
-    "devDependencies": {
-        "bun-types": "latest"
-    },
-    "peerDependencies": {
-        "typescript": "^5.0.0"
-    },
-    "dependencies": {
-        "discord.js": "latest",
-        "mongodb": "^6.2.0",
-        "pino": "^8.16.1"
-    }
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "discord.js": "latest",
+    "mongodb": "^6.2.0",
+    "pino": "^8.16.1",
+    "zod": "^3.22.4"
+  }
 }

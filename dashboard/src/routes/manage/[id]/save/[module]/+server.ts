@@ -1,9 +1,9 @@
 import { API } from "$env/static/private";
 import post from "$lib/modules/post/index.js";
 import { redirect } from "@sveltejs/kit";
+import { schemas } from "shared";
 import collections from "../../collections.js";
 import type { RequestHandler } from "./$types.js";
-import schemas from "./schemas.js";
 
 export const POST: RequestHandler = async ({ fetch, locals, params: { id, module }, request }) => {
     const req = await fetch(`${API}/check-guild`, {

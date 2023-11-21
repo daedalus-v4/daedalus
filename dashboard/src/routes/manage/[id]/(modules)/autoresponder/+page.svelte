@@ -3,7 +3,6 @@
     import { page } from "$app/stores";
     import Button from "$lib/components/Button.svelte";
     import ChannelSelector from "$lib/components/ChannelSelector.svelte";
-    import Debug from "$lib/components/Debug.svelte";
     import Icon from "$lib/components/Icon.svelte";
     import Limit from "$lib/components/Limit.svelte";
     import MessageEditor from "$lib/components/MessageEditor.svelte";

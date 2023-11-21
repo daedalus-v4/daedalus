@@ -569,7 +569,8 @@ export const modules: ModuleData = {
             highlight: {
                 name: "Highlight",
                 icon: "bell",
-                description: "Manage your highlights.",
+                description:
+                    "Manage your highlights. Users must have permission to use this command in a channel to receive highlights there (all uses of this command are only visible to the user).",
                 ghost: true,
                 syntaxes: [
                     ["/highlight list", `List your highlighted words/phrases and show your highlight configuration.`],

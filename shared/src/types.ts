@@ -539,7 +539,7 @@ export type DBModmailMessage = { time: number } & (
     | { type: "internal"; author: string; content: string; attachments: { name: string; url: string }[] }
     | {
           type: "outgoing";
-          id: number;
+          source: string;
           message: string;
           author: string;
           anon: boolean;

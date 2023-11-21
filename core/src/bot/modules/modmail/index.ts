@@ -108,11 +108,14 @@ export default (app: Argentium) =>
                         .description("reply to a modmail thread")
                         .stringOption("content", "the content of the reply")
                         .use(addReplyOptions)
-                        .fn(defer(false))
+                        .fn(async ({ _, ...data }) => {
+                            const reply = await _.deferReply();
+                            return { _, ...data, reply };
+                        })
                         .fn(getModmailContactInfo(false))
                         .fn(fetchCaller)
-                        .fn(async ({ _, caller, member, thread, anon, content, ...filemap }) => {
-                            return await handleReply(_, caller, member, !!anon, content ?? undefined, filemap);
+                        .fn(async ({ _, caller, member, thread, anon, content, reply, ...filemap }) => {
+                            return await handleReply(_, caller, member, !!anon, content ?? undefined, filemap, reply);
                         }),
                 )
                 .slash((x) =>
@@ -455,10 +458,10 @@ export default (app: Argentium) =>
                                 }));
                             }
 
-                            await response.deferUpdate();
+                            const reply = await response.deferUpdate();
 
                             try {
-                                await response.editReply(await handleReply(_, caller, member, !!anon, content, {}));
+                                await response.editReply(await handleReply(_, caller, member, !!anon, content, {}, reply));
                             } catch (error) {
                                 await response.editReply(template.error(`${error}`));
                             }

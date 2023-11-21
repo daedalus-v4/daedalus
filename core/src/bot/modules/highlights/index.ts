@@ -4,6 +4,7 @@ import { formatDuration, parseDuration } from "shared";
 import { db, getColor } from "shared/db.js";
 import { stem, textlike } from "../../../lib/utils.js";
 import { colors, template, timestamp, truncate } from "../../lib/format.js";
+import { check } from "../../lib/permissions.js";
 import { skip } from "../utils.js";
 
 export default (app: Argentium) =>
@@ -35,6 +36,7 @@ export default (app: Argentium) =>
                 const member = message.guild.members.cache.get(entry.user);
                 if (!member) continue;
                 if (member.id === message.author.id) continue;
+                if (await check(member, "highlight", message.channel)) continue;
 
                 const key = `${message.channel.id}/${member.id}`;
 
@@ -117,8 +119,8 @@ export default (app: Argentium) =>
                                     reply
                                         ? "replied message without ping"
                                         : reason!.found === reason!.phrase
-                                          ? `\`${reason!.phrase}\``
-                                          : `\`${reason!.phrase}\` = \`${reason!.found}\``
+                                        ? `\`${reason!.phrase}\``
+                                        : `\`${reason!.phrase}\` = \`${reason!.found}\``
                                 })`,
                                 color,
                                 fields: [
