@@ -16,7 +16,6 @@
                 <div class="grid grid-cols-[auto_1fr] items-center gap-2 mt-8">
                     <Icon icon="check" /> <span>All core functionality modules</span>
                     <Icon icon="check" /> <span>Modmail</span>
-                    <Icon icon="check" /> <span>Automoderation</span>
                     <Icon icon="check" /> <span>Advanced customization</span>
                 </div>
                 <Button class="mt-8" disabled>This tier is available by default!</Button>
@@ -28,13 +27,12 @@
                 <h5 class="h5 flex items-center gap-4 text-primary-600 dark:text-primary-400">$5/mo <b>&middot;</b> $50/yr</h5>
                 <div class="grid grid-cols-[auto_1fr] items-center gap-2 mt-8">
                     <Icon icon="check" /> <span>Everything from the free tier</span>
-                    <Icon icon="check" /> <span>Cosmetic modules</span>
                     <Icon icon="check" /> <span>Raised module limits</span>
                     <Icon icon="check" /> <span>Full customization</span>
                 </div>
-                <a href={$page.data.user ? "/account/premium" : "/auth/login?redirect=/account/premium"}
-                    ><Button variant="primary" class="mt-8">Subscribe Now!</Button></a
-                >
+                <a href={$page.data.user ? "/account/premium" : "/auth/login?redirect=/account/premium"}>
+                    <Button variant="primary" class="mt-8">Subscribe Now!</Button>
+                </a>
             </div>
         </Panel>
         <Panel class="border-2 border-secondary-500 dark:border-secondary-400 bg-secondary-600/10 dark:bg-secondary-300/10">
@@ -43,7 +41,6 @@
                 <h5 class="h5 flex items-center gap-4 text-secondary-500 dark:text-secondary-400">$10/mo <b>&middot;</b> $100/yr</h5>
                 <div class="grid grid-cols-[auto_1fr] items-center gap-2 mt-8">
                     <Icon icon="check" /> <span>Everything from the basic tier</span>
-                    <Icon icon="check" /> <span>Exclusive modules</span>
                     <Icon icon="check" /> <span>Custom bot profile</span>
                     <Icon icon="check" /> <span>Early access to new features</span>
                 </div>
