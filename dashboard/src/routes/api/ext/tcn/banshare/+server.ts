@@ -3,8 +3,6 @@ import crypto from "crypto";
 import { autoIncrement, db } from "shared/db.js";
 import type { RequestHandler } from "./$types.js";
 
-const key = crypto.createPrivateKey(TCN_HMAC_KEY);
-
 export const POST: RequestHandler = async ({ url }) => {
     const server = url.searchParams.get("g");
     const userid = url.searchParams.get("u");
@@ -18,7 +16,7 @@ export const POST: RequestHandler = async ({ url }) => {
     if (
         !crypto.timingSafeEqual(
             Buffer.from(hmac, "base64url"),
-            crypto.createHmac("sha256", key).update(`${server} ${userid} ${reason} ${origin} ${tcnbot}`).digest(),
+            crypto.createHmac("sha256", TCN_HMAC_KEY).update(`${server} ${userid} ${reason} ${origin} ${tcnbot}`).digest(),
         )
     )
         return new Response("", { status: 403 });
