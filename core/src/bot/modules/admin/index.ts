@@ -129,7 +129,8 @@ export default (app: Argentium) =>
                         const guilds = await Promise.all(_guilds.map((x) => x.fetch()));
                         const users = await Promise.all(guilds.map((x) => x.fetchOwner()));
 
-                        const seen = new Set<string>();
+                        const seen = new Set((await db.accountSettings.find({ suppressAdminBroadcasts: true }).toArray()).map((x) => x.user));
+
                         const targets = users.filter((x) => {
                             if (seen.has(x.id)) return false;
                             seen.add(x.id);

@@ -604,4 +604,5 @@ export type DBPoll = { question: string } & (
 export type DBAccountSettings = {
     notifyWhenOwnedServerPremiumStatusChanges: boolean;
     notifyWhenManagedServerPremiumStatusChanges: boolean;
+    suppressAdminBroadcasts: boolean;
 };

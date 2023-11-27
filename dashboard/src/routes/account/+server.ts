@@ -6,6 +6,7 @@ import type { RequestHandler } from "./$types.js";
 const schema = z.object({
     notifyWhenOwnedServerPremiumStatusChanges: z.boolean(),
     notifyWhenManagedServerPremiumStatusChanges: z.boolean(),
+    suppressAdminBroadcasts: z.boolean(),
 }) satisfies z.ZodType<DBAccountSettings>;
 
 export const POST: RequestHandler = async ({ locals: { user }, request }) => {

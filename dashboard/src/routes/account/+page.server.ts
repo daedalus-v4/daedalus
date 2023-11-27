@@ -10,6 +10,7 @@ export const load: PageServerLoad = async ({ locals: { user } }) => {
         data: defaults<DBAccountSettings>(await db.accountSettings.findOne({ user: user.id }), {
             notifyWhenOwnedServerPremiumStatusChanges: true,
             notifyWhenManagedServerPremiumStatusChanges: false,
+            suppressAdminBroadcasts: false,
         }),
     };
 };

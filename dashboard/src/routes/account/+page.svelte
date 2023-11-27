@@ -32,4 +32,11 @@
         <SlideToggle name="" size="sm" bind:checked={data.notifyWhenManagedServerPremiumStatusChanges} />
         <b>Notify when the premium status of a server you can manage changes</b>
     </div>
+    <div class="flex items-center gap-4">
+        <SlideToggle name="" size="sm" bind:checked={data.suppressAdminBroadcasts} />
+        <span>
+            <b>Suppress Admin Broadcasts</b> (we will extremely rarely DM you if you own a server running Daedalus, only in situations that require your immediate
+            attention)
+        </span>
+    </div>
 </Panel>
