@@ -1,7 +1,9 @@
 import Argentium from "argentium";
-import { BaseMessageOptions } from "discord.js";
+import { BaseMessageOptions, ComponentType, TextInputStyle } from "discord.js";
 import { db } from "shared/db.js";
 import { log } from "../../../lib/log.js";
+import { getAllClients } from "../../clients.js";
+import confirm from "../../lib/confirm.js";
 import { template } from "../../lib/format.js";
 import { defer } from "../../lib/hooks.js";
 
@@ -88,6 +90,83 @@ export default (app: Argentium) =>
                         if (formatted.length <= 2000) return { content: formatted };
                         else if (formatted.length <= 4096) return template.success(formatted);
                         else return { files: [{ name: "result.json", attachment: Buffer.from(output, "utf-8") }] };
+                    }),
+            )
+            .slash((x) =>
+                x
+                    .key("admin broadcast")
+                    .description("broadcast a message to all server owners through DMs")
+                    .fn(async ({ _ }) => {
+                        await _.showModal({
+                            title: "Broadcast",
+                            customId: "broadcast",
+                            components: [
+                                {
+                                    type: ComponentType.ActionRow,
+                                    components: [
+                                        {
+                                            type: ComponentType.TextInput,
+                                            style: TextInputStyle.Paragraph,
+                                            label: "Content",
+                                            customId: "content",
+                                            required: true,
+                                        },
+                                    ],
+                                },
+                            ],
+                        });
+
+                        const modal = await _.awaitModalSubmit({ time: 60 * 60 * 1000 }).catch(() => {});
+                        if (!modal) return;
+
+                        if (_.user.id !== Bun.env.OWNER && (await db.admins.countDocuments({ user: _.user.id })) === 0)
+                            return void (await modal.reply(template.error("You are no longer a Daedalus admin.")));
+
+                        await modal.deferReply({ ephemeral: true });
+
+                        const clients = getAllClients();
+                        const _guilds = (await Promise.all(clients.map(async (x) => (await x.guilds.fetch()).toJSON()))).flat();
+                        const guilds = await Promise.all(_guilds.map((x) => x.fetch()));
+                        const users = await Promise.all(guilds.map((x) => x.fetchOwner()));
+
+                        const seen = new Set<string>();
+                        const targets = users.filter((x) => {
+                            if (seen.has(x.id)) return false;
+                            seen.add(x.id);
+                            return true;
+                        });
+
+                        const response = await confirm(
+                            modal,
+                            {
+                                embeds: [
+                                    {
+                                        title: `Confirm broadcasting to ${targets.length} user${targets.length === 1 ? "" : "s"}?`,
+                                        description: "This operation will not be cancelable.",
+                                        color: 0x009688,
+                                    },
+                                ],
+                            },
+                            300000,
+                        );
+
+                        if (!response) return;
+
+                        if (_.user.id !== Bun.env.OWNER && (await db.admins.countDocuments({ user: _.user.id })) === 0)
+                            return void (await response.update(template.error("You are no longer a Daedalus admin.")));
+
+                        await response.deferUpdate();
+
+                        let failed = 0;
+                        for (const member of targets) {
+                            await member.send({}).catch(() => {
+                                failed++;
+                            });
+                        }
+
+                        await response.editReply(
+                            template.success(`Broadcasted to ${targets.length - failed} user${targets.length - failed === 1 ? "" : "s"} (failed: ${failed}).`),
+                        );
                     }),
             ),
     );
