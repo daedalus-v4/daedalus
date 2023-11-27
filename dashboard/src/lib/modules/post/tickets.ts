@@ -1,7 +1,7 @@
 import getClient from "$lib/get-client.js";
 import { invariant, lazy } from "$lib/utils.js";
 import { ButtonStyle, ComponentType, type BaseMessageOptions, type Message } from "discord.js";
-import { limits, type DbTicketsSettings } from "shared";
+import type { DbTicketsSettings } from "shared";
 import { autoIncrement, db, getPremiumBenefitsFor } from "shared/db.js";
 
 export default async function (settings: DbTicketsSettings, currentGuild: string): Promise<DbTicketsSettings> {
@@ -26,9 +26,7 @@ export default async function (settings: DbTicketsSettings, currentGuild: string
                 delete promptMap[prompt.id];
             }
 
-    const { multiTickets, increasedLimits } = await getPremiumBenefitsFor(guild.id);
-    const limit = limits.ticketPromptCount[increasedLimits];
-    const targetLimit = limits.ticketTargetCount[increasedLimits];
+    const { multiTickets, ticketPromptCountLimit: limit, ticketTargetCountLimit: targetLimit } = await getPremiumBenefitsFor(guild.id);
 
     for (let index = 0; index < settings.prompts.length; index++) {
         const prompt = settings.prompts[index];

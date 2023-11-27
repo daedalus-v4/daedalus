@@ -11,7 +11,8 @@ cycle(
 
         for await (const settings of db.redditFeedsSettings.find()) {
             try {
-                const guild = await (await getClient(settings.guild)).guilds.fetch(settings.guild);
+                const guild = await (await getClient(settings.guild)).guilds.fetch(settings.guild).catch(() => {});
+                if (!guild) continue;
                 if (!(await isModuleEnabled(guild.id, "reddit-feeds"))) continue;
 
                 for (const feed of settings.feeds) {

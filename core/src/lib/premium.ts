@@ -1,6 +1,5 @@
 import { APIGuild, Guild, OAuth2Guild } from "discord.js";
-import { premiumBenefits } from "shared";
-import { db } from "shared/db.js";
+import { db, getPremiumBenefitsFor } from "shared/db.js";
 import { clientCache, clientLoops, getClientFromToken } from "../bot/clients.js";
 import { log } from "./log.js";
 
@@ -16,7 +15,10 @@ export async function getTokens(ctx?: (string | GuildLike | { guild: GuildLike }
     const guilds = ctx.map((x) => (typeof x === "string" ? x : "guild" in x ? x.guild.id : x.id));
 
     const docs = Object.fromEntries((await db.guilds.find({ guild: { $in: guilds } }).toArray()).map((x) => [x.guild, x]));
-    return guilds.map((guild) => (!docs[guild]?.token || !premiumBenefits[docs[guild].tier].vanityClient ? Bun.env.TOKEN! : docs[guild].token!));
+
+    return await Promise.all(
+        guilds.map(async (guild) => (!docs[guild]?.token || !(await getPremiumBenefitsFor(guild)).vanityClient ? Bun.env.TOKEN! : docs[guild].token!)),
+    );
 }
 
 export async function getClient(ctx?: string | GuildLike | { guild: GuildLike }) {

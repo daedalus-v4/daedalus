@@ -6,10 +6,13 @@ import "./api";
 import { getClientFromToken } from "./bot/clients.js";
 import "./lib/global-tasks.js";
 import { log } from "./lib/log.js";
-import { getClient } from "./lib/premium.js";
+import { getTokens } from "./lib/premium.js";
 
 process.on("uncaughtException", (e) => log.fatal(e));
 
 await getClientFromToken(Bun.env.TOKEN!);
 
-for await (const { guild } of db.guildSettings.find()) await getClient(guild);
+const guilds = (await db.guildSettings.find().toArray()).map((x) => x.guild);
+const tokens = new Set(await getTokens(guilds));
+
+for (const token of tokens) await getClientFromToken(token).catch(() => {});

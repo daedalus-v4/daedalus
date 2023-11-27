@@ -28,15 +28,31 @@ export type ModuleData = Record<
     }
 >;
 
+export type LimitKey =
+    | "supporterAnnouncementsCount"
+    | "xpBonusChannelCount"
+    | "xpBonusRoleCount"
+    | "xpRewardCount"
+    | "reactionRolesCount"
+    | "purgeAtOnce"
+    | "automodCount"
+    | "autorolesCount"
+    | "statsChannelsCount"
+    | "autoresponderCount"
+    | "modmailTargetCount"
+    | "ticketPromptCount"
+    | "ticketTargetCount"
+    | "redditFeedsCount"
+    | "countCount";
+
 export type PremiumBenefits = {
     name: string;
     vanityClient: boolean;
-    increasedLimits: 0 | 1 | 2;
     customizeXpBackgrounds: boolean;
     multiModmail: boolean;
     multiTickets: boolean;
     customizeTicketOpenMessage: boolean;
-};
+} & Record<`${LimitKey}Limit`, number>;
 
 export type IField = { name: string; value: string; inline: boolean };
 
@@ -563,7 +579,7 @@ export type DbModmailThread = {
 
 export type DbTicketMessage = { time: number } & (
     | { type: "open" }
-    | { type: "message"; id: string; author: string; content: string; attachments: { name: string; url: string }[]; edits?: string[]; deleted?: boolean }
+    | { type: "message"; id: string | null; author: string; content: string; attachments: { name: string; url: string }[]; edits?: string[]; deleted?: boolean }
     | { type: "close"; author: string }
 );
 

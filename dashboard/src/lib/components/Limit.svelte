@@ -1,16 +1,16 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import { getLimit, limits } from "shared";
+    import { PremiumTier, premiumBenefits, type LimitKey } from "shared";
     import A from "./A.svelte";
     import Icon from "./Icon.svelte";
     import P from "./P.svelte";
 
     export let amount: number;
-    export let key: keyof typeof limits;
+    export let key: LimitKey;
 
-    const limit = getLimit(key, $page.data.premium.increasedLimits);
-    const basic = getLimit(key, 1);
-    const ultimate = getLimit(key, 2);
+    const limit: number = $page.data.premium[`${key}Limit`];
+    const basic = premiumBenefits[PremiumTier.BASIC][`${key}Limit`];
+    const ultimate = premiumBenefits[PremiumTier.ULTIMATE][`${key}Limit`];
 
     export let limited: boolean = amount >= limit;
     $: limited = amount >= limit;

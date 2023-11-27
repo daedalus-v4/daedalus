@@ -13,7 +13,7 @@ export default async function (cmd: ButtonInteraction, _row: string, _col: strin
     const doc = await db.reactionRolesSettings.findOne({ guild: cmd.guild!.id });
     if (!doc) return;
 
-    const entry = doc.entries.slice(0, await getLimitFor(cmd.guild!, "reactionRolesCount")).find((entry) => entry.message === cmd.message.id);
+    const entry = doc.entries.slice(0, await getLimitFor(cmd.guild!, "reactionRolesCountLimit")).find((entry) => entry.message === cmd.message.id);
 
     if (entry?.error)
         return template.error(`This reaction role prompt is out of sync due to an error with its last save. Server management can fix this on the dashboard.`);

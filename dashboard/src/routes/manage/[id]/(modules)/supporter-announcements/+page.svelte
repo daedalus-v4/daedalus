@@ -20,7 +20,7 @@
     let limited: boolean;
 </script>
 
-<ModuleSaver bind:base bind:data disabled={limited} />
+<ModuleSaver bind:base bind:data />
 
 {#each data.entries as entry, index}
     <Panel>

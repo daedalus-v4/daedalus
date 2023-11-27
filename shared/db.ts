@@ -33,10 +33,9 @@ import {
     DbWelcomeSettings,
     DbXpAmounts,
     DbXpSettings,
+    LimitKey,
     PremiumBenefits,
     commandMap,
-    getLimit,
-    limits,
     modules,
 } from ".";
 import { PremiumTier, premiumBenefits } from "./src/premium.js";
@@ -273,6 +272,10 @@ export class Database {
     public get accountSettings() {
         return _db.collection<DBAccountSettings & { user: string }>("account_settings");
     }
+
+    public get temporary() {
+        return _db.collection<any>("temporary_storage");
+    }
 }
 
 export const db = new Database();
@@ -303,13 +306,38 @@ export async function getColor(ctx?: string | APIGuild | Guild | { guild: APIGui
     return defaultColor;
 }
 
-export async function getLimitFor(guild: Guild | APIGuild, key: keyof typeof limits) {
-    return getLimit(key, (await getPremiumBenefitsFor(guild.id)).increasedLimits);
+export async function getLimitFor(guild: Guild | APIGuild, key: LimitKey) {
+    return (await getPremiumBenefitsFor(guild.id))[`${key}Limit`];
 }
 
 export async function getPremiumBenefitsFor(guild: string) {
-    return {
-        ...Object.assign(premiumBenefits[(await db.guilds.findOne({ guild }))?.tier ?? PremiumTier.FREE], (await db.premiumOverrides.findOne({ guild })) ?? {}),
-        _id: undefined,
-    };
+    const benefits = structuredClone(premiumBenefits[(await db.guilds.findOne({ guild }))?.tier ?? PremiumTier.FREE]);
+    const override = await db.premiumOverrides.findOne({ guild });
+    if (!override) return benefits;
+
+    for (const key of ["vanityClient", "customizeXpBackgrounds", "multiModmail", "multiTickets", "customizeTicketOpenMessage"] as const)
+        if (override[key] === true) benefits[key] = true;
+
+    for (const key of [
+        "supporterAnnouncementsCountLimit",
+        "xpBonusChannelCountLimit",
+        "xpBonusRoleCountLimit",
+        "xpRewardCountLimit",
+        "reactionRolesCountLimit",
+        "purgeAtOnceLimit",
+        "automodCountLimit",
+        "autorolesCountLimit",
+        "statsChannelsCountLimit",
+        "autoresponderCountLimit",
+        "modmailTargetCountLimit",
+        "ticketPromptCountLimit",
+        "ticketTargetCountLimit",
+        "redditFeedsCountLimit",
+        "countCountLimit",
+    ] as const) {
+        const value = override[key];
+        if (value !== undefined && value > benefits[key]) benefits[key] = value;
+    }
+
+    return benefits;
 }

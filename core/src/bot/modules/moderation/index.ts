@@ -1,7 +1,7 @@
 import Argentium from "argentium";
 import { SlashUtil } from "argentium/src/slash-util.js";
 import { ButtonStyle, ChannelType, ChatInputCommandInteraction, ComponentType, GuildMember, Message, TextInputStyle } from "discord.js";
-import { DbUserHistory, DurationStyle, formatDuration, limits, parseDuration } from "shared";
+import { DbUserHistory, DurationStyle, PremiumTier, formatDuration, parseDuration, premiumBenefits } from "shared";
 import { autoIncrement, db, getColor, getLimitFor, isCommandEnabled, isModuleEnabled } from "shared/db.js";
 import { textlike } from "../../../lib/utils.js";
 import { isStopped, stopButton } from "../../interactions/stop.js";
@@ -876,14 +876,20 @@ export default (app: Argentium) =>
                 x
                     .key("purge last")
                     .description("purge messages that pass an (optional) filter of the last N messages")
-                    .numberOption("count", "the number of messages to search", { minimum: 1, maximum: limits.purgeAtOnce[1], required: true })
+                    .numberOption("count", "the number of messages to search", {
+                        minimum: 1,
+                        maximum: premiumBenefits[PremiumTier.ULTIMATE].purgeAtOnceLimit,
+                        required: true,
+                    })
                     .use(addPurgeFilters)
                     .fn(defer(true))
                     .fn(async ({ _, count, ...rest }) => {
                         const limit = await getLimitFor(_.guild!, "purgeAtOnce");
 
                         if (count > limit)
-                            throw `You can only scan ${limit} messages at once. Upgrade to [premium](${Bun.env.DOMAIN}/premium) to unlock up to ${limits.purgeAtOnce[1]}.`;
+                            throw `You can only scan ${limit} messages at once. Upgrade to [premium](${Bun.env.DOMAIN}/premium) to unlock up to ${
+                                premiumBenefits[PremiumTier.ULTIMATE].purgeAtOnceLimit
+                            }.`;
 
                         const messages: Message[] = [];
 
@@ -942,9 +948,11 @@ export default (app: Argentium) =>
                         while (go) {
                             if (messages.length >= limit)
                                 throw `You can only scan ${limit} messages at once.${
-                                    limit === limits.purgeAtOnce[1]
+                                    limit === premiumBenefits[PremiumTier.ULTIMATE].purgeAtOnceLimit
                                         ? ""
-                                        : ` Upgrade to [premium](${Bun.env.DOMAIN}/premium) to unlock up to ${limits.purgeAtOnce[1]}.`
+                                        : ` Upgrade to [premium](${Bun.env.DOMAIN}/premium) to unlock up to ${
+                                              premiumBenefits[PremiumTier.ULTIMATE].purgeAtOnceLimit
+                                          }.`
                                 }`;
 
                             const block = await _.channel!.messages.fetch({ limit: 100, before: messages[messages.length - 1]?.id ?? end });

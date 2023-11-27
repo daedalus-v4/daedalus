@@ -35,7 +35,7 @@ function parseCustomMessageComponent(chars: CharArray, depth: number = 0): Custo
     if (chars.empty()) throw "Parsing error: unclosed {";
 
     let fname = "";
-    while (!chars.empty() && /[^\s}]/.test(chars.peek())) fname += chars.pop();
+    while (!chars.empty() && /[^\s{}]/.test(chars.peek())) fname += chars.pop();
 
     const fn = flatFMap[fname];
     if (!fn) throw `Unrecognized function: ${fname}.`;

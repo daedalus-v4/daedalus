@@ -119,8 +119,8 @@ export default (app: Argentium) =>
                                     reply
                                         ? "replied message without ping"
                                         : reason!.found === reason!.phrase
-                                        ? `\`${reason!.phrase}\``
-                                        : `\`${reason!.phrase}\` = \`${reason!.found}\``
+                                          ? `\`${reason!.phrase}\``
+                                          : `\`${reason!.phrase}\` = \`${reason!.found}\``
                                 })`,
                                 color,
                                 fields: [

@@ -14,7 +14,8 @@ cycle(
         for await (const entry of db.statsChannelsSettings.find()) {
             try {
                 const client = await getClient(entry.guild);
-                const guild = await client.guilds.fetch(entry.guild);
+                const guild = await client.guilds.fetch(entry.guild).catch(() => {});
+                if (!guild) continue;
 
                 if (await skip(guild, "stats-channels")) continue;
 

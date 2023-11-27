@@ -51,7 +51,7 @@ export default (app: Argentium) =>
             const doc = await db.tickets.findOne({ channel: messages.first()!.channel.id });
             if (!doc) return;
 
-            doc.messages.forEach((message, index) => message.type === "message" && messages.has(message.id) && indexes.push(index));
+            doc.messages.forEach((message, index) => message.type === "message" && message.id && messages.has(message.id) && indexes.push(index));
 
             await db.tickets.updateOne(
                 { channel: messages.first()!.channel.id },

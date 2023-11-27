@@ -1,5 +1,4 @@
 import { ButtonInteraction, ButtonStyle, ChannelType, ComponentType, OverwriteType, PermissionFlagsBits, StringSelectMenuInteraction } from "discord.js";
-import { limits } from "shared";
 import { db, getColor, getLimitFor, getPremiumBenefitsFor, isModuleEnabled } from "shared/db.js";
 import { formatMessage } from "shared/format-custom-message.js";
 import { isAssignedClient } from "../../lib/premium.js";
@@ -22,7 +21,7 @@ export default async function (cmd: ButtonInteraction | StringSelectMenuInteract
 
     if (!prompt) return;
 
-    const { multiTickets, increasedLimits, customizeTicketOpenMessage } = await getPremiumBenefitsFor(cmd.guild!.id);
+    const { multiTickets, ticketTargetCountLimit, customizeTicketOpenMessage } = await getPremiumBenefitsFor(cmd.guild!.id);
 
     if (cmd.isStringSelectMenu()) {
         if (!multiTickets) throw "This is a premium-only feature, but this server no longer has Daedalus premium.";
@@ -31,7 +30,7 @@ export default async function (cmd: ButtonInteraction | StringSelectMenuInteract
 
     const target = prompt.targets
         .filter((x) => !!x.logChannel && !!x.category)
-        .slice(0, limits.ticketTargetCount[increasedLimits])
+        .slice(0, ticketTargetCountLimit)
         .find((x) => `${x.id}` === id);
 
     if (!target) throw "Could not find the referenced ticket target. Please contact Daedalus support (not server staff) if this issue persists.";

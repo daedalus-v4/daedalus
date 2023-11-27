@@ -116,9 +116,9 @@ export async function selectGuild(message: Message, reply: Message): Promise<[Gu
     const openContacts = new Set((await db.modmailThreads.find({ user: message.author.id, closed: false }).toArray()).map((entry) => entry.guild));
 
     const unfiltered = await Promise.all(
-        (
-            await db.modulesPermissionsSettings.find({ "modules.modmail.enabled": true }).toArray()
-        ).map(async (x) => await message.client.guilds.fetch(x.guild).catch(() => {})),
+        (await db.modulesPermissionsSettings.find({ "modules.modmail.enabled": true }).toArray()).map(
+            async (x) => await message.client.guilds.fetch(x.guild).catch(() => {}),
+        ),
     );
 
     const filtered: Guild[] = [];
