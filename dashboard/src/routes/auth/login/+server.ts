@@ -5,7 +5,7 @@ import type { RequestHandler } from "./$types.js";
 const DISCORD_ENDPOINT = (path: string, state: string) =>
     `${DISCORD_API}/oauth2/authorize?${new URLSearchParams({
         client_id: PUBLIC_DISCORD_ID,
-        redirect_url: DISCORD_CALLBACK,
+        redirect_uri: DISCORD_CALLBACK,
         response_type: "code",
         scope: "identify guilds",
         state: state + path,
