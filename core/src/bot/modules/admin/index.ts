@@ -1,5 +1,5 @@
 import Argentium from "argentium";
-import { BaseMessageOptions, ComponentType, TextInputStyle } from "discord.js";
+import { BaseMessageOptions, ButtonStyle, ComponentType, TextInputStyle } from "discord.js";
 import { db } from "shared/db.js";
 import { log } from "../../../lib/log.js";
 import { getAllClients } from "../../clients.js";
@@ -158,11 +158,36 @@ export default (app: Argentium) =>
                         await response.deferUpdate();
 
                         let failed = 0;
-                        for (const member of targets) {
-                            await member.send({}).catch(() => {
-                                failed++;
-                            });
-                        }
+                        for (const member of targets)
+                            await member
+                                .send({
+                                    embeds: [
+                                        {
+                                            title: "Broadcast from Daedalus Administration",
+                                            description: modal.fields.getTextInputValue("content"),
+                                            color: 0x009688,
+                                            footer: {
+                                                text: "This message was sent to you because you own a server that is using Daedalus. We only send these messages for crucial information that requires your immediate attention. We sincerely apologize for this disruption. If you would like to never receive these messages again, please click the button below to go to your account management page and suppress admin broadcasts.",
+                                            },
+                                        },
+                                    ],
+                                    components: [
+                                        {
+                                            type: ComponentType.ActionRow,
+                                            components: [
+                                                {
+                                                    type: ComponentType.Button,
+                                                    style: ButtonStyle.Link,
+                                                    url: `${Bun.env.DOMAIN}/account`,
+                                                    label: "Account Settings",
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                })
+                                .catch(() => {
+                                    failed++;
+                                });
 
                         await response.editReply(
                             template.success(`Broadcasted to ${targets.length - failed} user${targets.length - failed === 1 ? "" : "s"} (failed: ${failed}).`),
