@@ -1,4 +1,4 @@
-import { Awaitable, Guild, MessageCreateOptions, OAuth2Guild, TextBasedChannel } from "discord.js";
+import { Awaitable, Guild, Message, MessageCreateOptions, OAuth2Guild, TextBasedChannel } from "discord.js";
 import { CustomMessageContext, MessageData } from "shared";
 import { isModuleEnabled } from "shared/db.js";
 import { formatMessage } from "shared/format-custom-message.js";
@@ -35,15 +35,23 @@ export async function getTextChannel(guild: Guild, id: string, moduleTitle: stri
 }
 
 export async function sendCustomMessage(
-    channel: TextBasedChannel,
+    location: TextBasedChannel | Message,
     data: MessageData,
     moduleTitle: string,
     errorMessage: string,
     context?: CustomMessageContext,
     allowPings?: boolean,
+    pingInReply?: boolean,
 ) {
+    const channel = location instanceof Message ? location.channel : location;
+
     try {
-        return await channel.send(await formatMessage(data.parsed, context ?? {}, allowPings));
+        const message = await formatMessage(data.parsed, context ?? {}, allowPings);
+
+        if (location instanceof Message) {
+            if (pingInReply) (message.allowedMentions ??= {}).repliedUser = true;
+            await location.reply(message);
+        } else await channel.send(message);
     } catch (error) {
         !channel.isDMBased() &&
             invokeLog("botError", channel, () =>

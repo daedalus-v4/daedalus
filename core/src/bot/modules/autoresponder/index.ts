@@ -77,11 +77,19 @@ export default (app: Argentium) =>
                 if (!roleAllowedByDefault) continue;
             }
 
-            await sendCustomMessage(message.channel, trigger.message, "Autoresponder", `Error responding to ${message.url}.`, {
-                guild: message.guild,
-                user: message.author,
-                member: message.member,
-            });
+            await sendCustomMessage(
+                trigger.replyMode === "normal" ? message.channel : message,
+                trigger.message,
+                "Autoresponder",
+                `Error responding to ${message.url}.`,
+                {
+                    guild: message.guild,
+                    user: message.author,
+                    member: message.member,
+                },
+                false,
+                trigger.replyMode === "ping-reply",
+            );
 
             if (trigger.reaction) await message.react(trigger.reaction).catch(() => {});
         }
