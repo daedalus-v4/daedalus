@@ -130,7 +130,7 @@ export default (app: Argentium) =>
 
             const indexes: number[] = [];
 
-            thread.messages.forEach((message, index) => message.type === "internal" && messages.has(message.id) && indexes.push(index));
+            thread.messages.forEach((message, index) => message.type === "internal" && message.id && messages.has(message.id) && indexes.push(index));
 
             if (indexes.length > 0)
                 await db.modmailThreads.updateOne(

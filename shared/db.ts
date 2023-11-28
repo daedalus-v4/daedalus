@@ -311,7 +311,7 @@ export async function getLimitFor(guild: Guild | APIGuild, key: LimitKey) {
 }
 
 export async function getPremiumBenefitsFor(guild: string) {
-    const benefits = structuredClone(premiumBenefits[(await db.guilds.findOne({ guild }))?.tier ?? PremiumTier.FREE]);
+    const benefits = JSON.parse(JSON.stringify(premiumBenefits[(await db.guilds.findOne({ guild }))?.tier ?? PremiumTier.FREE]));
     const override = await db.premiumOverrides.findOne({ guild });
     if (!override) return benefits;
 
@@ -326,7 +326,6 @@ export async function getPremiumBenefitsFor(guild: string) {
         "reactionRolesCountLimit",
         "purgeAtOnceLimit",
         "automodCountLimit",
-        "autorolesCountLimit",
         "statsChannelsCountLimit",
         "autoresponderCountLimit",
         "modmailTargetCountLimit",

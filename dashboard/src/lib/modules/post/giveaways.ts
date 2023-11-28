@@ -61,12 +61,13 @@ export default async function (settings: DbGiveawaysSettings, currentGuild: stri
                         message = await channel.messages.fetch({ message: giveawayMap[giveaway.id].messageId!, force: true });
                         edit = true;
                     } catch {
-                        message = await channel.send(data()).catch((error) => {
-                            throw `Could neither fetch the message in #${channel.name} to edit nor send a new one: ${error}`;
-                        });
+                        if (giveaway.deadline > Date.now())
+                            message = await channel.send(data()).catch((error) => {
+                                throw `Could neither fetch the message in #${channel.name} to edit nor send a new one: ${error}`;
+                            });
                     }
 
-                    if (edit && shouldPost()) await message.edit(data());
+                    if (edit && message && shouldPost()) await message.edit(data());
                 } else {
                     try {
                         const channel = await guild.channels.fetch(giveawayMap[giveaway.id].channel!);
@@ -80,7 +81,7 @@ export default async function (settings: DbGiveawaysSettings, currentGuild: stri
                 }
             }
 
-            if (!message) {
+            if (!message && giveaway.deadline > Date.now()) {
                 const channel = await guild.channels.fetch(giveaway.channel!).catch(() => {});
                 if (!channel?.isTextBased()) throw "Could not fetch channel.";
 
@@ -89,12 +90,13 @@ export default async function (settings: DbGiveawaysSettings, currentGuild: stri
                 });
             }
 
-            giveaway.messageId = message.id;
+            giveaway.messageId = message?.id ?? null;
             giveaway.error = null;
         } catch (error) {
             giveaway.error = `${error}`;
         } finally {
             if (giveaway.deadline > Date.now()) giveaway.closed = false;
+            else if (giveaway.id in giveawayMap) giveaway.closed = giveawayMap[giveaway.id].closed;
 
             if (giveaway.id in giveawayMap) giveawayMap[giveaway.id] = giveaway;
             else giveawayMap[(giveaway.id = await autoIncrement(`giveaways/${currentGuild}`))] = giveaway;

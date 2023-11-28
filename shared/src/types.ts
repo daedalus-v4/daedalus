@@ -36,7 +36,6 @@ export type LimitKey =
     | "reactionRolesCount"
     | "purgeAtOnce"
     | "automodCount"
-    | "autorolesCount"
     | "statsChannelsCount"
     | "autoresponderCount"
     | "modmailTargetCount"
@@ -552,7 +551,7 @@ export type DbUserHistory = {
 export type DBModmailMessage = { time: number } & (
     | { type: "open"; author: string; targetName: string | null }
     | { type: "incoming"; content: string; attachments: { name: string; url: string }[] }
-    | { type: "internal"; id: string; author: string; content: string; attachments: { name: string; url: string }[]; edits?: string[]; deleted: boolean }
+    | { type: "internal"; id: string | null; author: string; content: string; attachments: { name: string; url: string }[]; edits?: string[]; deleted: boolean }
     | {
           type: "outgoing";
           source: number;

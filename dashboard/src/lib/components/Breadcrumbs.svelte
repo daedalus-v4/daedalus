@@ -10,6 +10,6 @@
         {#if index !== 0}
             <li class="crumb-separator"><Icon icon="angle-right" /></li>
         {/if}
-        <li class="crumb"><A {to} class={index === links.length - 1 ? "font-bold" : ""}>{label}</A></li>
+        <li class="crumb"><A {to} class={index === links.length - 1 ? "font-bold" : ""}>{@html label}</A></li>
     {/each}
 </ol>

@@ -164,9 +164,8 @@ function collapse<T>(data: Record<string, T>) {
     return Object.entries(data).map(([guild, entry]) => ({ guild, ...entry }));
 }
 
-// TODO: re-enable this
-// console.log("THIS WILL WIPE THE DATABASE. CTRL-C IN THE NEXT 5 SECONDS TO STOP IT.");
-// await new Promise((r) => setTimeout(r, 5000));
+console.log("THIS WILL WIPE THE DATABASE. CTRL-C IN THE NEXT 5 SECONDS TO STOP IT.");
+await new Promise((r) => setTimeout(r, 5000));
 
 await connect(Bun.env.DB_URI!, Bun.env.DB_NAME!);
 
@@ -256,6 +255,16 @@ await section("premium", async () => {
         "xpRewardCount",
     );
 
+    const hasXpBackground = xp.filter((x) => x.rankcard || x.levelup).map((x) => x.guild);
+
+    if (hasXpBackground.length > 0)
+        await db.premiumOverrides.updateMany({ guild: { $in: hasXpBackground } }, { $set: { customizeXpBackgrounds: true } }, { upsert: true });
+
+    const hasTicketMessage = [...new Set((await src.tickets.find({ custom_open: true }).toArray()).map((x) => x.guild))];
+
+    if (hasTicketMessage.length > 0)
+        await db.premiumOverrides.updateMany({ guild: { $in: hasTicketMessage } }, { $set: { customizeTicketOpenMessage: true } }, { upsert: true });
+
     await groupAndCoerce("reaction_roles", "reactionRolesCount");
     await groupAndCoerce("automod_rules", "automodCount");
     // no need to coerce autoroles; it doesn't exist yet
@@ -287,7 +296,6 @@ await section("premium", async () => {
             reactionRolesCountLimit: z.optional(z.number()),
             purgeAtOnceLimit: z.optional(z.number()),
             automodCountLimit: z.optional(z.number()),
-            autorolesCountLimit: z.optional(z.number()),
             statsChannelsCountLimit: z.optional(z.number()),
             autoresponderCountLimit: z.optional(z.number()),
             modmailTargetCountLimit: z.optional(z.number()),
@@ -777,6 +785,7 @@ await section("modmail", async () => {
                               : x.type === "internal"
                                 ? {
                                       type: "internal",
+                                      id: null,
                                       author: x.author,
                                       content: x.content ?? "",
                                       attachments: x.files.map((s: string) => ({ name: s.split("/").at(-1)!, url: s })),
@@ -825,6 +834,7 @@ await section("modmail", async () => {
                         z.object({ type: z.literal("incoming"), content: z.string(), attachments: z.array(z.object({ name: z.string(), url: z.string() })) }),
                         z.object({
                             type: z.literal("internal"),
+                            id: snowflake,
                             author: snowflake,
                             content: z.string(),
                             attachments: z.array(z.object({ name: z.string(), url: z.string() })),

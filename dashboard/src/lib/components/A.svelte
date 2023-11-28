@@ -6,4 +6,4 @@
     export { className as class };
 </script>
 
-<a href={to} target={external ? "_blank" : null} class="{className} no-underline text-secondary-500 dark:text-secondary-400" on:click><slot /></a>
+<a href={to} target={external ? "_blank" : null} class="{className} no-underline text-secondary-400 dark:text-secondary-400" on:click><slot /></a>

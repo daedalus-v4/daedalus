@@ -24,6 +24,14 @@
     {/if}
 </Header>
 
+<div class="bg-surface-50 dark:bg-surface-900 py-4">
+    <Container class="flex gap-2" style="margin-top: 0; margin-bottom: 0">
+        <span>Check out the <A to="/docs/guides/v3-v4-migration">v3 &rightarrow; v4 Migration Guide</A>!</span>
+        &mdash;
+        <span><A to="/premium/why">Why we're introducing Premium</A></span>
+    </Container>
+</div>
+
 <Container main>
     <h2 class="h2 pt-8">Welcome to the <span class="text-primary-500 dark:text-primary-400">future of server management</span></h2>
     <P>
