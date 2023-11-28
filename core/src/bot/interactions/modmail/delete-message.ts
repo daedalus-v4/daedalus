@@ -72,6 +72,8 @@ export default async function (button: ButtonInteraction, _source: string) {
         files: [],
     });
 
+    await button.message.edit({ components: [] }).catch(() => {});
+
     await db.modmailThreads.updateOne({ channel: button.channel!.id }, { $set: { [`messages.${index}.deleted`]: true } });
     await response.editReply({ embeds: [{ title: "Outgoing Message Deleted", color: colors.statuses.success }], components: [] });
 }
