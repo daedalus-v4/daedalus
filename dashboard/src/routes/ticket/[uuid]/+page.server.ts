@@ -36,7 +36,7 @@ export const load: PageServerLoad = async ({ fetch, locals: { user }, params: { 
 
     return {
         ticket: { ...ticket, _id: undefined },
-        guildName: (await (await getClient(ticket.guild).catch(() => null))?.guilds.fetch(ticket.guild))?.name,
+        guildName: (await (await (await getClient(ticket.guild).catch(() => {}))?.guilds.fetch(ticket.guild).catch(() => {}))?.fetch().catch(() => {}))?.name,
         tags,
         streamed: { tags: (async () => (needed.length === 0 ? {} : await (await fetch(`${API}/tags/${needed.join(":")}`)).json()))() },
     };
