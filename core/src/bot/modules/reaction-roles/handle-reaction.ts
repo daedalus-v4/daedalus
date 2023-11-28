@@ -1,5 +1,6 @@
 import { MessageReaction, PartialMessageReaction, PartialUser, User } from "discord.js";
 import { db } from "shared/db.js";
+import { parseMessageURL, parseMessageURLOrNull } from "../../lib/parsing.js";
 
 export default async function (reaction: MessageReaction | PartialMessageReaction, user: User | PartialUser, added: boolean) {
     if (!reaction.message.guild || user.bot) return;
@@ -7,9 +8,13 @@ export default async function (reaction: MessageReaction | PartialMessageReactio
     const doc = await db.reactionRolesSettings.findOne({ guild: reaction.message.guild.id });
     if (!doc) return;
 
-    const entry = doc.entries.find((x) => x.message === reaction.message.id);
-    if (entry?.error) return;
-    if (entry?.style !== "reactions") return;
+    const entry = doc.entries.find((x) =>
+        x.addReactionsToExistingMessage
+            ? JSON.stringify(parseMessageURLOrNull(x.url)) === JSON.stringify(parseMessageURL(reaction.message.url))
+            : x.style === "reactions" && x.message === reaction.message.id,
+    );
+
+    if (!entry || entry.error) return;
 
     const roles = entry.reactionData.map((x) => x.role!);
     const add = entry.reactionData.find((x) => x.emoji === (reaction.emoji.id ?? reaction.emoji.toString()))?.role;
