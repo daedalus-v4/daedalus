@@ -781,11 +781,12 @@ await section("modmail", async () => {
                                       content: x.content ?? "",
                                       attachments: x.files.map((s: string) => ({ name: s.split("/").at(-1)!, url: s })),
                                       time: x.time.getTime(),
+                                      deleted: false,
                                   }
                                 : x.type === "outgoing"
                                   ? {
                                         type: "outgoing",
-                                        source: "",
+                                        source: -1,
                                         message: "",
                                         author: x.author,
                                         anon: !!x.anon,
@@ -827,6 +828,8 @@ await section("modmail", async () => {
                             author: snowflake,
                             content: z.string(),
                             attachments: z.array(z.object({ name: z.string(), url: z.string() })),
+                            edits: z.optional(z.array(z.string())),
+                            deleted: z.boolean(),
                         }),
                         z.object({
                             type: z.literal("outgoing"),

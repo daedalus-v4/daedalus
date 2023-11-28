@@ -100,6 +100,44 @@ export default (app: Argentium) =>
 
             await resolve(message, guild, reply, files);
         })
+        .on(Events.MessageUpdate, async (before, after) => {
+            if (before.content === after.content) return;
+            if (!after.guild) return;
+            if (await skip(after.guild, "modmail")) return;
+
+            const thread = await db.modmailThreads.findOne({ channel: after.channel.id });
+            if (!thread) return;
+
+            const index = thread.messages.findIndex((x) => x.type === "internal" && x.id === after.id);
+            if (index === -1) return;
+
+            await db.modmailThreads.updateOne({ channel: after.channel.id }, { $push: { [`messages.${index}.edits`]: after.content } });
+        })
+        .on(Events.MessageDelete, async (message) => {
+            const thread = await db.modmailThreads.findOne({ channel: message.channel.id });
+            if (!thread) return;
+
+            const index = thread.messages.findIndex((x) => x.type === "internal" && x.id === message.id);
+            if (index === -1) return;
+
+            await db.modmailThreads.updateOne({ channel: message.channel.id }, { $set: { [`messages.${index}.deleted`]: true } });
+        })
+        .on(Events.MessageBulkDelete, async (messages) => {
+            if (messages.size === 0) return;
+
+            const thread = await db.modmailThreads.findOne({ channel: messages.first()!.channel.id });
+            if (!thread) return;
+
+            const indexes: number[] = [];
+
+            thread.messages.forEach((message, index) => message.type === "internal" && messages.has(message.id) && indexes.push(index));
+
+            if (indexes.length > 0)
+                await db.modmailThreads.updateOne(
+                    { channel: messages.first()!.channel.id },
+                    { $set: Object.fromEntries(indexes.map((index) => [`messages.${index}.deleted`, true])) },
+                );
+        })
         .commands((x) =>
             x
                 .slash((x) =>
@@ -115,7 +153,7 @@ export default (app: Argentium) =>
                         .fn(getModmailContactInfo(false))
                         .fn(fetchCaller)
                         .fn(async ({ _, caller, member, thread, anon, content, reply, ...filemap }) => {
-                            return await handleReply(_, caller, member, !!anon, content ?? undefined, filemap, reply);
+                            return await handleReply(_, caller, member, !!anon, content ?? undefined, filemap);
                         }),
                 )
                 .slash((x) =>
@@ -461,7 +499,7 @@ export default (app: Argentium) =>
                             const reply = await response.deferUpdate();
 
                             try {
-                                await response.editReply(await handleReply(_, caller, member, !!anon, content, {}, reply));
+                                await response.editReply(await handleReply(_, caller, member, !!anon, content, {}));
                             } catch (error) {
                                 await response.editReply(template.error(`${error}`));
                             }

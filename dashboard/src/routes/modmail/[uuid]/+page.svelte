@@ -58,12 +58,12 @@
                     {types[message.type]}
                     {tags[user] ?? "Loading User..."}
                     <span class="text-surface-600 dark:text-surface-400">({user}) &mdash; {new Date(message.time).toLocaleString()}</span>
-                    {#if message.type === "outgoing" && message.deleted}
+                    {#if (message.type === "outgoing" || message.type === "internal") && message.deleted}
                         <span class="text-error-400 dark:text-error-400">&mdash; deleted</span>
                     {/if}
                 </h4>
                 {#if message.type === "incoming" || message.type === "outgoing" || message.type === "internal"}
-                    {@const items = [message.content, ...(message.type === "outgoing" ? message.edits ?? [] : [])]}
+                    {@const items = [message.content, ...(message.type === "outgoing" || message.type === "internal" ? message.edits ?? [] : [])]}
                     {@const content = items[indexes[index] ?? items.length - 1]}
 
                     {#each content

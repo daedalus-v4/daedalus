@@ -52,10 +52,12 @@ export async function maybeLogInternalMessage(message: Message) {
             $push: {
                 messages: {
                     type: "internal",
+                    id: message.id,
                     author: message.author.id,
                     content: message.content,
                     attachments: message.attachments.map((x) => ({ name: x.name, url: x.url })),
                     time: Date.now(),
+                    deleted: false,
                 },
             },
         },

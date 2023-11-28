@@ -46,17 +46,18 @@ export default (app: Argentium) =>
         .on(Events.MessageBulkDelete, async (messages) => {
             if (messages.size === 0 || (await isNotTicketMessage(messages.first()!))) return;
 
-            const indexes: number[] = [];
-
             const doc = await db.tickets.findOne({ channel: messages.first()!.channel.id });
             if (!doc) return;
 
+            const indexes: number[] = [];
+
             doc.messages.forEach((message, index) => message.type === "message" && message.id && messages.has(message.id) && indexes.push(index));
 
-            await db.tickets.updateOne(
-                { channel: messages.first()!.channel.id },
-                { $set: Object.fromEntries(indexes.map((index) => [`messages.${index}.deleted`, true])) },
-            );
+            if (indexes.length > 0)
+                await db.tickets.updateOne(
+                    { channel: messages.first()!.channel.id },
+                    { $set: Object.fromEntries(indexes.map((index) => [`messages.${index}.deleted`, true])) },
+                );
         })
         .commands((x) =>
             x.slash((x) =>
