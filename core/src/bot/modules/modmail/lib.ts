@@ -450,7 +450,7 @@ export async function resolve(message: Message, guild: Guild, reply: Message, fi
         }
     }
 
-    if (creating) {
+    if (creating || entry?.closed) {
         let uuid: string;
 
         do {
