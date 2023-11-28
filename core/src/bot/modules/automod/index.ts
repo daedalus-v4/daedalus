@@ -1,5 +1,5 @@
 import Argentium from "argentium";
-import { Events, Message, PartialMessage, PermissionFlagsBits } from "discord.js";
+import { Events, Message, PartialMessage } from "discord.js";
 import { formatDuration } from "shared";
 import { autoIncrement, db, getLimitFor } from "shared/db.js";
 import { englishList, expand } from "../../lib/format.js";
@@ -129,7 +129,7 @@ async function scan(message: Message | PartialMessage) {
                         color: embedColor ?? 0x009688,
                         footer: { text: willDelete ? "Your message was deleted." : "" },
                     },
-                    ...(banFooter ? [{ description: banFooter, color: embedColor }] : []),
+                    ...(actions.includes("ban") && banFooter ? [{ description: banFooter, color: embedColor }] : []),
                 ],
             });
 
