@@ -555,7 +555,7 @@ export type DBModmailMessage = { time: number } & (
     | { type: "internal"; author: string; content: string; attachments: { name: string; url: string }[] }
     | {
           type: "outgoing";
-          source: string;
+          source: number;
           message: string;
           author: string;
           anon: boolean;

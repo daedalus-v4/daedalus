@@ -3,10 +3,12 @@ import { db } from "shared/db.js";
 import { colors } from "../../lib/format.js";
 import { getModmailContactInfo } from "../../modules/modmail/lib.js";
 
-export default async function (modal: ModalSubmitInteraction, source: string) {
+export default async function (modal: ModalSubmitInteraction, _source: string) {
     const { member, thread } = await getModmailContactInfo(false)({ _: modal });
 
     await modal.deferReply();
+
+    const source = parseInt(_source);
 
     const index = thread.messages.findIndex((x) => x.type === "outgoing" && x.source === source);
     if (index === -1) throw "This message could not be found in this modmail thread as an outgoing message.";

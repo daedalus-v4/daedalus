@@ -3,8 +3,13 @@ import { db } from "shared/db.js";
 import { colors, template } from "../../lib/format.js";
 import { getModmailContactInfo } from "../../modules/modmail/lib.js";
 
-export default async function (button: ButtonInteraction) {
+export default async function (button: ButtonInteraction, _source: string) {
     const { member, thread } = await getModmailContactInfo(false)({ _: button });
+
+    const source = parseInt(_source);
+
+    const index = thread.messages.findIndex((x) => x.type === "outgoing" && x.source === source);
+    if (index === -1) throw "This message could not be found in this modmail thread as an outgoing message.";
 
     const reply = await button.reply({
         components: [
@@ -44,10 +49,6 @@ export default async function (button: ButtonInteraction) {
         }));
 
     await response.deferUpdate();
-
-    const index = thread.messages.findIndex((x) => x.type === "outgoing" && x.source === button.message.id);
-
-    if (index === -1) return void (await response.editReply(template.error("This message could not be found in this modmail thread as an outgoing message.")));
 
     const data = thread.messages[index];
     if (data.type !== "outgoing") throw "?";

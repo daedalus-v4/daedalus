@@ -63,13 +63,6 @@ export default new Argentium()
             fn = require(`./interactions/${path}.js`).default;
         } catch (error) {
             log.error(error, "b9358a18-36ff-4006-ae64-1a0c6232371e");
-
-            await interaction.reply(
-                template.error(
-                    `This interaction is not yet implemented. This is our fault; please contact support. (interaction ID: \`${interaction.customId}\`)`,
-                ),
-            );
-
             return;
         }
 

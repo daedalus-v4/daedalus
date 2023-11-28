@@ -12,7 +12,6 @@ import {
     GuildMember,
     GuildTextBasedChannel,
     InteractionReplyOptions,
-    InteractionResponse,
     Message,
     ModalSubmitInteraction,
     TextBasedChannel,
@@ -23,7 +22,7 @@ import {
 } from "discord.js";
 import { WithId } from "mongodb";
 import { DbModmailSettings, DbModmailThread } from "shared";
-import { db, getColor, getLimitFor, getPremiumBenefitsFor } from "shared/db.js";
+import { autoIncrement, db, getColor, getLimitFor, getPremiumBenefitsFor } from "shared/db.js";
 import { formatCustomMessageString } from "shared/format-custom-message.js";
 import { colors, embed, expand, mdash, template } from "../../lib/format.js";
 import { invokeLog } from "../../lib/logging.js";
@@ -581,7 +580,6 @@ export async function handleReply(
     anon: boolean,
     content: string | undefined,
     filemap: Record<string, Attachment | null>,
-    reply: InteractionResponse,
 ): Promise<InteractionReplyOptions> {
     const files = Object.values(filemap)
         .filter((x) => x)
@@ -607,13 +605,15 @@ export async function handleReply(
 
     await db.tasks.deleteOne({ action: "modmail/close", channel: _.channel!.id });
 
+    const source = await autoIncrement("modmail-messages");
+
     await db.modmailThreads.updateOne(
         { channel: _.channel!.id },
         {
             $push: {
                 messages: {
                     type: "outgoing",
-                    source: reply.id,
+                    source,
                     message: output.id,
                     author: _.user.id,
                     anon: !!anon,
@@ -636,14 +636,14 @@ export async function handleReply(
                     {
                         type: ComponentType.Button,
                         style: ButtonStyle.Secondary,
-                        customId: `:${_.user.id}:modmail/edit`,
+                        customId: `:${_.user.id}:modmail/edit-message:${source}`,
                         emoji: "✏️",
                         label: "Edit",
                     },
                     {
                         type: ComponentType.Button,
                         style: ButtonStyle.Danger,
-                        customId: `:${_.user.id}:modmail/delete`,
+                        customId: `:${_.user.id}:modmail/delete-message:${source}`,
                         emoji: "🗑️",
                         label: "Delete",
                     },
@@ -687,10 +687,10 @@ export async function startModal(
     if (!modal) return;
 
     content = modal.fields.getTextInputValue("content");
-    const reply = await modal.deferReply();
+    await modal.deferReply();
 
     try {
-        await modal.editReply(await handleReply(_, caller, member, anon, content, filemap, reply));
+        await modal.editReply(await handleReply(_, caller, member, anon, content, filemap));
     } catch (error) {
         await modal.editReply(template.error(`${error}`));
     }
