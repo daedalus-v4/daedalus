@@ -109,6 +109,7 @@ export default async function (settings: DbReactionRolesSettings, currentGuild: 
                             JSON.stringify([
                                 x.promptMessage,
                                 x.style,
+                                x.type,
                                 x.style === "dropdown"
                                     ? x.dropdownData.map((x) => ({ ...x, role: null }))
                                     : x.style === "buttons"
