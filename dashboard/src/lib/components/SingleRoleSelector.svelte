@@ -33,13 +33,15 @@
     {#if selected}
         <span
             class="badge px-4 text-sm flex rounded-full"
-            style="color: #{map[selected].color.toString(16).padStart(6, '0')}; outline: 1px solid #{map[selected].color.toString(16).padStart(6, '0')}"
+            style="color: #{(map[selected]?.color ?? 0xff0000).toString(16).padStart(6, '0')}; outline: 1px solid #{(map[selected]?.color ?? 0xff0000)
+                .toString(16)
+                .padStart(6, '0')}"
         >
             <button on:click={() => (selected = null)}>
                 <Icon icon="circle-xmark" />
             </button>
             <span class="text-surface-900 dark:text-surface-50">
-                {map[selected].name}
+                {map[selected]?.name ?? `Invalid Role: ${selected}`}
             </span>
         </span>
     {/if}

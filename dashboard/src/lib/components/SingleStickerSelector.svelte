@@ -1,13 +1,13 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import { globalEmojiStore, stickerSelectorModalStore } from "$lib/stores";
+    import { stickerSelectorModalStore } from "$lib/stores";
     import type { TFSticker } from "shared";
     import Button from "./Button.svelte";
     import Icon from "./Icon.svelte";
 
     export let selected: string | null;
     const stickers: TFSticker[] = $page.data.stickers;
-    const emojiMap = Object.fromEntries(stickers.map((e) => [e.id, e]));
+    const stickerMap = Object.fromEntries(stickers.map((e) => [e.id, e]));
 
     function open() {
         $stickerSelectorModalStore = {
@@ -27,15 +27,13 @@
         <span class="badge px-4 text-sm flex items-center rounded outline outline-surface-500 dark:outline-surface-300">
             <button class="w-4" on:click={() => (selected = null)}>
                 {#if selected.match(/^[1-9][0-9]{16,19}$/)}
-                    <img src={emojiMap[selected]?.url} alt={emojiMap[selected]?.name ?? ""} />
+                    <img src={stickerMap[selected]?.url} alt={stickerMap[selected]?.name ?? ""} />
                 {:else}
                     {selected}
                 {/if}
             </button>
             <span class="text-surface-600 dark:text-surface-100">
-                {selected.match(/^[1-9][0-9]{16,19}$/)
-                    ? emojiMap[selected]?.name ?? `Invalid Emoji: ${selected}`
-                    : $globalEmojiStore.reverseMap[selected] ?? "Unknown Emoji"}
+                {stickerMap[selected]?.name ?? `Invalid Sticker: ${selected}`}
             </span>
         </span>
     {/if}

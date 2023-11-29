@@ -34,7 +34,10 @@
 
 <div class="flex flex-wrap gap-3">
     {#each selected as id}
-        <span class="badge px-4 text-sm flex rounded outline outline-surface-500 dark:outline-surface-300">
+        <span
+            class="badge px-4 text-sm flex rounded outline outline-surface-500 dark:outline-surface-300"
+            style={map[id] ? "" : "color: 0xff0000; outline: 1px solid 0xff0000"}
+        >
             <button on:click={() => (selected = selected.filter((x) => x !== id))}>
                 <Icon icon="circle-xmark" />
             </button>
