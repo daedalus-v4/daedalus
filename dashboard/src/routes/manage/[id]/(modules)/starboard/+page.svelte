@@ -52,7 +52,3 @@
         {/each}
     </div>
 </Panel>
-
-<Panel>
-    <CodeBlock language="json" code={JSON.stringify(data, undefined, 4)} />
-</Panel>
