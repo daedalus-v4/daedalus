@@ -28,7 +28,7 @@ export const POST: RequestHandler = async ({ url }) => {
         type: "ban",
         mod: tcnbot,
         time: Date.now(),
-        duration: 0,
+        duration: Infinity,
         origin,
         reason,
     });
