@@ -53,4 +53,7 @@
 <EmojiSelectorModal />
 <StickerSelectorModal />
 
-<LeftNavLayout {links}><slot /></LeftNavLayout>
+<LeftNavLayout {links}>
+    <span class="text-lg text-surface-500 dark:text-surface-300">Managing <b>{$page.data.guildName}</b></span>
+    <slot />
+</LeftNavLayout>

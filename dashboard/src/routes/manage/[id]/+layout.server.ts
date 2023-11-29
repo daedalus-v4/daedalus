@@ -16,8 +16,17 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
         headers: { "Content-Type": "application/json" },
     });
 
-    const response: { owner: boolean; valid: boolean; roles: TFRole[]; channels: TFChannel[]; emojis: TFEmoji[]; stickers: TFSticker[]; sounds: TFSound[] } =
-        await request.json();
+    const response: {
+        name: string;
+        owner: boolean;
+        valid: boolean;
+        roles: TFRole[];
+        channels: TFChannel[];
+        emojis: TFEmoji[];
+        stickers: TFSticker[];
+        sounds: TFSound[];
+    } = await request.json();
+
     if (!response.valid) throw redirect(303, "/manage?reload");
 
     locals.authorized = true;
@@ -43,6 +52,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
 
     if (key in collections())
         return {
+            guildName: response.name,
             owner: response.owner,
             roles: response.roles,
             channels: response.channels,
@@ -59,5 +69,5 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
             ),
         };
 
-    return { owner: response.owner, missing: true };
+    return { guildName: response.name, owner: response.owner, missing: true };
 };
