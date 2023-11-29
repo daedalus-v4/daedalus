@@ -456,6 +456,11 @@ await section("co-op", async () => {
 
     await db.coOpSettings.insertMany(collapse(data));
     await validate(schemas["co-op"], db.coOpSettings);
+
+    await db.modulesPermissionsSettings.updateMany(
+        { $and: [{ guild: { $in: Object.keys(data) } }, { "modules.co-op.enabled": { $ne: false } }] },
+        { $set: { "modules.co-op.enabled": true } },
+    );
 });
 
 await section("modules", async () => {
@@ -1200,6 +1205,11 @@ await section("suggestions", async () => {
 
     await db.suggestionsSettings.insertMany(collapse(entries));
     await validate(schemas.suggestions, db.suggestionsSettings);
+
+    await db.modulesPermissionsSettings.updateMany(
+        { $and: [{ guild: { $in: Object.keys(entries) } }, { "modules.suggestions.enabled": { $ne: false } }] },
+        { $set: { "modules.suggestions.enabled": true } },
+    );
 });
 
 await section("supporter-announcements", async () => {
