@@ -17,10 +17,10 @@ export async function check(user: User | GuildMember, name: string, channel: Cha
 
     const permissionsSettings = await db.modulesPermissionsSettings.findOne({ guild: channel.guild.id });
 
-    if (!(permissionsSettings?.modules[command.module]?.enabled ?? modules[command.module].default ?? true))
+    if (!(permissionsSettings?.modules?.[command.module]?.enabled ?? modules[command.module].default ?? true))
         return `The ${modules[command.module].name} module is disabled.`;
 
-    if (!(permissionsSettings?.commands[name]?.enabled ?? command.default ?? true)) return `The ${command.name} command is disabled.`;
+    if (!(permissionsSettings?.commands?.[name]?.enabled ?? command.default ?? true)) return `The ${command.name} command is disabled.`;
 
     if (!(bypass ?? command.bypass)) {
         const required = (Array.isArray(req) ? req : [req]).filter((x) => x).map((key) => PermissionFlagsBits[key as keyof typeof PermissionFlagsBits]);
@@ -30,7 +30,7 @@ export async function check(user: User | GuildMember, name: string, channel: Cha
             const roles = [...member.roles.cache.keys()];
 
             const guildSettings = await db.guildSettings.findOne({ guild: channel.guild.id });
-            const commandSettings = permissionsSettings?.commands[name];
+            const commandSettings = permissionsSettings?.commands?.[name];
 
             if (guildSettings) {
                 if (

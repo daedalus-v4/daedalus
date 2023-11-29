@@ -62,7 +62,7 @@ export default new Argentium()
         try {
             fn = require(`./interactions/${path}.js`).default;
         } catch (error) {
-            log.error(error, "b9358a18-36ff-4006-ae64-1a0c6232371e");
+            log.error({ cid: interaction.customId, path }, "b9358a18-36ff-4006-ae64-1a0c6232371e");
             return;
         }
 
