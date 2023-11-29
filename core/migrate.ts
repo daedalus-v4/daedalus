@@ -103,7 +103,7 @@ async function validate(schema: z.ZodType, collection: Collection<any>) {
     log.debug(`validated ${count} ${count === 1 ? "entry" : "entries"}.`);
 }
 
-const clients: Record<string, Client> = {};
+const clients: Record<string, Client | null> = {};
 
 async function getWebhook(channel: string, id: string): Promise<string | null> {
     const doc = await db.temporary.findOne({ type: "webhook", id });
@@ -112,12 +112,19 @@ async function getWebhook(channel: string, id: string): Promise<string | null> {
     let url: string | null = null;
 
     for (const token of [Bun.env.PROD_TOKEN!, ...(await db.guilds.find({ token: { $ne: null } }).toArray()).filter((x) => x.token).map((x) => x.token!)]) {
-        if (!clients[token]) {
+        if (!(token in clients)) {
             clients[token] = new Client({ intents: 0 });
-            await clients[token].login(token);
+
+            try {
+                await clients[token]!.login(token);
+            } catch {
+                clients[token] = null;
+            }
         }
 
-        const ch = await clients[token].channels.fetch(channel).catch(() => {
+        if (!clients[token]) continue;
+
+        const ch = await clients[token]!.channels.fetch(channel).catch(() => {
             log.trace(`could not fetch channel ${channel}`);
         });
 
@@ -834,7 +841,7 @@ await section("modmail", async () => {
                         z.object({ type: z.literal("incoming"), content: z.string(), attachments: z.array(z.object({ name: z.string(), url: z.string() })) }),
                         z.object({
                             type: z.literal("internal"),
-                            id: snowflake,
+                            id: z.nullable(snowflake),
                             author: snowflake,
                             content: z.string(),
                             attachments: z.array(z.object({ name: z.string(), url: z.string() })),
@@ -843,7 +850,7 @@ await section("modmail", async () => {
                         }),
                         z.object({
                             type: z.literal("outgoing"),
-                            source: z.string(),
+                            source: z.number(),
                             message: z.string(),
                             author: snowflake,
                             anon: z.boolean(),
