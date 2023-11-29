@@ -518,6 +518,8 @@ export async function resolve(message: Message, guild: Guild, reply: Message, fi
             files,
             allowedMentions: { parse: ["users"] },
         });
+
+        await db.modmailTargets.updateOne({ user: message.author.id }, { $set: { guild: guild.id } }, { upsert: true }).catch(() => {});
     } catch (error) {
         await reply.edit(template.error("Sending your message failed. Please contact support if this issue persists."));
         invokeLog("botError", guild, () => template.logerror(`Bot Error ${mdash} Modmail`, `Error posting user's message:\n\`\`\`\n${error}\n\`\`\``));
