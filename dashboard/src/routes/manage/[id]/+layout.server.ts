@@ -50,7 +50,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
     sortChannels(roots);
     roots.sort((x, y) => (x.type === 4 ? 1 : 0) - (y.type === 4 ? 1 : 0));
 
-    if (key in collections())
+    if (key in collections() || key === "debug")
         return {
             guildName: response.name,
             owner: response.owner,
@@ -62,11 +62,14 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
             rootChannels: roots,
             enabled: await isModuleEnabled(params.id, key),
             premium: await getPremiumBenefitsFor(params.id),
-            data: await b2f[key as keyof typeof b2f](
-                fe,
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (await collections()[key as keyof ReturnType<typeof collections>].findOne({ guild: params.id })) as any,
-            ),
+            data:
+                key === "debug"
+                    ? null
+                    : await b2f[key as keyof typeof b2f](
+                          fe,
+                          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                          (await collections()[key as keyof ReturnType<typeof collections>].findOne({ guild: params.id })) as any,
+                      ),
         };
 
     return { guildName: response.name, owner: response.owner, missing: true };
