@@ -32,7 +32,7 @@ const functions: Record<"member" | "user" | "role" | "guild" | "global", Record<
     },
     guild: {
         server: { arity: 0, apply: (ctx) => ctx.guild!.name },
-        members: { arity: 0, apply: (ctx) => ctx.guild!.members.cache.size },
+        members: { arity: 0, apply: (ctx) => ctx.guild!.members.cache.size, fetch: ["members"] },
         boosts: { arity: 0, apply: (ctx) => ctx.guild!.premiumSubscriptionCount ?? 0 },
         tier: { arity: 0, apply: (ctx) => ctx.guild!.premiumTier },
         "server-icon": { arity: 0, apply: (ctx) => ctx.guild!.iconURL() ?? "" },
