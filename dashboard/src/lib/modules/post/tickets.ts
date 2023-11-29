@@ -1,5 +1,5 @@
 import getClient from "$lib/get-client.js";
-import { invariant, lazy } from "$lib/utils.js";
+import { invariant } from "$lib/utils.js";
 import { ButtonStyle, ComponentType, type BaseMessageOptions, type Message } from "discord.js";
 import type { DbTicketsSettings } from "shared";
 import { autoIncrement, db, getPremiumBenefitsFor } from "shared/db.js";
@@ -41,8 +41,8 @@ export default async function (settings: DbTicketsSettings, currentGuild: string
                     ? "At least one target must be configured (log channel and category must both be set)."
                     : "Ticket target is not configured (log channel and category must both be set).";
 
-            const data: () => BaseMessageOptions = lazy(() => ({
-                ...(prompt.id in promptMap && invariant(JSON.stringify, prompt.prompt, promptMap[prompt.id].prompt) ? {} : prompt.prompt),
+            const data: (post: boolean) => BaseMessageOptions = (post) => ({
+                ...(!post && prompt.id in promptMap && invariant(JSON.stringify, prompt.prompt, promptMap[prompt.id].prompt) ? {} : prompt.prompt),
                 components:
                     prompt.multi && multiTickets
                         ? [
@@ -78,7 +78,7 @@ export default async function (settings: DbTicketsSettings, currentGuild: string
                                   ],
                               },
                           ],
-            }));
+            });
 
             let message: Message | undefined;
 
@@ -93,12 +93,12 @@ export default async function (settings: DbTicketsSettings, currentGuild: string
                         message = await channel.messages.fetch({ message: promptMap[prompt.id].message!, force: true });
                         edit = true;
                     } catch {
-                        message = await channel.send(data()).catch((error) => {
+                        message = await channel.send(data(true)).catch((error) => {
                             throw `Could neither fetch the message in #${channel.name} to edit nor send a new one: ${error}`;
                         });
                     }
 
-                    if (edit) await message.edit(data());
+                    if (edit) await message.edit(data(false));
                 } else {
                     try {
                         const channel = await guild.channels.fetch(promptMap[prompt.id].channel!);
@@ -116,7 +116,7 @@ export default async function (settings: DbTicketsSettings, currentGuild: string
                 const channel = await guild.channels.fetch(prompt.channel!).catch(() => {});
                 if (!channel?.isTextBased()) throw "Could not fetch channel.";
 
-                message = await channel.send(data()).catch(() => {
+                message = await channel.send(data(true)).catch(() => {
                     throw `Could not send message in #${channel.name}.`;
                 });
             }

@@ -1,5 +1,5 @@
 import getClient from "$lib/get-client.js";
-import { invariant, lazy } from "$lib/utils.js";
+import { invariant } from "$lib/utils.js";
 import { ButtonStyle, ComponentType, type BaseMessageOptions, type Message } from "discord.js";
 import type { DbGiveawaysSettings } from "shared";
 import { autoIncrement, db } from "shared/db.js";
@@ -28,8 +28,10 @@ export default async function (settings: DbGiveawaysSettings, currentGuild: stri
 
     for (const giveaway of settings.giveaways) {
         try {
-            const data: () => BaseMessageOptions = lazy(() => ({
-                ...(giveaway.id in giveawayMap && invariant(JSON.stringify, giveaway.message, giveawayMap[giveaway.id].message) ? {} : giveaway.message),
+            const data: (post: boolean) => BaseMessageOptions = (post) => ({
+                ...(!post && giveaway.id in giveawayMap && invariant(JSON.stringify, giveaway.message, giveawayMap[giveaway.id].message)
+                    ? {}
+                    : giveaway.message),
                 components: [
                     {
                         type: ComponentType.ActionRow,
@@ -45,7 +47,7 @@ export default async function (settings: DbGiveawaysSettings, currentGuild: stri
                         ],
                     },
                 ],
-            }));
+            });
 
             let message: Message | undefined;
             const shouldPost = () => !invariant((x) => JSON.stringify([x.message, x.deadline < Date.now()]), giveaway, giveawayMap[giveaway.id]);
@@ -62,12 +64,12 @@ export default async function (settings: DbGiveawaysSettings, currentGuild: stri
                         edit = true;
                     } catch {
                         if (giveaway.deadline > Date.now())
-                            message = await channel.send(data()).catch((error) => {
+                            message = await channel.send(data(true)).catch((error) => {
                                 throw `Could neither fetch the message in #${channel.name} to edit nor send a new one: ${error}`;
                             });
                     }
 
-                    if (edit && message && shouldPost()) await message.edit(data());
+                    if (edit && message && shouldPost()) await message.edit(data(false));
                 } else {
                     try {
                         const channel = await guild.channels.fetch(giveawayMap[giveaway.id].channel!);
@@ -85,7 +87,7 @@ export default async function (settings: DbGiveawaysSettings, currentGuild: stri
                 const channel = await guild.channels.fetch(giveaway.channel!).catch(() => {});
                 if (!channel?.isTextBased()) throw "Could not fetch channel.";
 
-                message = await channel.send(data()).catch(() => {
+                message = await channel.send(data(true)).catch(() => {
                     throw `Could not send message in #${channel.name}.`;
                 });
             }
