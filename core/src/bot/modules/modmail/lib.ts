@@ -64,7 +64,7 @@ export async function maybeLogInternalMessage(message: Message) {
     );
 }
 
-export async function confirmRepeatGuild(message: Message, guild: Guild): Promise<[Message, boolean?]> {
+export async function confirmRepeatGuild(message: Message, guild: Guild): Promise<[Message, Guild?, boolean?]> {
     const reply = await message.reply({
         embeds: [
             {
@@ -103,14 +103,14 @@ export async function confirmRepeatGuild(message: Message, guild: Guild): Promis
             if (response.customId === "switch") return [reply];
         } else {
             await response.update(replies.canceled);
-            return [reply, true];
+            return [reply, undefined, true];
         }
     } catch {
         await reply.edit(replies.timedOut);
-        return [reply, true];
+        return [reply, undefined, true];
     }
 
-    return [reply];
+    return [reply, guild];
 }
 
 export async function selectGuild(message: Message, reply: Message): Promise<[Guild | undefined, boolean?]> {

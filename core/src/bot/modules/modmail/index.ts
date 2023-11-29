@@ -75,7 +75,7 @@ export default (app: Argentium) =>
             if (guild) {
                 if (!(await guild.members.fetch({ user: message.author.id, force: true }).catch(() => {}))) guild = undefined;
                 else if (await skip(guild, "modmail")) guild = undefined;
-                else [reply, exited] = await confirmRepeatGuild(message, guild);
+                else [reply, guild, exited] = await confirmRepeatGuild(message, guild);
 
                 if (exited) return;
             }
