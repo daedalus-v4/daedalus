@@ -202,8 +202,9 @@
         Content Intent" options.
     </P>
     <P>
-        To add your bot, copy-paste the following URL and replace <code class="code">APP_ID</code> with your application ID (you can find this in the General tab
-        or just copy-paste the ID out of the URL).
+        To add your bot, copy-paste the following URL and replace <code class="code">APP_ID</code> with your application ID (you can find this in the General
+        tab or just copy-paste the ID out of the URL):
+        <code class="code">https://discord.com/api/oauth2/authorize?client_id=APP_ID&permissions=1428010036470&scope=applications.commands+bot</code>
     </P>
     <P>
         Finally, go back to the bot settings, click "Reset Token", and then copy-paste the token into the input field. For security reasons, we never show you
