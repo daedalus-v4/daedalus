@@ -9,6 +9,7 @@ declare namespace App {
             global_name: string;
             discriminator: string;
             admin: boolean;
+            owner: boolean;
             avatar: string;
         };
         authorized?: boolean;
@@ -21,6 +22,7 @@ declare namespace App {
             global_name: string;
             discriminator: string;
             admin: boolean;
+            owner: boolean;
             avatar: string;
         };
     }

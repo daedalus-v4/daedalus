@@ -53,7 +53,10 @@ export const handle: Handle = async ({ event, resolve }) => {
         if (response.id) event.locals.user = response;
     }
 
-    if (event.locals.user) event.locals.user.admin = event.locals.user.id === OWNER || (await db.admins.countDocuments({ id: event.locals.user.id })) > 0;
+    if (event.locals.user) {
+        event.locals.user.owner = event.locals.user.id === OWNER;
+        event.locals.user.admin = event.locals.user.owner || (await db.admins.countDocuments({ id: event.locals.user.id })) > 0;
+    }
 
     return await resolve(event);
 };

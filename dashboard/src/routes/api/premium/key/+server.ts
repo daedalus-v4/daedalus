@@ -14,10 +14,10 @@ export const POST: RequestHandler = async ({ locals, url }) => {
     const keys = (await db.premiumKeys.findOne({ id: locals.user.id }))?.keys ?? [];
 
     const available =
-        sessions.flatMap((session) => session!.subscriptions.filter((sub) => sub.level === level).map((sub) => sub.quantity)).reduce((x, y) => x + y) -
+        sessions.flatMap((session) => session!.subscriptions.filter((sub) => sub.level === level).map((sub) => sub.quantity)).reduce((x, y) => x + y, 0) -
         keys.filter((key) => key.startsWith(prefix)).length;
 
-    if (available <= 0) return new Response("You do not have any subscriptions left.", { status: 402 });
+    if (!locals.user.owner && available <= 0) return new Response("You do not have any subscriptions left.", { status: 402 });
 
     let key: string;
 

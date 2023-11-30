@@ -13,11 +13,13 @@
     $: basicKeys = $page.data.keys.filter((key: string) => key.startsWith("bpk_"));
     $: ultimateKeys = $page.data.keys.filter((key: string) => key.startsWith("upk_"));
 
-    $: [basicTotal, ultimateTotal] = ["basic", "ultimate"].map((key, index) =>
-        ($page.data.sessions as { subscriptions: { level: string; quantity: number }[] }[])
-            .flatMap((session) => session.subscriptions.filter((sub) => sub.level === key).map((sub) => sub.quantity))
-            .reduce((x, y) => x + y, 0),
-    );
+    $: [basicTotal, ultimateTotal] = $page.data.user.owner
+        ? [Infinity, Infinity]
+        : ["basic", "ultimate"].map((key) =>
+              ($page.data.sessions as { subscriptions: { level: string; quantity: number }[] }[])
+                  .flatMap((session) => session.subscriptions.filter((sub) => sub.level === key).map((sub) => sub.quantity))
+                  .reduce((x, y) => x + y, 0),
+          );
 
     $: basicQuantity = basicTotal - basicKeys.length;
     $: ultimateQuantity = ultimateTotal - ultimateKeys.length;

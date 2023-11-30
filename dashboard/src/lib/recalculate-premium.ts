@@ -1,4 +1,4 @@
-import { API, PRICE_T1_M, PRICE_T1_Y, PRICE_T2_M, PRICE_T2_Y } from "$env/static/private";
+import { API, OWNER, PRICE_T1_M, PRICE_T1_Y, PRICE_T2_M, PRICE_T2_Y } from "$env/static/private";
 import { PremiumTier } from "shared";
 import { db } from "shared/db.js";
 import { getPortalSessions, stripe } from "./stripe.js";
@@ -13,6 +13,8 @@ export default async function recalculate(user?: string) {
 
         let basicTotal = 0;
         let ultimateTotal = 0;
+
+        if (user === OWNER) basicTotal = ultimateTotal = Infinity;
 
         for (const session of await getPortalSessions(user, false))
             for (const sub of session!.subscriptions)
@@ -53,6 +55,9 @@ export default async function recalculate(user?: string) {
                 }
             }
         }
+
+        basicTotal[OWNER] = Infinity;
+        ultimateTotal[OWNER] = Infinity;
 
         for await (const { user, keys } of db.premiumKeys.find()) {
             if (!basicTotal[user] && !ultimateTotal[user]) {
