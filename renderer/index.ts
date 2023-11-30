@@ -17,8 +17,9 @@ function xpToLevel(xp: number, floor = true): number {
     return floor ? Math.floor(level) : level;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function drawLevelup({ before, after, url, avatar }: { before: number; after: number; url: string | null; avatar: string }) {
+async function drawLevelup(query: any) {
+    const { before, after, url, avatar } = JSON.parse(query.data) as { before: number; after: number; url: string | null; avatar: string };
+
     const canvas = new Canvas(1000, 200);
     const img = canvas.getContext("2d");
 
@@ -105,20 +106,15 @@ async function drawLevelup({ before, after, url, avatar }: { before: number; aft
     return canvas.toBuffer();
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-async function drawRankcard({
-    name,
-    xp,
-    rank,
-    url,
-    avatar,
-}: {
-    name: string;
-    xp: { text: number; voice: number };
-    rank: { text: number; voice: number };
-    url: string | null;
-    avatar: string;
-}) {
+async function drawRankcard(query: any) {
+    const { name, xp, rank, url, avatar } = JSON.parse(query.data) as {
+        name: string;
+        xp: { text: number; voice: number };
+        rank: { text: number; voice: number };
+        url: string | null;
+        avatar: string;
+    };
+
     const canvas = new Canvas(1000, 400);
     const img = canvas.getContext("2d");
 
@@ -259,6 +255,6 @@ function constrainText(ctx: CanvasRenderingContext2D, font: string, text: string
 }
 
 fastify()
-    .post("/draw-levelup", async (req, res) => res.send(await drawLevelup(req.body as any)))
-    .post("/draw-rankcard", async (req, res) => res.send(await drawRankcard(req.body as any)))
+    .get("/draw-levelup", async (req, res) => res.type("image/png").send(await drawLevelup(req.query as any)))
+    .get("/draw-rankcard", async (req, res) => res.type("image/png").send(await drawRankcard(req.query as any)))
     .listen({ port: parseInt(process.env.PORT ?? "4040") });

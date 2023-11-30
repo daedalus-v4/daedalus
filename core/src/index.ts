@@ -8,7 +8,7 @@ import "./lib/global-tasks.js";
 import { log } from "./lib/log.js";
 import { getTokens } from "./lib/premium.js";
 
-process.on("uncaughtException", (e) => log.fatal(e));
+process.on("uncaughtException", (e) => log.fatal(e, "5827b2db-2098-4f87-bd74-99655c3ccbbb"));
 
 await getClientFromToken(Bun.env.TOKEN!);
 

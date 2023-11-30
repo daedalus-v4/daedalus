@@ -192,18 +192,14 @@ export async function addXp(channel: Channel, member: GuildMember, text = 0, voi
 async function drawLevelup(settings: DbXpSettings, member: GuildMember, before: number, after: number) {
     const benefits = await getPremiumBenefitsFor(member.guild.id);
 
-    return (
-        await fetch(`localhost:${Bun.env.RENDERER_PORT}/draw-levelup`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                before,
-                after,
-                url: benefits.customizeXpBackgrounds ? settings.announcementBackground : null,
-                avatar: member.displayAvatarURL({ extension: "png" }),
-            }),
-        })
-    ).body;
+    return `${Bun.env.RENDERER}/draw-levelup?${new URLSearchParams({
+        data: JSON.stringify({
+            before,
+            after,
+            url: benefits.customizeXpBackgrounds ? settings.announcementBackground : null,
+            avatar: member.displayAvatarURL({ extension: "png" }),
+        }),
+    })}`;
 }
 
 export async function drawRankcard(guild: Guild, user: User, settings?: DbXpSettings | null) {
@@ -220,17 +216,13 @@ export async function drawRankcard(guild: Guild, user: User, settings?: DbXpSett
 
     settings ??= await db.xpSettings.findOne({ guild: guild.id });
 
-    return (
-        await fetch(`localhost:${Bun.env.RENDERER_PORT}/draw-rankcard`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                name,
-                xp: { text: 0, voice: 0 },
-                rank: { text: 1, voice: 1 },
-                url: benefits.customizeXpBackgrounds ? settings?.rankCardBackground ?? null : null,
-                avatar: (member ?? user).displayAvatarURL({ extension: "png" }),
-            }),
-        })
-    ).body;
+    return `${Bun.env.RENDERER}/draw-rankcard?${new URLSearchParams({
+        data: JSON.stringify({
+            name,
+            xp: { text: 0, voice: 0 },
+            rank: { text: 1, voice: 1 },
+            url: benefits.customizeXpBackgrounds ? settings?.rankCardBackground ?? null : null,
+            avatar: (member ?? user).displayAvatarURL({ extension: "png" }),
+        }),
+    })}`;
 }

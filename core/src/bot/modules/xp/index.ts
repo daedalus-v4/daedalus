@@ -36,6 +36,7 @@ export default (app: Argentium) =>
                         .fn(defer(false))
                         .fn(async ({ _, user }) => {
                             user ??= _.user;
+
                             try {
                                 await _.editReply({
                                     files: [{ contentType: "image/png", attachment: (await drawRankcard(_.guild!, user)) as any, name: `${user.id}-rank.png` }],
@@ -45,7 +46,7 @@ export default (app: Argentium) =>
                                     template.error("Sorry, something went wrong displaying your rank card. Please contact support if this issue persists."),
                                 );
 
-                                log.error(null, "d06905f5-7c49-40e8-a0fa-961d4f8f4849");
+                                log.error(error, "d06905f5-7c49-40e8-a0fa-961d4f8f4849");
                             }
                         }),
                 )
