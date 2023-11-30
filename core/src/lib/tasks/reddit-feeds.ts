@@ -27,7 +27,7 @@ cycle(
                     });
 
                     if (!request.ok) {
-                        log.error(request.status, "08bbdc35-c961-4313-9a2a-ece7b7395a6b");
+                        log.error({ status: request.status }, "08bbdc35-c961-4313-9a2a-ece7b7395a6b");
                         continue;
                     }
 
