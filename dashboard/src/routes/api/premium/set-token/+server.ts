@@ -1,10 +1,11 @@
 import { API } from "$env/static/private";
 import type { RequestHandler } from "./$types.js";
 
-export const POST: RequestHandler = async ({ locals, request, url }) => {
+export const POST: RequestHandler = async ({ locals, url }) => {
     if (!locals.user) return new Response("You must be signed in.", { status: 401 });
 
     const guild = url.searchParams.get("guild") ?? "";
+    const token = url.searchParams.get("token") ?? "";
 
     {
         const req = await fetch(`${API}/check-guild`, {
@@ -16,8 +17,6 @@ export const POST: RequestHandler = async ({ locals, request, url }) => {
         const res: { valid: boolean } = await req.json();
         if (!res.valid) return new Response("You do not have permission to manage this server.", { status: 403 });
     }
-
-    const token = await request.text();
 
     {
         const req = await fetch(`${API}/assign-client`, {

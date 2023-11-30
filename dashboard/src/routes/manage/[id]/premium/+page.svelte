@@ -58,12 +58,7 @@
 
         loading = true;
 
-        const request = await fetch(`/api/premium/set-token?${new URLSearchParams({ guild: $page.params.id })}`, {
-            method: "POST",
-            headers: { "Content-Type": "text/plain" },
-            body: token.trim(),
-        });
-
+        const request = await fetch(`/api/premium/set-token?${new URLSearchParams({ guild: $page.params.id, token: token.trim() })}`, { method: "POST" });
         const response = await request.text();
 
         if (!request.ok) {
