@@ -1,6 +1,7 @@
 import Argentium from "argentium";
 import { APIEmbedField, BaseMessageOptions, ComponentType, Events, MessageType } from "discord.js";
 import { db, getColor } from "shared/db.js";
+import { log } from "../../../lib/log.js";
 import { mdash, template } from "../../lib/format.js";
 import { defer } from "../../lib/hooks.js";
 import { skip } from "../utils.js";
@@ -33,9 +34,19 @@ export default (app: Argentium) =>
                         .description("get a user's XP and rank")
                         .userOption("user", "the user (default: yourself)")
                         .fn(defer(false))
-                        .fn(async ({ _, user }): Promise<BaseMessageOptions> => {
+                        .fn(async ({ _, user }) => {
                             user ??= _.user;
-                            return { files: [{ attachment: await drawRankcard(_.guild!, user), name: `${user.id}-rank.png` }] };
+                            try {
+                                await _.editReply({
+                                    files: [{ contentType: "image/png", attachment: (await drawRankcard(_.guild!, user)) as any, name: `${user.id}-rank.png` }],
+                                });
+                            } catch (error) {
+                                await _.editReply(
+                                    template.error("Sorry, something went wrong displaying your rank card. Please contact support if this issue persists."),
+                                );
+
+                                log.error(null, "d06905f5-7c49-40e8-a0fa-961d4f8f4849");
+                            }
                         }),
                 )
                 .slash((x) =>
