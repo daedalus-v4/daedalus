@@ -38,7 +38,9 @@ export default (app: Argentium) =>
                             user ??= _.user;
 
                             try {
-                                await _.editReply(await drawRankcard(_.guild!, user));
+                                await _.editReply({
+                                    files: [{ name: `${user.id}-rankcard.png`, contentType: "image/png", attachment: await drawRankcard(_.guild!, user) }],
+                                });
                             } catch (error) {
                                 await _.editReply(
                                     template.error("Sorry, something went wrong displaying your rank card. Please contact support if this issue persists."),
@@ -152,7 +154,10 @@ export default (app: Argentium) =>
                 ),
         );
 
-setInterval(() => {
-    const now = Date.now();
-    lastMessage = Object.fromEntries(Object.entries(lastMessage).filter(([, v]) => now - v < 60000));
-}, 60 * 60 * 1000);
+setInterval(
+    () => {
+        const now = Date.now();
+        lastMessage = Object.fromEntries(Object.entries(lastMessage).filter(([, v]) => now - v < 60000));
+    },
+    60 * 60 * 1000,
+);
