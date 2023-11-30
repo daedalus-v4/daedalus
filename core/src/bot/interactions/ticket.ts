@@ -28,10 +28,12 @@ export default async function (cmd: ButtonInteraction | StringSelectMenuInteract
         id = cmd.values[0];
     }
 
-    const target = prompt.targets
-        .filter((x) => !!x.logChannel && !!x.category)
-        .slice(0, ticketTargetCountLimit)
-        .find((x) => `${x.id}` === id);
+    const target = prompt.multi
+        ? prompt.targets
+              .filter((x) => !!x.logChannel && !!x.category)
+              .slice(0, ticketTargetCountLimit)
+              .find((x) => `${x.id}` === id)
+        : prompt.targets[0];
 
     if (!target) throw "Could not find the referenced ticket target. Please contact Daedalus support (not server staff) if this issue persists.";
 
