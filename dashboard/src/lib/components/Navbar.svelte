@@ -10,6 +10,7 @@
         [invite(), "plus", "Invite", false, true],
         ["https://discord.gg/7TRKfSK7EU", "discord", "Support", true, true],
         ["/premium", "crown", "Premium"],
+        ...($page.data.user?.admin ? [["/admin", "screwdriver-wrench", "Admin"] as [string, string, string]] : []),
     ];
 
     let dark = true;
