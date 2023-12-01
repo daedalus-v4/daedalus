@@ -845,7 +845,7 @@ export default (app: Argentium) =>
                 const perms = role.permissions.toArray();
 
                 return embed(
-                    "Role Created",
+                    "Role Deleted",
                     `${expand(user, "System")} deleted ${role.name} (\`${role.id}\`) with permission${perms.length === 1 ? "" : "s"} ${englishList(
                         perms.map((key) => permissions[key]?.name ?? key),
                     )}`,
