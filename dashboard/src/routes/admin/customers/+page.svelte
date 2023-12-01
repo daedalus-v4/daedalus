@@ -1,19 +1,18 @@
 <script lang="ts">
-    import { enhance } from "$app/forms";
     import Button from "$lib/components/Button.svelte";
     import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
 
     export let form: any;
 
-    $: discord = form?.original.discord ?? "";
-    $: customer = form?.original.customer ?? "";
+    let discord: string = "";
+    let customer: string = "";
 
     $: discordValid = discord.match(/^[1-9][0-9]{16,19}$/);
     $: customerValid = customer.startsWith("cus_");
 </script>
 
-<form method="post" use:enhance>
+<form method="post">
     <Panel>
         <h2 class="h2">Customers</h2>
         <div class="flex items-center gap-4">
