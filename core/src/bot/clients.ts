@@ -1,4 +1,5 @@
-import { ActivityType, Client, Events, IntentsBitField, Partials } from "discord.js";
+import { ActivityType, Client, Events, IntentsBitField, Partials, PresenceStatusData } from "discord.js";
+import { db } from "shared/db.js";
 import clientTasks from "../lib/client-tasks.js";
 import { log } from "../lib/log.js";
 import argentium from "./argentium.js";
@@ -9,6 +10,8 @@ export const clientLoops: Record<string, NodeJS.Timer[]> = {};
 export async function getClientFromToken(token: string) {
     if (!clientCache[token]) {
         log.info(`Obtaining client ${token.slice(0, 5)}...${token.slice(-5)}`);
+
+        const entry = token === Bun.env.TOKEN ? null : await db.guilds.findOne({ token });
 
         const client = (clientCache[token] = new Client({
             intents:
@@ -27,7 +30,14 @@ export async function getClientFromToken(token: string) {
             partials: [Partials.Channel, Partials.Message, Partials.Reaction],
             allowedMentions: { parse: [] },
             failIfNotExists: false,
-            presence: { activities: [{ type: ActivityType.Watching, name: "for /help" }] },
+            presence: {
+                status: (entry?.status as PresenceStatusData) ?? "online",
+                activities: entry?.activityType
+                    ? entry.activityType === "Custom" && (entry.status ?? "").trim() === ""
+                        ? []
+                        : [{ type: ActivityType[entry.activityType as keyof typeof ActivityType] ?? ActivityType.Custom, name: entry.statusText ?? "" }]
+                    : [{ type: ActivityType.Watching, name: "for /help" }],
+            },
         }));
 
         client.setMaxListeners(20);

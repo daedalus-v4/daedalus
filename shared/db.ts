@@ -89,7 +89,14 @@ export class Database {
     }
 
     public get guilds() {
-        return _db.collection<{ guild: string; tier: PremiumTier; token: string | null }>("guilds");
+        return _db.collection<{
+            guild: string;
+            tier: PremiumTier;
+            token: string | null;
+            status?: string | null;
+            activityType?: string | null;
+            statusText?: string | null;
+        }>("guilds");
     }
 
     public get premiumOverrides() {

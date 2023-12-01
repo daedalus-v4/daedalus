@@ -73,6 +73,23 @@
         loading = false;
     }
 
+    async function setStatus() {
+        loading = true;
+
+        const request = await fetch(`/api/premium/set-status?${new URLSearchParams({ guild: $page.params.id, ...$page.data.settings })}`, { method: "POST" });
+        const response = await request.text();
+
+        if (!request.ok) {
+            loading = false;
+            return alert(response);
+        }
+
+        alert(`Your custom bot's status has been set!`);
+
+        await invalidateAll();
+        loading = false;
+    }
+
     async function resetToken() {
         if (
             !confirm(
@@ -168,6 +185,28 @@
                 </button>
             </div>
         </div>
+        <h3 class="h3">Custom Status</h3>
+        {#if $page.data.settings.hasCustomClient}
+            <div class="grid grid-cols-[auto_auto_1fr_auto] items-center gap-4">
+                <select class="select" bind:value={$page.data.settings.status}>
+                    <option value="online">Online</option>
+                    <option value="idle">Idle</option>
+                    <option value="dnd">Do Not Disturb</option>
+                    <option value="invisible">Invisible (Offline)</option>
+                </select>
+                <select class="select" bind:value={$page.data.settings.activityType}>
+                    <option value="Custom">[No Prefix]</option>
+                    <option value="Playing">Playing</option>
+                    <option value="Listening">Listening to</option>
+                    <option value="Watching">Watching</option>
+                    <option value="Competing">Competing In</option>
+                </select>
+                <input type="text" class="input" bind:value={$page.data.settings.statusText} />
+                <button class="btn-icon btn-icon-sm variant-filled-primary" disabled={loading} on:click={setStatus}><Icon icon="save" /></button>
+            </div>
+        {:else}
+            <P>Set a custom client to enable this feature!</P>
+        {/if}
     {/if}
 </Panel>
 
