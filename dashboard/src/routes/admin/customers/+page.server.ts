@@ -11,21 +11,36 @@ export const actions: Actions = {
         const customer = (data.get("stripe") ?? "") as string;
         const discord = (data.get("discord") ?? "") as string;
 
-        if (action === "Fetch Discord User from Customer ID") {
-            const entry = await db.customers.findOne({ stripe: customer });
+        const response = await (async () => {
+            if (action === "Fetch Discord User from Customer ID") {
+                const entry = await db.customers.findOne({ stripe: customer });
 
-            if (entry) return { og: customer, discord: entry.discord };
+                if (entry) return { og: customer, discord: entry.discord };
 
-            const result = await stripe.customers.retrieve(customer).catch(() => {});
-            if (!result) return { error: "This customer ID does not exist." };
+                const result = await stripe.customers.retrieve(customer).catch(() => {});
+                if (!result) return { error: "This customer ID does not exist." };
 
-            return { error: "This customer ID is not assigned to a user." };
-        } else if (action === "Fetch Customer IDs from Discord User") {
-            const entries = await db.customers.find({ discord }).toArray();
+                return { error: "This customer ID is not assigned to a user." };
+            } else if (action === "Fetch Customer IDs from Discord User") {
+                const entries = await db.customers.find({ discord }).toArray();
 
-            return { og: discord, customers: entries.map((x) => x.stripe) };
-        }
+                return { og: discord, customers: entries.map((x) => x.stripe) };
+            } else if (action === "Add Association") {
+                const entry = await db.customers.findOne({ stripe: customer });
+                if (entry) return { error: `That customer is already bound to <code class="code">${entry.discord}</code>.` };
 
-        return { error: "NotImplemented" };
+                await db.customers.updateOne({ stripe: customer }, { $set: { discord } }, { upsert: true });
+                return { added: { customer, discord } };
+            } else if (action === "Remove Association") {
+                const entry = await db.customers.findOneAndDelete({ discord, stripe: customer });
+                if (!entry) return { error: "That association does not exist." };
+
+                return { removed: { customer, discord } };
+            }
+
+            return { error: "NotImplemented" };
+        })();
+
+        return { original: { customer, discord }, ...response };
     },
 };
