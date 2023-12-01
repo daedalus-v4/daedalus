@@ -8,9 +8,9 @@ export const POST: RequestHandler = async ({ locals, url }) => {
     const key = url.searchParams.get("key") ?? "";
 
     const result = await db.premiumKeys.updateOne({ user: locals.user.id }, { $pull: { keys: key } });
-    if (result.modifiedCount > 0) await db.premiumKeyBindings.deleteOne({ key });
+    const entry = result.modifiedCount > 0 ? await db.premiumKeyBindings.findOneAndDelete({ key }) : null;
 
-    await recalculate(locals.user.id);
+    await recalculate(locals.user.id, entry?.guild);
 
     return new Response();
 };

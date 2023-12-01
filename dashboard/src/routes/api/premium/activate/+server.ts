@@ -25,7 +25,7 @@ export const POST: RequestHandler = async ({ locals, url }) => {
     const doc = await db.premiumKeyBindings.findOneAndUpdate({ key }, { $setOnInsert: { guild } }, { upsert: true });
     if (doc) return new Response("That key is already in use.", { status: 400 });
 
-    await recalculate(userDoc.user);
+    await recalculate(userDoc.user, guild);
 
     return new Response();
 };

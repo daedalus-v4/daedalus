@@ -3,7 +3,7 @@ import { PremiumTier } from "shared";
 import { db } from "shared/db.js";
 import { getPortalSessions, stripe } from "./stripe.js";
 
-export default async function recalculate(user?: string) {
+export default async function recalculate(user?: string, guild?: string) {
     const enable: string[] = [];
     const disable: string[] = [];
 
@@ -81,7 +81,7 @@ export default async function recalculate(user?: string) {
 
     const bindings = await db.premiumKeyBindings.find({ disabled: { $ne: true } }).toArray();
 
-    const guildSet = new Set((await db.guilds.find().toArray()).map((entry) => entry.guild));
+    const guildSet = new Set([...(await db.guilds.find().toArray()).map((entry) => entry.guild), ...(guild ? [guild] : [])]);
     for (const binding of bindings) guildSet.add(binding.guild);
 
     const guilds = [...guildSet];
