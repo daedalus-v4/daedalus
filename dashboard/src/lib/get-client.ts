@@ -7,7 +7,9 @@ await defaultClient.login(TOKEN);
 
 const clientCache: Record<string, Client> = {};
 
-export default async function (guild: string) {
+export default async function (guild?: string) {
+    if (!guild) return defaultClient;
+
     const benefits = await getPremiumBenefitsFor(guild);
     if (!benefits.vanityClient) return defaultClient;
 

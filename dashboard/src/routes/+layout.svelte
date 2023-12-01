@@ -8,6 +8,8 @@
     import { initializeStores, storeHighlightJs, storePopup } from "@skeletonlabs/skeleton";
     import "../app.postcss";
 
+    import { page } from "$app/stores";
+    import AdminButton from "$lib/components/AdminButton.svelte";
     import MessageEditorModal from "$lib/components/MessageEditorModal.svelte";
     import { modalStackStore } from "$lib/stores";
     import hljs from "highlight.js/lib/core";
@@ -35,6 +37,11 @@
 
 <Navbar />
 <UpButton />
+
+{#if $page.data.admin}
+    <AdminButton />
+{/if}
+
 <div class="h-full pt-16">
     <div class="h-full grid" style="grid-template-rows: 1fr auto">
         <div class="bg-surface-200 dark:bg-surface-700">

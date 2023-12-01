@@ -92,11 +92,11 @@ export async function addXp(channel: Channel, member: GuildMember, text = 0, voi
                         "announcement",
                         {
                             content: `${member} Congratulations ${mdash} you have leveled up from ${key} level ${levelBefore[key]} to ${levelAfter[key]}!`,
-                            files: [
+                            embeds: [
                                 {
-                                    name: `${member.id}-levelup.png`,
-                                    contentType: "image/png",
-                                    attachment: await drawLevelup(settings!, member, levelBefore[key], levelAfter[key]),
+                                    description: `You've leveled up from ${key} level ${levelBefore[key]} to ${levelAfter[key]}!`,
+                                    color: await getColor(member.guild),
+                                    image: { url: await drawLevelup(settings!, member, levelBefore[key], levelAfter[key]) },
                                 },
                             ],
                             allowedMentions: { users: [member.id] },
@@ -192,20 +192,14 @@ export async function addXp(channel: Channel, member: GuildMember, text = 0, voi
 async function drawLevelup(settings: DbXpSettings, member: GuildMember, before: number, after: number) {
     const benefits = await getPremiumBenefitsFor(member.guild.id);
 
-    return Buffer.from(
-        await (
-            await fetch(
-                `${Bun.env.RENDERER}/draw-levelup?${new URLSearchParams({
-                    data: JSON.stringify({
-                        before,
-                        after,
-                        url: benefits.customizeXpBackgrounds ? settings.announcementBackground : null,
-                        avatar: member.displayAvatarURL({ extension: "png" }),
-                    }),
-                })}`,
-            )
-        ).arrayBuffer(),
-    );
+    return `${Bun.env.RENDERER}/draw-levelup?${new URLSearchParams({
+        data: JSON.stringify({
+            before,
+            after,
+            url: benefits.customizeXpBackgrounds ? settings.announcementBackground : null,
+            avatar: member.displayAvatarURL({ extension: "png" }),
+        }),
+    })}`;
 }
 
 export async function drawRankcard(guild: Guild, user: User, settings?: DbXpSettings | null) {
@@ -222,19 +216,13 @@ export async function drawRankcard(guild: Guild, user: User, settings?: DbXpSett
 
     settings ??= await db.xpSettings.findOne({ guild: guild.id });
 
-    return Buffer.from(
-        await (
-            await fetch(
-                `${Bun.env.RENDERER}/draw-rankcard?${new URLSearchParams({
-                    data: JSON.stringify({
-                        name,
-                        xp: { text: 0, voice: 0 },
-                        rank: { text: 1, voice: 1 },
-                        url: benefits.customizeXpBackgrounds ? settings?.rankCardBackground ?? null : null,
-                        avatar: member ? member.displayAvatarURL({ extension: "png" }) : user.displayAvatarURL({ extension: "png" }),
-                    }),
-                })}`,
-            )
-        ).arrayBuffer(),
-    );
+    return `${Bun.env.RENDERER}/draw-rankcard?${new URLSearchParams({
+        data: JSON.stringify({
+            name,
+            xp: { text: 0, voice: 0 },
+            rank: { text: 1, voice: 1 },
+            url: benefits.customizeXpBackgrounds ? settings?.rankCardBackground ?? null : null,
+            avatar: member ? member.displayAvatarURL({ extension: "png" }) : user.displayAvatarURL({ extension: "png" }),
+        }),
+    })}`;
 }

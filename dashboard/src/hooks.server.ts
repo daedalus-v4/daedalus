@@ -1,5 +1,6 @@
 import { DB_NAME, DB_URI, DISCORD_API, OWNER } from "$env/static/private";
 import { PUBLIC_DOMAIN } from "$env/static/public";
+import getClient from "$lib/get-client.js";
 import recalculate from "$lib/recalculate-premium.js";
 import type { Handle } from "@sveltejs/kit";
 import { connect, db } from "shared/db.js";
@@ -54,8 +55,35 @@ export const handle: Handle = async ({ event, resolve }) => {
     }
 
     if (event.locals.user) {
-        event.locals.user.owner = event.locals.user.id === OWNER;
-        event.locals.user.admin = event.locals.user.owner || (await db.admins.countDocuments({ id: event.locals.user.id })) > 0;
+        event.locals.owner = event.locals.user.owner = event.locals.user.id === OWNER;
+        event.locals.admin = event.locals.user.admin = event.locals.user.owner || (await db.admins.countDocuments({ id: event.locals.user.id })) > 0;
+
+        if (event.locals.admin) {
+            const entry = await db.impersonations.findOne({ admin: event.locals.user.id });
+
+            if (entry && (await db.admins.countDocuments({ user: entry.target })) === 0 && entry.target !== OWNER) {
+                try {
+                    const client = await getClient();
+                    const user = await client.users.fetch(entry.target);
+
+                    event.locals.realUser = event.locals.user;
+
+                    event.locals.user = {
+                        id: user.id,
+                        username: user.username,
+                        global_name: user.globalName!,
+                        discriminator: user.discriminator,
+                        avatar: user.avatar!,
+                        owner: false,
+                        admin: false,
+                    };
+                } catch {
+                    // do nothing
+                }
+            }
+        }
+    } else {
+        event.locals.owner = event.locals.admin = false;
     }
 
     return await resolve(event);

@@ -88,6 +88,10 @@ export class Database {
         return _db.collection<{ user: string }>("admins");
     }
 
+    public get impersonations() {
+        return _db.collection<{ admin: string; target: string }>("impersonations");
+    }
+
     public get guilds() {
         return _db.collection<{
             guild: string;
