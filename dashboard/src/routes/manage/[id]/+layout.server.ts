@@ -72,5 +72,5 @@ export const load: LayoutServerLoad = async ({ fetch, locals, params, url }) => 
                       ),
         };
 
-    return { guildName: response.name, owner: response.owner, missing: true };
+    return { guildName: response.name, owner: response.owner, premium: await getPremiumBenefitsFor(params.id), missing: true };
 };

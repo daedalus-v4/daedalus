@@ -6,7 +6,7 @@
     import Modal from "$lib/components/Modal.svelte";
     import P from "$lib/components/P.svelte";
     import Panel from "$lib/components/Panel.svelte";
-    import { PremiumTier, premiumBenefits } from "shared";
+    import { PremiumTier } from "shared";
 
     let premiumInfoOpen = false;
     let customClientInfoOpen = false;
@@ -116,8 +116,6 @@
 
     let tier: PremiumTier;
     $: tier = $page.data.settings?.tier ?? PremiumTier.FREE;
-
-    $: benefits = premiumBenefits[tier];
 </script>
 
 <Panel>
@@ -127,7 +125,7 @@
                 "text-primary-500 dark:text-primary-400",
                 "font-bold bg-clip-text text-transparent box-decoration-clone bg-gradient-to-br from-tertiary-600 to-tertiary-400 dark:from-tertiary-400 dark:to-tertiary-600",
                 "font-bold bg-clip-text text-transparent box-decoration-clone bg-gradient-to-br from-secondary-400 via-primary-500 to-tertiary-400 dark:from-secondary-400 dark:via-primary-400 dark:to-tertiary-500",
-            ][tier]}>{benefits.name}</b
+            ][tier]}>{$page.data.premium.name}</b
         >
     </h2>
 </Panel>
@@ -164,10 +162,10 @@
 
 <Panel class="relative">
     <h2 class="h2 flex items-center gap-4">
-        Custom Client {#if !benefits.vanityClient}<Icon icon="lock" class="text-xl" />{/if}
+        Custom Client {#if !$page.data.premium.vanityClient}<Icon icon="lock" class="text-xl" />{/if}
         <button class="btn-icon variant-soft-secondary" on:click={() => (customClientInfoOpen = true)}><Icon icon="info-circle" /></button>
     </h2>
-    {#if !benefits.vanityClient}
+    {#if !$page.data.premium.vanityClient}
         <P>This feature is only available with the <b>Daedalus Ultimate Premium</b> plan!</P>
         <div class="absolute inset-0 card bg-surface-200/50 dark:bg-surface-400/50 backdrop-blur-[1px] pointer-events-none" />
     {:else if !$page.data.owner}
