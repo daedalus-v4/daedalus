@@ -158,7 +158,10 @@ export default (app: Argentium) =>
                 ),
         );
 
-setInterval(() => {
-    const now = Date.now();
-    lastMessage = Object.fromEntries(Object.entries(lastMessage).filter(([, v]) => now - v < 60000));
-}, 60 * 60 * 1000);
+setInterval(
+    () => {
+        const now = Date.now();
+        lastMessage = Object.fromEntries(Object.entries(lastMessage).filter(([, v]) => now - v < 60000));
+    },
+    60 * 60 * 1000,
+);

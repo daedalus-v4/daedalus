@@ -6,6 +6,7 @@
     import Header from "$lib/components/Header.svelte";
     import Icon from "$lib/components/Icon.svelte";
     import Loading from "$lib/components/Loading.svelte";
+    import P from "$lib/components/P.svelte";
     import invite from "$lib/invite";
     import { fuzzy } from "$lib/utils";
     import type { DDLGuild } from "shared";
@@ -77,6 +78,10 @@
 </Header>
 
 <Container main>
+    {#if $page.data.realUser}
+        <P><b>Data on this page will not be accurate as the guild list cannot be fetched for an impersonated user without their access token.</b></P>
+    {/if}
+
     <input type="search" class="input text-xl" placeholder="Filter Servers" bind:value={query} />
 
     {#if servers?.some((x) => x.notIn)}
