@@ -175,11 +175,12 @@ export default (app: Argentium) =>
                         .stringOption("content", "the content for the notification which is also stored in the logs (leave blank to use the default)")
                         .stringOption("delay", "how long to wait before auto-closing (recipient is always notified; canceled if a message is sent)")
                         .fn(defer(false))
-                        .fn(getModmailContactInfo(false))
-                        .fn(async ({ _, notify, content, delay: _delay, member }) => {
+                        .fn(async ({ _, notify, content, delay: _delay }) => {
                             const delay = _delay ? parseDuration(_delay, false) : 0;
 
                             if (delay > 0) {
+                                const { member } = await getModmailContactInfo(false)({ _ });
+
                                 const time = Date.now() + delay;
 
                                 await db.tasks.updateOne(
