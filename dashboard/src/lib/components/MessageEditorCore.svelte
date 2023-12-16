@@ -217,17 +217,17 @@
                         <div class="{closeFooter ? '-rotate-90' : ''} transition-rotate duration-100">
                             <Icon icon="angle-down" class="text-sm" />
                         </div>
-                        Images
+                        Footer
                     </h4>
                 </button>
                 <div class="{closeFooter ? 'hidden' : ''} my-2 w-full grid gap-4">
                     <label>
                         Footer Text
-                        <input type="text" class="input" bind:value={embed.image.url} />
+                        <input type="text" class="input" bind:value={embed.footer.text} />
                     </label>
                     <label>
                         Footer Icon URL
-                        <input type="text" class="input" bind:value={embed.thumbnail.url} />
+                        <input type="text" class="input" bind:value={embed.footer.iconURL} />
                     </label>
                     <span class="flex items-center gap-4">
                         <SlideToggle name="" size="sm" bind:checked={embed.showTimestamp} />
