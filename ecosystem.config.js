@@ -12,7 +12,6 @@ module.exports = {
             name: "dashboard",
             script: "./build/index.js",
             cwd: "./dashboard",
-            interpreter: "/root/.bun/bin/bun",
             min_uptime: 10000,
             max_restarts: 5,
         },
