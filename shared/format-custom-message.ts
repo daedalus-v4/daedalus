@@ -72,7 +72,7 @@ export async function formatMessage(input: MessageData["parsed"], ctx: CustomMes
                 image: { url: await u(e.image.url) },
                 thumbnail: { url: await u(e.thumbnail.url) },
                 footer: { text: await u(e.footer.text), iconURL: await u(e.footer.iconURL) },
-                timestamp: e.showTimestamp ? undefined : new Date().toISOString(),
+                timestamp: e.showTimestamp ? new Date().toISOString() : undefined,
             })),
         ),
     };
