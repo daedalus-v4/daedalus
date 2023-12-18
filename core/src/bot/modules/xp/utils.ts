@@ -216,13 +216,25 @@ export async function drawRankcard(guild: Guild, user: User, settings?: DbXpSett
 
     settings ??= await db.xpSettings.findOne({ guild: guild.id });
 
-    return `${Bun.env.RENDERER}/draw-rankcard?${new URLSearchParams({
-        data: JSON.stringify({
-            name,
-            xp: { text: 0, voice: 0 },
-            rank: { text: 1, voice: 1 },
-            url: benefits.customizeXpBackgrounds ? settings?.rankCardBackground ?? null : null,
-            avatar: member ? member.displayAvatarURL({ extension: "png" }) : user.displayAvatarURL({ extension: "png" }),
-        }),
-    })}`;
+    return {
+        embeds: [
+            {
+                description: `XP card for ${user}\n- Text Level ${xpToLevel(xp.text)}: Rank #${rank.text}, ${Math.floor(xp.text)} XP\n- Voice Level ${xpToLevel(
+                    xp.voice,
+                )}: Rank #${rank.voice}, ${Math.floor(xp.voice)} XP`,
+                color: 0x2b2d31,
+                image: {
+                    url: `${Bun.env.RENDERER}/draw-rankcard?${new URLSearchParams({
+                        data: JSON.stringify({
+                            name,
+                            xp,
+                            rank,
+                            url: benefits.customizeXpBackgrounds ? settings?.rankCardBackground ?? null : null,
+                            avatar: member ? member.displayAvatarURL({ extension: "png" }) : user.displayAvatarURL({ extension: "png" }),
+                        }),
+                    })}`,
+                },
+            },
+        ],
+    };
 }

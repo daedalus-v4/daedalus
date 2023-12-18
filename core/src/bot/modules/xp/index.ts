@@ -38,9 +38,7 @@ export default (app: Argentium) =>
                             user ??= _.user;
 
                             try {
-                                await _.editReply({
-                                    embeds: [{ description: `XP card for ${user}`, color: 0x2b2d31, image: { url: await drawRankcard(_.guild!, user) } }],
-                                });
+                                await _.editReply(await drawRankcard(_.guild!, user));
 
                                 // await _.editReply({
                                 //     files: [{ name: `${user.id}-rankcard.png`, contentType: "image/png", attachment: await drawRankcard(_.guild!, user) }],
