@@ -6,6 +6,8 @@ export default (app: App) =>
     app.get(
         "/roles/:guild/:user",
         async ({ params: { guild: guildId, user } }) => {
+            if (user === Bun.env.OWNER) return { owner: true, roles: [] };
+
             try {
                 const bot = await getClient(guildId);
                 const guild = await bot.guilds.fetch(guildId);
