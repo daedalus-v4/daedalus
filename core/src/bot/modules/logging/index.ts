@@ -13,7 +13,6 @@ import {
     escapeMarkdown,
 } from "discord.js";
 import { DurationStyle, formatDuration, permissions } from "shared";
-import { getAllClients } from "../../clients.js";
 import { SpoilerLevel, copyFiles, copyMedia } from "../../lib/copy-media.js";
 import { code, colors, embed, englishList, expand, mdash, timeinfo } from "../../lib/format.js";
 import getMuteRole from "../../lib/get-mute-role.js";
@@ -1062,7 +1061,7 @@ export default (app: Argentium) =>
             const afterAvatar = after.displayAvatarURL({ size: 256 });
 
             if (beforeAvatar !== afterAvatar || before.username !== after.username) {
-                const members = getAllClients().flatMap((client) => client.guilds.cache.map((guild) => guild.members.cache.get(after.id) ?? []).flat());
+                const members = after.client.guilds.cache.map((guild) => guild.members.cache.get(after.id) ?? []).flat();
                 if (members.length === 0) return;
 
                 if (before.username !== after.username)
