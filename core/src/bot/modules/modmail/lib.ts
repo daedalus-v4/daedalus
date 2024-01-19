@@ -384,7 +384,7 @@ export async function resolve(message: Message, guild: Guild, reply: Message, fi
     let informedOfError = false;
     let error: any;
 
-    if (entry) {
+    if (entry?.channel) {
         const fetched = await guild.channels.fetch(entry.channel).catch(() => {});
 
         if (target.useThreads) {
