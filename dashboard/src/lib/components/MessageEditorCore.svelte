@@ -112,7 +112,7 @@
                     </label>
                     <label>
                         Description
-                        <input type="text" class="input" bind:value={embed.description} />
+                        <textarea rows="4" class="textarea" bind:value={embed.description} />
                     </label>
                     <label>
                         URL
