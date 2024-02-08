@@ -38,7 +38,7 @@ export async function getClientFromToken(token: string) {
                         : [{ type: ActivityType[entry.activityType as keyof typeof ActivityType] ?? ActivityType.Custom, name: entry.statusText ?? "" }]
                     : [{ type: ActivityType.Watching, name: "for /help" }],
             },
-	    sweepers: { messages: { lifetime: 24 * 60 * 60, interval: 60 * 60 } },
+            sweepers: { messages: { lifetime: 24 * 60 * 60, interval: 60 * 60 } },
         }));
 
         client.setMaxListeners(20);
