@@ -10,7 +10,7 @@
         "skipLibCheck": true,
         "paths": {
             "shared": ["../shared"],
-            "shared/*": ["../shared/*"]
-        }
-    }
+            "shared/*": ["../shared/*"],
+        },
+    },
 }

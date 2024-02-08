@@ -1,5 +1,5 @@
 import Argentium from "argentium";
-import { Events, Message, PartialMessage } from "discord.js";
+import { Events, Message, PartialMessage, PermissionFlagsBits } from "discord.js";
 import { formatDuration } from "shared";
 import { autoIncrement, db, getLimitFor } from "shared/db.js";
 import { englishList, expand } from "../../lib/format.js";
@@ -12,7 +12,7 @@ export default (app: Argentium) => app.on(Events.MessageCreate, scan).on(Events.
 async function scan(message: Message | PartialMessage) {
     if (!message.guild) return;
     if (message.author?.id === message.client.user.id) return;
-    // if (message.member?.permissions.has(PermissionFlagsBits.Administrator)) return;
+    if (message.member?.permissions.has(PermissionFlagsBits.Administrator)) return;
     if (await skip(message.guild, "automod")) return;
 
     try {
