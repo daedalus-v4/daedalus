@@ -24,13 +24,13 @@ export default function (client: Client) {
     startLoop(
         client,
         async (client) => {
+            const tracker = (tracking[client.user!.id] ??= new Set());
+            const seen = new Set<string>();
+
             for (const guild of (await client.guilds.fetch()).values()) {
                 if (await skip(guild, "xp")) continue;
 
                 const settings = await db.xpSettings.findOne({ guild: guild.id });
-
-                const tracker = (tracking[client.user!.id] ??= new Set());
-                const seen = new Set<string>();
 
                 try {
                     for (const state of (await guild.fetch()).voiceStates.cache.values()) {
@@ -45,12 +45,12 @@ export default function (client: Client) {
                             await addXp(state.channel, state.member, 0, 1, settings);
                         } else tracker.add(state.member.id);
                     }
-
-                    for (const id of [...tracker]) if (!seen.has(id)) tracker.delete(id);
                 } catch (error) {
                     log.error(error, "406a1ccd-ff4f-4383-b6e4-a9859c01c11a");
                 }
             }
+
+            for (const id of [...tracker]) if (!seen.has(id)) tracker.delete(id);
         },
         60000,
         "ac9d3620-9a37-45be-88ac-f5d757696220",
