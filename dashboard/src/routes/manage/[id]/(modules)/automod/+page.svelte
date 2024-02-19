@@ -337,7 +337,7 @@
                                     if (rule.additionalAction === "timeout" && duration > 28 * 24 * 60 * 60 * 1000)
                                         throw "Members can only be timed out for up to 28 days.";
 
-                                    rule.actionDuration = duration;
+                                    data.rules[openIndex].actionDuration = duration === Infinity ? 0 : duration;
                                 } catch (error) {
                                     alert(error);
                                 }

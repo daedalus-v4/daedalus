@@ -95,11 +95,7 @@ async function scan(message: Message | PartialMessage) {
         actions.push("ban");
 
         for (const key of ["mute", "timeout"] as const)
-            if (
-                actionDurations.ban === Infinity ||
-                (actions.includes(key) && actionDurations[key] !== Infinity && actionDurations.ban >= actionDurations[key]!)
-            )
-                actions.splice(actions.indexOf(key), 1);
+            if (actions.includes(key) && actionDurations.ban >= actionDurations[key]!) actions.splice(actions.indexOf(key), 1);
     } else if (actionDurations.kick !== undefined) actions.push("kick");
 
     if (actions.length === 0 && actionDurations.warn !== undefined) actions.push("warn");
@@ -152,10 +148,10 @@ async function scan(message: Message | PartialMessage) {
                             actions.length > 0
                                 ? ` and was ${actionString}`
                                 : willNotify
-                                  ? notified
-                                      ? " and was notified (but no history was logged)"
-                                      : " but could not be notified"
-                                  : ""
+                                ? notified
+                                    ? " and was notified (but no history was logged)"
+                                    : " but could not be notified"
+                                : ""
                         }.`,
                         color: embedColor,
                         fields: [
@@ -173,8 +169,8 @@ async function scan(message: Message | PartialMessage) {
                                     ? notified
                                         ? "The user was notified of this action."
                                         : message.author?.bot
-                                          ? "The message was sent by a bot so no notification could be sent."
-                                          : "The user could not be notified; they may have DMs closed or may have blocked the bot."
+                                        ? "The message was sent by a bot so no notification could be sent."
+                                        : "The user could not be notified; they may have DMs closed or may have blocked the bot."
                                     : [],
                                 willDelete ? "The message was deleted." : [],
                             ]
